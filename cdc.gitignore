@@ -1,0 +1,50 @@
+# Byte-compiled / optimized Python files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Django-related files
+*.log
+*.pot
+*.pyc
+db.sqlite3
+media/
+
+# Static files (usually collected by Django)
+/static/
+
+# Environment variables and sensitive information
+.env
+*.env
+
+# Development and local settings
+settings_local.py
+
+# IDE files
+.idea/
+.vscode/
+
+# Dependency directories
+venv/
+node_modules/
+
+# Compiled files
+*.pyc
+*.class
+*.o
+*.pyd
+*.so
+*.dll
+
+# Mac-specific files
+.DS_Store
+
+# Windows-specific files
+Thumbs.db
+
+# Editor and temp files
+*~
+*.swp
+*.swo
+*.bak
+*.cache

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { drive, driveByStatusResponse, serverResponse } from '../models/model';
+import { drive, driveByIdResponse, driveByStatusResponse, serverResponse } from '../models/model';
 import { AppService } from '../service/app.service';
 import { FormBuilder, Validators } from '@angular/forms';
 import { DatePipe, formatDate } from '@angular/common';
@@ -21,6 +21,11 @@ export class DriveComponent implements OnInit {
   selectedFile: File | null = null;
   filter = 'All'
   show_desc = ''
+  show_delete = ''
+  action = 'add'
+
+  edit_drive_id = 0
+
 
   startDate!: string;
   endDate!: string;
@@ -155,12 +160,85 @@ export class DriveComponent implements OnInit {
     }
   }
 
-  editDrive(drive_id : number){
-    // this.toastr.info(drive_id.toString())
+  getDriveById(drive_id : number){
+    this.action = 'edit'
+    this.section = 2
+    this.edit_drive_id = drive_id
+
+    this.service.getDriveById(drive_id).subscribe(
+      (res:driveByIdResponse)=>{
+        if(res.success){
+          console.log(res.drive)
+          this.addDriveForm.patchValue({
+            'company':res.drive.company,
+            'job_role':res.drive.job_role,
+            'date':res.drive.date,
+            'website':res.drive.website,
+            'hr_name':res.drive.HR_name,
+            'hr_mail':res.drive.HR_mail,
+            'description':res.drive.description,
+            'mode':res.drive.mode,
+            // 'file':res.drive.file.toString()
+          })
+
+        }else this.toastr.warning('Something Went Wrong!!')
+      },
+      err=>{
+        this.toastr.error('Server Not Responding!!')
+      }
+    )
+  }
+
+  editDrive(){
+    let formData:FormData = new FormData()
+    const formattedDate = this.datePipe.transform(this.addDriveForm.value.date!, 'dd-MM-yyyy');
+      
+    formData.append('company',this.addDriveForm.value.company!)
+    formData.append('job_role',this.addDriveForm.value.job_role!)
+    formData.append('date',formattedDate!)
+    formData.append('website',this.addDriveForm.value.website!)
+    formData.append('hr_name',this.addDriveForm.value.hr_name!)
+    formData.append('hr_mail',this.addDriveForm.value.hr_mail!)
+    formData.append('description',this.addDriveForm.value.description!)
+    formData.append('eligible_lst',this.selectedFile!)
+    formData.append('staff_id',this.dataService.cur_user_data.staff_id)
+    formData.append('mode',this.addDriveForm.value.mode!)
+
+    formData.append('drive_id',this.edit_drive_id.toString())
+
+    this.service.edit_drive(formData).subscribe(
+      (res:serverResponse)=>{
+        if(res.success){
+          this.toastr.success(res.message)
+          this.section = 1
+          this.filterByStatus(this.filter)
+        }else{
+          this.toastr.warning(res.message)
+        }
+      },
+      err=>{
+        this.toastr.error('Server Not Responding!!')
+      }
+    )
   }
 
   deleteDrive(drive_id : number){
+    let formData = new FormData()
+    
+    formData.append('drive_id',drive_id.toString())
 
+    this.service.delete_drive(formData).subscribe(
+      (res:serverResponse)=>{
+        if(res.success){
+          this.toastr.success(res.message)
+          this.filterByStatus(this.filter)
+        }
+        else this.toastr.warning(res.message)
+      },
+      err=>{
+        this.toastr.warning('Server Not Responding!!')
+      }
+    )
   }
 
   onFileSelected(event: any) {
@@ -169,6 +247,12 @@ export class DriveComponent implements OnInit {
 
   resetForm(){
     this.addDriveForm.reset()
+  }
+
+  goBack(){
+    this.section = 1
+    this.filterByStatus(this.filter)
+    if(this.action === 'edit') this.action = 'add'
   }
 
 }

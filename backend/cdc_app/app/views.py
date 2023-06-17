@@ -188,7 +188,7 @@ def get_drive_by_status(request):
     drive_lst = []
     
     status = request.GET.get('status')
-    print(status)
+    # print(status)
     today = date.today()
 
 
@@ -203,7 +203,7 @@ def get_drive_by_status(request):
 
 
         for drive in drives:
-            print(drive.file.url)
+            # print(drive.file.url)
             current_site = get_current_site(request)
             domain = current_site.domain
             file_url = f"{settings.MEDIA_URL}{drive.file}"
@@ -337,7 +337,6 @@ def add_drive(request):
     
     date_str = request.POST['date']
     date_obj = datetime.strptime(date_str, '%d-%m-%Y').date()
-    current_date = date.today()
     
     try:
         drive = Drive(
@@ -373,6 +372,148 @@ def add_drive(request):
     
         return JsonResponse(data)
     
+@csrf_exempt
+def delete_drive(request):
+    drive_id = request.POST.get('drive_id')
+    print(drive_id)
+    
+    try:
+        drive = Drive.objects.get(pk=drive_id)
+        drive.delete()
+        data = {
+            'success':True,
+            'message' : f'Drive added Successfully!!'
+        }
+        return JsonResponse(data)
+    
+    except Exception as e:
+        data = {
+            'success':False,
+            'message' : f'Some Technical Error !!'
+        }
+        return JsonResponse(data)
+
+@csrf_exempt
+def get_drive_by_id(request):
+    
+    drive_id = request.GET.get('drive_id')
+    print(drive_id)
+    
+    drive_obj = {}
+    
+    try:
+        drive = Drive.objects.get(pk=drive_id)
+        current_site = get_current_site(request)
+        domain = current_site.domain
+        file_url = f"{settings.MEDIA_URL}{drive.file}"
+        file_absolute_url = f"http://{domain}{file_url}"
+        
+        drive_obj = {
+                    'id' : drive.pk,
+                    'company' : drive.company,
+                    'job_role': drive.job_role,
+                    'mode': drive.drive_mode,
+                    'date': drive.date,
+                    'placement_officer_id': drive.placement_officer_id,
+                    'website' : drive.website,
+                    'HR_name' : drive.HR_name,
+                    'HR_mail' : drive.HR_mail,
+                    'description' : drive.description,
+                    'file' : (drive.file.name).split('/')[-1],
+                    'completed' : True
+                }
+        data = {
+            'success':True,
+            'drive' : drive_obj
+        }
+    
+        return JsonResponse(data)
+    
+    except Exception as e:
+        data = {
+            'success':False,
+            'drive' : {}
+        }
+    
+        return JsonResponse(data)
     
     
+    
+    
+    data = {
+            'success':True,
+            'drive' : drive_obj
+        }
+    
+    return JsonResponse(data)
+    
+@csrf_exempt
+def update_drive(request):
+    company = request.POST['company']
+    job_role = request.POST['job_role']
+    website = request.POST['website']
+    hr_name = request.POST['hr_name']
+    hr_mail = request.POST['hr_mail']
+    description = request.POST['description']
+    staff_id = request.POST['staff_id']
+    mode = request.POST['mode']
+    drive_id = int(request.POST['drive_id'])
+    date_str = request.POST['date']
+    date_obj = datetime.strptime(date_str, '%d-%m-%Y').date()
+    
+    try:    
+        eligible_lst = request.FILES['eligible_lst']
+        
+        print(company+"\n"+eligible_lst)
+        
+        updated_data = {
+            'job_role' : job_role,
+            'date' : date_obj,
+            'company' : company,
+            'website' : website,
+            'HR_name'  : hr_name,
+            'HR_mail' : hr_mail,
+            'drive_mode' : mode,
+            'description' : description,
+            'file' : eligible_lst
+        }
+        
+        Drive.objects.filter(pk=drive_id).update(**updated_data)
+        
+        data = {
+                'success':True,
+                'message' : f'Drive updated Successfully!!'
+            }
+        
+        return JsonResponse(data)
+
+    except Exception as e:
+        # print(request.POST.get('eligible_lst'))
+        if(request.POST.get('eligible_lst') == 'null'):
+            updated_data = {
+                'job_role' : job_role,
+                'date' : date_obj,
+                'company' : company,
+                'website' : website,
+                'HR_name'  : hr_name,
+                'HR_mail' : hr_mail,
+                'drive_mode' : mode,
+                'description' : description,
+            }
+        
+            Drive.objects.filter(pk=drive_id).update(**updated_data)
+            data = {
+                'success':True,
+                'message' : f'Drive updated Successfully!!'
+            }
+        
+            return JsonResponse(data)
+        
+        else:
+            data = {
+                    'success':False,
+                    'message' : f'Some Technical Error !!'
+                }
+            return JsonResponse(data)
+     
     

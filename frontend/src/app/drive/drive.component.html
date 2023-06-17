@@ -1,6 +1,6 @@
 <div class="main">
 
-    <img (click) = "section=1" src="../../assets/back.png" *ngIf="section==2" class="back">
+    <img (click) = 'goBack()' src="../../assets/back.png" *ngIf="section==2" class="back">
 
     <div class="top">
         <div class="title" *ngIf="section==1">
@@ -9,7 +9,7 @@
         </div>
 
         <div class="title" *ngIf="section==2">
-            <h1>Add Drive</h1>
+            <h1>{{action==='add'?'Add Drive' : 'Edit Drive'}}</h1>
             <hr id="line" style="width: 250px;">
         </div>
 
@@ -97,6 +97,21 @@
     <div class="grid-container" *ngIf="section==1">
         <div class="drive-info-box"  [ngClass]="{'inactive-box': drive.completed}" *ngFor="let drive of drive_lst">
             
+            <!--  -->
+            <div class="delete-box" *ngIf="show_delete === (drive.id.toString())">
+                
+                <div class="dialog-box">
+                    <p>Are you sure you want to delete this drive?</p>
+                    <div class="btns">
+                        <!--  -->
+                        <!-- -->
+                        <p class="del-btn" style="background-color: #2f96b4;" (click)="deleteDrive(drive.id)">Yes</p>
+                        <p class = "del-btn" style="background-color: #e5383b;"  (click)="show_delete = ''">No</p>
+                    </div>
+                </div>
+
+            </div>
+
             <div class="desc-box" *ngIf="show_desc === (drive.id.toString())">
                 
                 <div class="desc-title">
@@ -169,10 +184,10 @@
                 </div>
 
                 <div class="options-box">
-                    <span class="material-symbols-outlined" id="edit" matTooltip="edit" (click)="editDrive(drive.id)">
+                    <span class="material-symbols-outlined" id="edit" matTooltip="edit" (click)='getDriveById(drive.id)'>
                         edit
                     </span>
-                    <span class="material-symbols-outlined" id="delete" matTooltip="delete" (click)="deleteDrive(drive.id)">
+                    <span class="material-symbols-outlined" id="delete" matTooltip="delete" (click)="show_delete = (drive.id.toString())">
                         delete
                     </span>
                     <span class="material-symbols-outlined" id="info" matTooltip="description" (click)="show_desc = (drive.id.toString())">
@@ -248,9 +263,8 @@
                     </mat-form-field>
                 </div>
             </div>
-               
-            
-            
+             
+
             <div class="input">
                 <p>Company Website</p>
                 <mat-form-field>
@@ -302,12 +316,13 @@
                     </div>
                   </div> 
                   <span style="font-weight: 100;font-style:italic">(.csv, .pdf, .xls, .doc)</span>
+                  <span style="font-weight: 100;font-style:italic" *ngIf="action==='edit'">*upload required only for new files</span>
             </div>
                          
 
             <div class="btns">
               <button mat-raised-button id="reset" (click)="resetForm()">Reset</button>
-              <button mat-raised-button id="add" (click)="addDrive()">Add Drive</button>
+              <button mat-raised-button id="add" (click)="action==='add'?addDrive() : editDrive()">{{action==='add'?'Add Drive' : 'Save Changes'}}</button>
             </div>
           
         </form>

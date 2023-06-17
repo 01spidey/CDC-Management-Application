@@ -40,13 +40,18 @@ export interface drive{
     HR_name : string,
     HR_mail : string,
     description : string,
-    file : File,
+    file : File|string,
     completed : boolean
 }
 
 export interface driveByStatusResponse{
     success : boolean,
     drive_lst : drive[]
+}
+
+export interface driveByIdResponse{
+    success : boolean,
+    drive : drive
 }
 
 export interface openMemberResponse{

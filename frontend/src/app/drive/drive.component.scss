@@ -151,8 +151,6 @@
         }
     }
 
-    
-
     .top{
         display: flex;
         align-items: center;
@@ -212,6 +210,53 @@
                 }
             }
 
+            .delete-box{
+                position: absolute;
+                top: 5px;
+                bottom: 5px;
+                left: 5px;
+                right: 5px;
+                background-color: white;
+                z-index: 200;
+
+                padding: 20px 20px;
+                border-radius: 20px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap: 5px;
+
+                .dialog-box{
+                    display: flex;
+                    flex-direction: column;
+                    gap: 10px;
+                    align-items: center;
+                    font-family: 'Nunito';
+                    font-weight: 500;
+
+                    .btns{
+                        display: flex;
+                        gap: 40px;
+                        justify-content: center;
+                        width: 100%;
+
+                        .del-btn{
+                            padding: 5px 20px;
+                            border-radius: 5px;
+                            color: white;
+                            cursor: pointer;
+                            font-size: .9rem;
+                            transition: 0.3s ease;
+                            &:hover{
+                                opacity: 0.85;
+                            }
+                        }
+                    }
+                    
+                }
+            }
+
+
             .desc-box{
                 position: absolute;
                 top: 5px;
@@ -237,7 +282,7 @@
                     display: flex;
                     align-items: end;
                     
-                    color: #35363a;
+                    color: #152b51;
                     position: relative;
                     // background-color: #152b51;
                     width: 100%;
@@ -394,10 +439,7 @@
                         background-color: #2f96b4;
                         color: white;
                     }
-    
                 }
-
-
             }
 
             button{
@@ -416,35 +458,12 @@
             }
             
             .info{
-            //     // width: fit-content;
-            //     border-radius: 10px;
-            //     padding: 3px;
-
                 position: absolute;
                 bottom: 10px;
                 right: 20px;
                 cursor: pointer;
-                // color: white;
                 color: #198754;
                 font-weight: bold;
-                // padding: 0px 3px;
-                // padding-top: 3px;
-                // border-radius: 30px;
-
-            //     // font-size: 0.7rem;
-            //     // font-family: 'Poppins';
-            //     // color: #868585;
-
-            //     // display: flex;
-            //     // align-items: center;
-
-            //     // span{
-            //     //     font-size: 1rem;
-            //     // }
-
-            //     &:hover{
-            //         color: #2f96b4;
-            //     }
             }
         }
     }

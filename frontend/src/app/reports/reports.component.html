@@ -1,1 +1,90 @@
-<p>reports works!</p>
+<div class="main">
+
+    <img (click) = "section=1" src="../../assets/back.png" *ngIf="section==2" class="back">
+
+    <div class="top">
+        <div class="title" *ngIf="section==1">
+            <h1>Reports Dashboard</h1>
+            <hr id="line" style="width: 420px;">
+        </div>
+
+        <div class="title" *ngIf="section==2">
+            <h1>Add Drive</h1>
+            <hr id="line" style="width: 250px;">
+        </div>
+
+        <div *ngIf="section==1 && role=='Officer'" class="add-drive" (click)="section=2">
+            <span class="material-symbols-outlined">
+                add_box
+            </span>
+            <p>Add Report</p>
+        </div>
+
+    </div>
+    
+    <div class="filter-box" *ngIf="section==1">
+        <div class="container">
+            <div class="status-filter">
+                <a style="text-decoration: none;">
+                    <div class="status" [ngClass]="{'active-chip' : filter=='All', 'not-active-chip':filter!='All'}">
+                        <span class="material-symbols-outlined">
+                            done
+                        </span>
+                        <p>All</p>
+                    </div>
+                </a>
+                
+    
+                <a style="text-decoration: none;">
+                    <div class="status" [ngClass]="{'active-chip' : filter=='Today', 'not-active-chip':filter!='Today'}">
+                        <span class="material-symbols-outlined">
+                            done
+                        </span>
+                        <p>Today</p>
+                    </div>
+                </a>
+                
+                <a style="text-decoration: none;">
+                    <div class="status" [ngClass]="{'active-chip' : filter=='Upcoming', 'not-active-chip':filter!='Upcoming'}">
+                        <span class="material-symbols-outlined">
+                            done
+                        </span>
+                        <p>Upcoming</p>    
+                    </div>
+                </a>
+    
+                <a style="text-decoration: none;">
+                    <div class="status" [ngClass]="{'active-chip' : filter=='Completed', 'not-active-chip':filter!='Completed'}">
+                        <span class="material-symbols-outlined">
+                            done
+                        </span>
+                        <p>Completed</p>    
+                    </div>
+                </a>
+            </div>
+            <a>
+                <span matTooltip="Refresh" class="material-symbols-outlined" id="refresh">
+                    refresh
+                </span>
+            </a>
+            
+        </div>
+        
+
+        <div class="date-filter" *ngIf="filter == 'All' || filter == 'Completed'">
+            
+            <mat-form-field>
+                <mat-label>Filter By Date Range</mat-label>
+                
+                <mat-date-range-input [rangePicker]="picker">
+                  <input matStartDate placeholder="Start date" [(ngModel)]="startDate">
+                  <input matEndDate placeholder="End date" [(ngModel)]="endDate">
+                </mat-date-range-input>
+
+                <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-date-range-picker #picker></mat-date-range-picker>
+            </mat-form-field>
+            <button mat-raised-button>Apply</button>
+        </div>
+    </div>
+</div>

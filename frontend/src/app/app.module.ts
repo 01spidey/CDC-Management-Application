@@ -20,6 +20,7 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { LoginGuard } from './guard/login.guard';
 import { AuthGuard } from './guard/auth.guard';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 
 @NgModule({
   declarations: [
@@ -44,7 +45,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     ToastrModule.forRoot(),
     CommonModule,
     MatTooltipModule,
-    FormsModule
+    FormsModule,
+    MatSlideToggleModule
   ],
   providers: [
     DatePipe,

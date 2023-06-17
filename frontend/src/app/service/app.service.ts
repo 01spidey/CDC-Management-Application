@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http'
-import { driveByStatusResponse, loadMembersResponse, loginResponse, openMemberResponse, serverResponse } from '../models/model';
+import { driveByIdResponse, driveByStatusResponse, loadMembersResponse, loginResponse, openMemberResponse, serverResponse } from '../models/model';
 
 @Injectable({
   providedIn: 'root'
@@ -36,7 +36,6 @@ export class AppService {
   }
 
   getDriveByDateRange(formData: FormData) {
-    
     return this.http.post<driveByStatusResponse>(`${this.URL}/get_drive_by_dateRange`, formData);
   }
   
@@ -44,6 +43,20 @@ export class AppService {
   add_drive(formData:FormData){
     console.log(formData.get('eligible_lst'))
     return this.http.post<serverResponse>(`${this.URL}/add_drive`, formData)
+  }
+
+  delete_drive(formData:FormData){
+    return this.http.post<serverResponse>(`${this.URL}/delete_drive`, formData)
+  }
+
+  getDriveById(drive_id : number){
+    const params = { drive_id : drive_id }
+    return this.http.get<driveByIdResponse>(`${this.URL}/get_drive_by_id`, { params : params })
+  }
+
+  edit_drive(formData:FormData){
+    console.log(formData.get('eligible_lst'))
+    return this.http.post<serverResponse>(`${this.URL}/update_drive`, formData)
   }
 
   // get_user(user_id: string, role: string) {

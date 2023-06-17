@@ -1,0 +1,204 @@
+<div class="main">
+
+    <img (click) = "section=1" src="../../assets/back.png" *ngIf="section==2" class="back">
+    <!-- Title -->
+    
+    <div class="title" *ngIf="section==1">
+        <h1>My Team</h1>
+        <hr id="line">
+    </div>
+    
+    <div class="title" *ngIf="section==2">
+        <h1>Add Member</h1>
+        <hr id="line">
+    </div>
+
+    <div class="title" *ngIf="section==3">
+        <h1>Team Member</h1>
+        <hr id="line">
+    </div>
+    
+    <!--  -->
+
+    <div *ngIf="section==1" class="add-member" (click)="section=2">
+        <span class="material-symbols-outlined">
+            add_box
+        </span>
+        <p>Add Member</p>
+    </div>
+
+
+    <!-- Content -->
+
+    <div class="grid-container" *ngIf="section==1">
+        <div class="grid-item" *ngFor="let member of team_lst">
+            <div class="profile-img" style="background-image: url('../../assets/team-img.jpg');">
+            </div>
+            <p class="name">{{member.name}}</p>
+            <p class="id">{{member.staff_id}}</p>
+            
+            <span class="material-symbols-outlined open" (click)="openMember(member.user_id, member.name, member.mail, member.phone, member.staff_id)">
+                open_in_new
+            </span>
+        </div>
+        <div class="grid-item" id="add-member" (click)="section=2">
+            <span class="material-symbols-outlined">
+                add_circle
+            </span>
+            <p>Add member</p>
+        </div>  
+    </div>
+
+    <div class="add-member-box" *ngIf="section==2">
+        <!-- [formGroup]="loginForm" (ngSubmit)="proceedLogin()" -->
+        <form [formGroup]="addMemberForm" *ngIf="section==2">
+            
+            <div class="input">
+                <p>Name</p>
+                <mat-form-field class="input">
+                    <mat-label>Tom H</mat-label>
+                    <input matInput formControlName = "name">
+                </mat-form-field>
+            </div>
+            
+            <div class="input">
+                <p>E-mail ID</p>
+                <mat-form-field>
+                    <mat-label>tom@kpriet.ac.in</mat-label>
+                    <input matInput formControlName = "mail">
+                </mat-form-field>
+            </div>    
+            
+            
+            <div class="input">
+                <p>Staff ID</p>
+                <mat-form-field>
+                    <mat-label>19KPR001</mat-label>
+                    <input matInput formControlName = "staff_id">
+                </mat-form-field>
+            </div>
+            
+
+            <div class="input">
+                <p>Contact</p>
+                <mat-form-field>
+                    <mat-label>xxxxxxxxxx</mat-label>
+                    <span matPrefix>+91 &nbsp;</span>
+                    <input matInput formControlName = "contact">
+                </mat-form-field> 
+            </div>
+                         
+
+            <div class="btns">
+              <button mat-raised-button id="reset" (click)="resetForm()">Reset</button>
+              <button mat-raised-button id="add" (click)="addMember()">Add member</button>
+            </div>
+          
+        </form>
+
+    </div>
+
+    <div class="member-details-box" *ngIf="section==3">
+        <div class="img" style="background-image: url('../../assets/team-img.jpg');"></div>
+        <div class="details">
+
+            <div class="top">
+                <h2>Tom H</h2>
+                <p>19KPR001</p>
+            </div>
+            
+
+            <div class="info">
+                <p class="field">User ID : </p>
+                <p class="value">01tom</p>
+            </div>
+
+            <div class="info">
+                <p class="field">Mail ID : </p>
+                <p class="value">01tom@gmail.com</p>
+            </div>
+
+            <div class="info">
+                <p class="field">Contact : </p>
+                <p class="value">01tom</p>
+            </div>
+            
+        </div>
+    </div>
+
+    <div class="title" *ngIf="section==3">
+        <h2>Reports</h2>
+    </div>
+
+    <div class="report-section" *ngIf="section==3">
+
+        <div class="mat-elevation-z8">
+            <table mat-table [dataSource]="dataSource">
+          
+              <!-- Position Column -->
+              <ng-container matColumnDef="position">
+                <th mat-header-cell *matHeaderCellDef style="width: 100px;"> No. </th>
+                <td mat-cell *matCellDef="let report" style = "background-color: #35363a80;color:white;font-weight:500;text-align:center"> {{report.position}} </td>
+              </ng-container>
+          
+            
+              <!-- Panel Column -->
+              <ng-container matColumnDef="panel">
+                <th mat-header-cell *matHeaderCellDef style="border-left: 2px solid white;                "> Report </th>
+                <td mat-cell *matCellDef="let report">
+                    <mat-accordion>
+                        <mat-expansion-panel (opened)="panelOpenState = true"
+                                             (closed)="panelOpenState = false">
+                        
+                            <mat-expansion-panel-header>
+                                
+                                <mat-panel-title>{{report.panel.date}}</mat-panel-title>
+            
+                                <mat-panel-description>
+                                    <p>{{report.panel.company}}</p>
+                                </mat-panel-description>
+                                
+                            </mat-expansion-panel-header>
+            
+                            <div class="report-box">
+                                
+                                <div class="top">
+                                    <h2>{{report.panel.company}}</h2>
+                                    <p class="date">{{report.panel.date}}</p>
+                                </div>
+
+                                <div class="btm">
+
+                                    <p>HR : <span>{{report.panel.HR_name}}</span></p>
+                                    <p>Mail : <span>{{report.panel.HR_mail}}</span></p>
+                                    <p>Mode : <span>{{report.panel.contact_mode}}</span></p>
+                                    <p>Website : <span>{{report.panel.website}}</span></p>
+                                    
+                                    <div class="message">
+                                        <p style="background-color:#198754;color:white;padding:5px 10px;border-radius:5px;">Message</p>
+                                        <p style="padding: 10px;font-family: 'Nunito';">{{report.panel.message}}</p>
+                                    </div>
+                                    
+                                </div>
+                                
+                            </div>
+                        
+                        </mat-expansion-panel>
+            
+                    </mat-accordion>
+                </td>
+              </ng-container>
+          
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+          
+            <mat-paginator [pageSizeOptions]="[5, 10]"
+                           showFirstLastButtons>
+            </mat-paginator>
+          </div>          
+
+    </div>
+
+</div>
+

@@ -1,0 +1,158 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+
+header{
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    height: 10%;
+    color: white;
+    padding: 1% 2%;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    p{
+        font-size: 1.5rem;
+    }
+
+    #name{
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        color: #152b51;
+    }
+
+    #img{
+        height: 150%;
+    }
+}
+
+
+section{
+    height: 100vh;
+    width: 100%;
+}
+
+#welcome{
+    background-image: url('../../assets/college_bg.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    opacity: 0.95;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+
+    h1{
+        font-size: 4.5rem;
+        width: 50%;
+        font-family: 'Poppins', sans-serif;
+        color: white;
+    }
+
+    p{
+        margin-top: 30px;
+        font-size: 20px;
+        font-family: 'Nunito', sans-serif;
+        background-color: #198754;
+        color: white;
+        padding: 10px;
+        border-radius: 10px;
+        cursor: pointer;
+
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        transition: background-color 0.3s ease;
+
+        &:hover{
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+    }
+}
+
+#login{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    background-color:azure;
+
+    .page{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 70px;
+
+        h1{
+            background-color: #198754;
+            color: white;
+            font-weight: 600;
+            padding: 8px 50px;
+            border-radius: 10px;
+        }
+
+        .box{
+            height: 60%;
+            width: 80%;
+            display: flex;
+            justify-content: space-between;
+            gap: 10%;
+    
+            img{
+                height: 80%;
+                width: 80%;
+                display: inline-block;
+            }
+    
+            .box-1,.box-2{
+                // width: 45%;
+                flex: 1;
+                border-radius: 10px;
+                padding: 2%;
+                box-shadow: 1px 1px 5px 1px rgba(0, 0, 0, 0.5);
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                transition: 0.5s ease;
+    
+                &:hover{
+                    border: none;
+                    box-shadow: 2px 2px 7px 2px rgba(0, 0, 0, 0.6);
+                }
+    
+                p{
+                    text-align: center;
+                    margin-top: 20px;
+                    font-size: 17px;
+                    background-color: #152b51;
+                    padding: 10px 15px;
+                    border-radius: 5px;
+                    color: white;
+                    cursor: pointer;
+    
+                    &:hover{
+                        background-color: rgba(0, 0, 0, 0.8);
+                    }
+                }
+            }
+        }
+    }
+
+    
+
+
+}
+

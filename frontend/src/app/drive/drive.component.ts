@@ -1,0 +1,174 @@
+import { Component, OnInit } from '@angular/core';
+import { drive, driveByStatusResponse, serverResponse } from '../models/model';
+import { AppService } from '../service/app.service';
+import { FormBuilder, Validators } from '@angular/forms';
+import { DatePipe, formatDate } from '@angular/common';
+import { ToastrService } from 'ngx-toastr';
+import { DataService } from '../service/data.service';
+
+@Component({
+  selector: 'app-drive',
+  templateUrl: './drive.component.html',
+  styleUrls: ['./drive.component.scss']
+})
+export class DriveComponent implements OnInit {
+
+  section = 1  
+  role:string = this.dataService.user_role
+  cur_user_id:string = this.dataService.cur_user_data.user_id
+
+  drive_lst:drive[] = []
+  selectedFile: File | null = null;
+  filter = 'All'
+  show_desc = ''
+
+  startDate!: string;
+  endDate!: string;
+
+  addDriveForm = this.builder.group({
+    company:this.builder.control('',Validators.required),
+    job_role:this.builder.control('',Validators.required),
+    date:this.builder.control('',Validators.required),
+    website:this.builder.control('',Validators.required),
+    hr_name:this.builder.control('',Validators.required),
+    hr_mail:this.builder.control('',Validators.compose([
+      Validators.required,
+      Validators.email
+    ])),
+    description:this.builder.control('',Validators.required),
+    file : this.builder.control(''),
+    mode : this.builder.control('',Validators.required)
+  });
+
+  constructor(
+    private service : AppService,
+    private dataService : DataService,
+    private builder : FormBuilder,
+    private datePipe : DatePipe,
+    private toastr:ToastrService
+  ) { 
+
+  }
+
+  ngOnInit(): void {
+      this.drive_lst = [ ]
+      
+      const today = new Date();
+      const threeMonthsAgo = new Date(today.getFullYear(), today.getMonth() - 3, today.getDate());
+      const threeMonthsAfter = new Date(today.getFullYear(), today.getMonth() + 3, today.getDate());
+      
+      this.startDate = this.datePipe.transform(threeMonthsAgo, 'yyyy-MM-dd')!;
+      this.endDate = this.datePipe.transform(threeMonthsAfter, 'yyyy-MM-dd')!;
+      
+      this.filterByStatus(this.filter)
+  }
+
+  filterByStatus(status:string){
+
+    sessionStorage.setItem('status',status)
+    this.filter = status
+    console.log(status)
+
+    if (status === 'Today' || status === 'Upcoming') {
+      // console.log(status)
+     
+      this.service.getDriveByStatus(status).subscribe(
+        (res:driveByStatusResponse)=>{
+          console.log(res.drive_lst)
+          this.drive_lst = res.drive_lst
+          if(res.success) this.toastr.success('Filter Applied!!');
+          else this.toastr.warning('Technical Error!!');
+        },
+        (err)=>{
+          this.toastr.error("Server Not Responding!!")
+        }
+      )
+    }
+
+    else{
+      // this.drive_lst = []
+      const startDate = this.startDate ? formatDate(this.startDate, 'yyyy-MM-dd', 'en') : '';
+      const endDate = this.endDate ? formatDate(this.endDate, 'yyyy-MM-dd', 'en') : '';
+
+      // Create FormData object
+      const formData = new FormData();
+      formData.append('status', status);
+      formData.append('start_date', startDate);
+      formData.append('end_date', endDate);
+
+      // console.log(startDate)
+      // console.log(endDate)
+
+      // Send the formData to the backend API
+      this.service.getDriveByDateRange(formData).subscribe(
+        (res: driveByStatusResponse) => {
+          console.log(res.drive_lst);
+          this.drive_lst = res.drive_lst;
+
+          if(res.success) this.toastr.success('Filter Applied!!');
+          else this.toastr.warning('Technical Error!!');
+        },
+        err => {
+          this.toastr.error('Server Not Responding!!');
+        }
+      );
+    }
+
+  }
+
+
+  addDrive(){
+    if(this.addDriveForm.valid){
+      let formData = new FormData()
+      const formattedDate = this.datePipe.transform(this.addDriveForm.value.date!, 'dd-MM-yyyy');
+      
+      formData.append('company',this.addDriveForm.value.company!)
+      formData.append('job_role',this.addDriveForm.value.job_role!)
+      formData.append('date',formattedDate!)
+      formData.append('website',this.addDriveForm.value.website!)
+      formData.append('hr_name',this.addDriveForm.value.hr_name!)
+      formData.append('hr_mail',this.addDriveForm.value.hr_mail!)
+      formData.append('description',this.addDriveForm.value.description!)
+      formData.append('eligible_lst',this.selectedFile!)
+      formData.append('staff_id',this.dataService.cur_user_data.staff_id)
+      formData.append('mode',this.addDriveForm.value.mode!)
+      
+      console.log(formattedDate)
+
+      this.service.add_drive(formData).subscribe(
+        (res:serverResponse)=>{
+          if(res.success){
+            this.toastr.success(res.message)
+            this.addDriveForm.reset()
+          }
+          else{
+            this.toastr.error(res.message)
+          }
+        },
+        err=>{
+          this.toastr.error('Server Not Responding!!')
+        }
+      )
+    }
+    else{
+      
+    }
+  }
+
+  editDrive(drive_id : number){
+    // this.toastr.info(drive_id.toString())
+  }
+
+  deleteDrive(drive_id : number){
+
+  }
+
+  onFileSelected(event: any) {
+    this.selectedFile = event.target.files[0];
+  }
+
+  resetForm(){
+    this.addDriveForm.reset()
+  }
+
+}

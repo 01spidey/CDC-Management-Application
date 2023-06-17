@@ -1,0 +1,317 @@
+<div class="main">
+
+    <img (click) = "section=1" src="../../assets/back.png" *ngIf="section==2" class="back">
+
+    <div class="top">
+        <div class="title" *ngIf="section==1">
+            <h1>Placement Drive</h1>
+            <hr id="line" style="width: 380px;">
+        </div>
+
+        <div class="title" *ngIf="section==2">
+            <h1>Add Drive</h1>
+            <hr id="line" style="width: 250px;">
+        </div>
+
+        <div *ngIf="section==1 && role=='Officer'" class="add-drive" (click)="section=2">
+            <span class="material-symbols-outlined">
+                add_box
+            </span>
+            <p>Add Drive</p>
+        </div>
+
+    </div>
+    
+    <div class="filter-box" *ngIf="section==1">
+        <div class="container">
+            <div class="status-filter">
+                <a style="text-decoration: none;">
+                    <div class="status" [ngClass]="{'active-chip' : filter=='All', 'not-active-chip':filter!='All'}" (click)="filterByStatus('All')">
+                        <span class="material-symbols-outlined">
+                            done
+                        </span>
+                        <p>All</p>
+                    </div>
+                </a>
+                
+    
+                <a style="text-decoration: none;">
+                    <div class="status" [ngClass]="{'active-chip' : filter=='Today', 'not-active-chip':filter!='Today'}" (click)="filterByStatus('Today')">
+                        <span class="material-symbols-outlined">
+                            done
+                        </span>
+                        <p>Today</p>
+                    </div>
+                </a>
+                
+                <a style="text-decoration: none;">
+                    <div class="status" [ngClass]="{'active-chip' : filter=='Upcoming', 'not-active-chip':filter!='Upcoming'}" (click)="filterByStatus('Upcoming')">
+                        <span class="material-symbols-outlined">
+                            done
+                        </span>
+                        <p>Upcoming</p>    
+                    </div>
+                </a>
+    
+                <a style="text-decoration: none;">
+                    <div class="status" [ngClass]="{'active-chip' : filter=='Completed', 'not-active-chip':filter!='Completed'}" (click)="filterByStatus('Completed')">
+                        <span class="material-symbols-outlined">
+                            done
+                        </span>
+                        <p>Completed</p>    
+                    </div>
+                </a>
+            </div>
+            <a>
+                <span matTooltip="Refresh" class="material-symbols-outlined" id="refresh" (click)="filterByStatus(filter)">
+                    refresh
+                </span>
+            </a>
+            
+        </div>
+        
+
+        <div class="date-filter" *ngIf="filter == 'All' || filter == 'Completed'">
+            
+            <mat-form-field>
+                <mat-label>Filter By Date Range</mat-label>
+                
+                <mat-date-range-input [rangePicker]="picker">
+                  <input matStartDate placeholder="Start date" [(ngModel)]="startDate">
+                  <input matEndDate placeholder="End date" [(ngModel)]="endDate">
+                </mat-date-range-input>
+
+                <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-date-range-picker #picker></mat-date-range-picker>
+            </mat-form-field>
+            <button mat-raised-button (click)="filterByStatus(filter)">Apply</button>
+        </div>
+    </div>
+    
+
+    <div class="no-data" *ngIf="drive_lst.length==0">
+        <img src="../../assets/no-data.svg" alt="no-data.svg">
+        <p>No Data Found...</p>
+    </div>
+
+    <div class="grid-container" *ngIf="section==1">
+        <div class="drive-info-box"  [ngClass]="{'inactive-box': drive.completed}" *ngFor="let drive of drive_lst">
+            
+            <div class="desc-box" *ngIf="show_desc === (drive.id.toString())">
+                
+                <div class="desc-title">
+                    <span class="material-symbols-outlined" (click)="show_desc = ''">
+                        close
+                    </span>
+                    <h2>Description</h2>
+                </div>
+                <div class="desc-content">
+                    <p>{{drive.description}}</p>
+                </div>
+                <!-- <div class="center-content">
+                    
+                    
+                </div> -->
+            </div>
+
+            <div class="title-box">
+                <div class="left">
+                    <div class="company">
+                        <h1>{{drive.company}}</h1>
+                        <a [href]="drive.website" target="_blank">
+                            <span class="material-symbols-outlined link">
+                                open_in_new
+                            </span>
+                        </a>
+                    </div>
+                    <p>{{drive.job_role}}</p>
+                </div>
+                <div class="right">
+                    <span class="material-symbols-outlined">
+                        today
+                    </span>
+                    <p>{{drive.date}}</p>
+                </div>
+            </div>
+            
+            <div class="content">
+                
+                <div class="field">
+                    <span class="material-symbols-outlined">
+                        badge
+                    </span>
+                    <p style="font-family: 'Poppins';font-weight:500;">Placement Officer : </p>
+                    <p>{{drive.placement_officer_id}}</p>
+                </div>
+
+                <div class="field">
+                    <span class="material-symbols-outlined">
+                        account_box
+                    </span>
+                    <p style="font-family: 'Poppins';font-weight:500;">HR Name : </p>
+                    <p>{{drive.HR_name}}</p>
+                </div>
+                
+                <div class="field">
+                    <span class="material-symbols-outlined">
+                        mail
+                    </span>
+                    <p style="font-family: 'Poppins';font-weight:500;">HR Mail : </p>
+                    <p>{{drive.HR_mail}}</p>
+                </div>
+
+                <div class="field">
+                    <span class="material-symbols-outlined">
+                        push_pin
+                    </span>
+                    <p style="font-family: 'Poppins';font-weight:500;">Mode : </p>
+                    <p>{{drive.mode}}</p>
+                </div>
+
+                <div class="options-box">
+                    <span class="material-symbols-outlined" id="edit" matTooltip="edit" (click)="editDrive(drive.id)">
+                        edit
+                    </span>
+                    <span class="material-symbols-outlined" id="delete" matTooltip="delete" (click)="deleteDrive(drive.id)">
+                        delete
+                    </span>
+                    <span class="material-symbols-outlined" id="info" matTooltip="description" (click)="show_desc = (drive.id.toString())">
+                        info
+                    </span>
+                </div>
+
+                <!-- <img src="../../../../backend/cdc_app/media/" alt=""> -->
+            </div>
+
+            <a [href]="drive.file" download><button mat-raised-button>Eligible List</button></a>
+
+            <!-- <div class="info">
+                <p>more</p>
+                <span class="material-symbols-outlined">
+                    chevron_right
+                </span>
+            </div> -->
+
+            <div class="info" *ngIf="drive.placement_officer_id === cur_user_id">
+                <!-- <p>more</p> -->
+                <span class="material-symbols-outlined" matTooltip="posted by you">
+                    check_circle
+                </span>
+            </div>
+        
+        </div>
+         
+    </div>
+
+    <div class="add-drive-box" *ngIf="section==2">
+        <!-- [formGroup]="loginForm" (ngSubmit)="proceedLogin()" -->
+        
+        <form [formGroup]="addDriveForm" *ngIf="section==2">
+            
+            <div class="section">
+                <div class="input">
+                    <p>Company</p>
+                    <mat-form-field class="input">
+                        <mat-label>AutoDesk</mat-label>
+                        <input matInput formControlName = "company">
+                    </mat-form-field>
+                </div>
+    
+                <div class="input">
+                    <p>Job Role</p>
+                    <mat-form-field class="input">
+                        <mat-label>SDE Intern</mat-label>
+                        <input matInput formControlName = "job_role">
+                    </mat-form-field>
+                </div>
+            </div>
+            
+            <div class="section">
+                <div class="input">
+                    <p>Drive Date</p>
+                    <mat-form-field>
+                        <mat-label>Choose a date</mat-label>
+                        <input matInput [matDatepicker]="picker" formControlName = "date">
+                        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-datepicker #picker></mat-datepicker>
+                      </mat-form-field>
+                </div> 
+
+                <div class="input">
+                    <p>Drive Mode</p>
+                    <mat-form-field>
+                        <mat-label>Mode</mat-label>
+                        <mat-select formControlName = "mode">
+                            <mat-option value="online">Online</mat-option>
+                            <mat-option value="offline">Offline</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            </div>
+               
+            
+            
+            <div class="input">
+                <p>Company Website</p>
+                <mat-form-field>
+                    <mat-label>https://www.autodesk.com/careers</mat-label>
+                    <input type="url" matInput formControlName = "website">
+                </mat-form-field>
+            </div>
+            
+
+            <div class="section">
+                <div class="input">
+                    <p>HR Name</p>
+                    <mat-form-field>
+                        <mat-label>Tom H</mat-label>
+                        <input matInput formControlName = "hr_name">
+                    </mat-form-field> 
+                </div>
+    
+                <div class="input">
+                    <p>HR Mail</p>
+                    <mat-form-field>
+                        <mat-label>TomH@amazon.com*</mat-label>
+                        <input matInput formControlName = "hr_mail">
+                    </mat-form-field> 
+                </div>
+            </div>
+            
+
+            <div class="input">
+                <p>Description</p>
+                <mat-form-field>
+                    <mat-label>Write Description Here</mat-label>
+                    <textarea matInput formControlName="description"></textarea>
+                </mat-form-field> 
+            </div>
+
+            <div class="input">
+                <p>Eligibe List</p>
+                <div class="file-sec">
+                    <div class="file-name">
+                      <p *ngIf="!selectedFile">No File Choosen...</p>
+                      <p *ngIf="selectedFile">{{selectedFile.name}}</p>
+                    </div>
+                    <div class="file-inp">
+                      <input class="inp" type="file" accept=".pdf,.csv,.xls,.doc" (change)="onFileSelected($event)" formControlName = 'file'>
+                      <span class="material-symbols-outlined" style="color:white;font-weight:bold">
+                        upload
+                      </span>
+                    </div>
+                  </div> 
+                  <span style="font-weight: 100;font-style:italic">(.csv, .pdf, .xls, .doc)</span>
+            </div>
+                         
+
+            <div class="btns">
+              <button mat-raised-button id="reset" (click)="resetForm()">Reset</button>
+              <button mat-raised-button id="add" (click)="addDrive()">Add Drive</button>
+            </div>
+          
+        </form>
+
+    </div>
+
+</div>

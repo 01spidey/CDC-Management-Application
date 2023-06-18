@@ -26,10 +26,16 @@ urlpatterns = [
     path('login', include('app.urls')),
     path('add_member', include('app.urls')),
     path('load_members', include('app.urls')),
+    
     path('get_drive_by_status', include('app.urls')),
     path('get_drive_by_dateRange', include('app.urls')),
     path('add_drive', include('app.urls')),
     path('delete_drive', include('app.urls')),
     path('get_drive_by_id', include('app.urls')),
     path('update_drive', include('app.urls')),
+    
+    path('add_report', include('app.urls')),
+    path('delete_report', include('app.urls')),
+    path('update_report', include('app.urls')),
+    
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

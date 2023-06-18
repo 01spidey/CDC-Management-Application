@@ -3,7 +3,8 @@ import { DataService } from '../service/data.service';
 import { ToastrService } from 'ngx-toastr';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { AppService } from '../service/app.service';
-import { DatePipe } from '@angular/common';
+import { DatePipe, formatDate } from '@angular/common';
+import { serverResponse } from '../models/model';
 
 @Component({
   selector: 'app-reports',
@@ -50,13 +51,51 @@ export class ReportsComponent implements OnInit{
 
   }
 
-
-
-
-
-
   addReport(){
-    console.log(this.reminder_date)
+    
+    if(this.reminder_date==='') console.log(this.reminder_date)
+
+    if(this.addReportForm.valid){      
+      if(this.reminder && this.reminder_date===''){
+        this.toastr.warning('Set reminder date!!')
+      }else{
+        const formattedDate = this.datePipe.transform(this.addReportForm.value.date!, 'dd-MM-yyyy');
+        const formattedReminderDate = (!this.reminder)?'' : this.datePipe.transform(this.reminder_date, 'dd-MM-yyyy');
+        // console.log(formattedDate+' '+formattedReminderDate)
+        
+        let data = {
+          company:this.addReportForm.value.company,
+          date:formattedDate,
+          hr_name:this.addReportForm.value.hr_name,
+          hr_mail:this.addReportForm.value.hr_mail,
+          message:this.addReportForm.value.message,
+          mode : this.addReportForm.value.mode,
+          visibility : this.visibility,
+          reminder_date : formattedReminderDate,
+          staff_id : this.dataService.user_id
+        }
+
+        // let data = this.addReportForm.value
+
+        this.service.addReport(data).subscribe(
+          (res:serverResponse)=>{
+            if(res.success){
+              this.toastr.success('Report added successfully')
+              this.addReportForm.reset()
+              this.reminder = false
+            }else{
+              this.toastr.warning('Something went wrong')
+            }
+          },
+          (err)=>{
+            this.toastr.error('Something went wrong')
+          }
+        )
+      }
+      
+    }else this.toastr.warning('Form Invalid!!')
+    
+
   }
 
   editReport(){

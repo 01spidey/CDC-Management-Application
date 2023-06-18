@@ -1,3 +1,4 @@
+import json
 from django.conf import settings
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
@@ -516,4 +517,84 @@ def update_drive(request):
                 }
             return JsonResponse(data)
      
+
+@csrf_exempt
+def add_report(request):
     
+    formData = json.loads(request.body)
+    print(formData)
+    # {'company': 'vsv', 'date': '2023-06-17T18:30:00.000Z', 'hr_name': 'sdvsdv', 'hr_mail': 'abc@gmail.com', 'message': 'svsdvs', 'mode': 'sdvsv', 'visibility': 'Public', 'reminder': False, 'reminder_date': ''}
+    
+    
+    try:
+        company = formData['company']
+        report_date = formData['date']
+        hr_name = formData['hr_name']
+        hr_mail = formData['hr_mail']
+        mode = formData['mode']
+        message = formData['message']
+        reminder_date = formData['reminder_date']
+        visibility = formData['visibility']
+        staff_id = formData['staff_id']
+        
+        date_obj = datetime.strptime(report_date, '%d-%m-%Y').date()
+        reminder_date_obj = datetime.strptime(reminder_date, '%d-%m-%Y').date()
+        
+        print(f'{company}\n{report_date}\n{hr_name}\n{hr_mail}\n{mode}\n{message}\n{reminder_date}\n{visibility}')
+        
+        report = Report(
+            date = date_obj,
+            placement_officer_id = staff_id,
+            company = company,
+            HR_name = hr_name,
+            HR_mail = hr_mail,
+            contact_mode = mode,
+            message = message,
+            reminder_date = reminder_date_obj,
+            visibility = visibility
+        )
+        
+        report.save()
+        
+        data = {
+            'success':True,
+            'message' : 'Report added Successfully!!'
+        }
+        
+        return JsonResponse(data)
+    
+    except Exception as e:
+        print(e)
+        data = {
+            'success':False,
+            'message' : 'Some Technical Error!!'
+        }
+        
+        return JsonResponse(data)
+    
+@csrf_exempt
+def delete_report(request):
+    
+    formData = request.POST
+    print(formData)
+    
+    data = {
+        'success':True,
+        'message' : 'Report deleted Successfully!!'
+    }
+    
+    return JsonResponse(data)
+
+@csrf_exempt
+def update_report(request):
+    
+    formData = request.POST
+    print(formData)
+    
+    data = {
+        'success':True,
+        'message' : 'Report updated Successfully!!'
+    }
+    
+    return JsonResponse(data)
+     

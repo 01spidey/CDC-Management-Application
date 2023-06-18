@@ -5,14 +5,14 @@ from django.utils.timezone import now
 
 class Report(models.Model):
     date = models.DateField(default=now, null=False)
-    placement_officer_id = models.ForeignKey('PlacementOfficer', to_field='staff_id', on_delete=models.CASCADE)
+    placement_officer_id = models.CharField(max_length=50, null=True)
     company = models.CharField(max_length=50, null=False)
     HR_name = models.CharField(max_length=50, null=False)
     HR_mail = models.EmailField(null=False)
     contact_mode = models.CharField(max_length=50, null=False)
     message = models.TextField(null=False)
     reminder_date = models.DateField(null=True, default=None)
-    visibility = models.DateField(null = True, default=None)
+    visibility = models.CharField(max_length=50, null=False, default='public')
     
     class Meta:
         ordering = ['-date']

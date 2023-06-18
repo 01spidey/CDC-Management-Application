@@ -15,4 +15,8 @@ urlpatterns = [
     path('delete_drive', views.delete_drive),
     path('get_drive_by_id', views.get_drive_by_id),
     path('update_drive', views.update_drive),   
+    path('add_report', views.add_report),
+    path('delete_report', views.delete_report),
+    path('update_report', views.update_report),
+    
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

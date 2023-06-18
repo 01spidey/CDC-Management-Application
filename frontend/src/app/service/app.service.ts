@@ -59,6 +59,10 @@ export class AppService {
     return this.http.post<serverResponse>(`${this.URL}/update_drive`, formData)
   }
 
+  addReport(data:object){
+    return this.http.post<serverResponse>(`${this.URL}/add_report`, data)
+  }
+
   // get_user(user_id: string, role: string) {
   //   let params = new HttpParams()
   //     .set('user_id', user_id)

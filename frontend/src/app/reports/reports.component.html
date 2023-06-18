@@ -9,8 +9,8 @@
         </div>
 
         <div class="title" *ngIf="section==2">
-            <h1>Add Drive</h1>
-            <hr id="line" style="width: 250px;">
+            <h1>{{action==='add'?'Add Report' : 'Edit Report'}}</h1>
+            <hr id="line" style="width: 270px;">
         </div>
 
         <div *ngIf="section==1 && role=='Officer'" class="add-drive" (click)="section=2">
@@ -19,7 +19,6 @@
             </span>
             <p>Add Report</p>
         </div>
-
     </div>
     
     <div class="filter-box" *ngIf="section==1">
@@ -87,4 +86,132 @@
             <button mat-raised-button>Apply</button>
         </div>
     </div>
+
+
+    <div class="add-report-box" *ngIf="section==2" [ngStyle]="visibility==='Private'? {'background-color' : '#35363a'} : {}">
+        <!-- [formGroup]="loginForm" (ngSubmit)="proceedLogin()" -->
+
+        <mat-slide-toggle class="vis-toggle" color="accent"
+        (click) = "visibility= visibility==='Public'?'Private' : 'Public'"
+        [ngStyle]="visibility==='Private'? {'background-color' : 'white'} : {'background-color' : '#35363a'}">
+        
+            <div class="toggle-txt" [ngStyle]="visibility==='Private'? {'color' : '#35363a'} : {'color' : 'white'}">
+                <span class="material-symbols-outlined" *ngIf="visibility==='Public'">
+                    lock_open
+                </span>
+    
+                <span class="material-symbols-outlined" *ngIf="visibility==='Private'">
+                    lock
+                </span>
+    
+                <p> {{visibility}} </p>
+            </div>
+            
+        </mat-slide-toggle>
+
+        <form [formGroup]="addReportForm" *ngIf="section==2" [ngStyle]="visibility==='Private'? {'color' : 'white'} : {}">
+
+            <!-- <div class="input">
+                <p>Visibility</p>
+                <mat-form-field>
+                    <mat-label>Visibility</mat-label>
+                    <mat-slide-toggle formControlName = 'visibility'>Slide me!</mat-slide-toggle>
+                </mat-form-field> 
+            </div> -->
+
+            <div class="section">
+                <div class="input">
+                    <p>Company</p>
+                    <mat-form-field class="input">
+                        <mat-label>e.g. AutoDesk</mat-label>
+                        <input matInput formControlName = "company">
+                    </mat-form-field>
+                </div>
+
+                <div class="input">
+                    <p>Contact Mode</p>
+                    <mat-form-field>
+                        <mat-label>e.g. Mail</mat-label>
+                        <input matInput formControlName = "mode">
+                    </mat-form-field>
+                </div>
+
+            </div>
+            
+            <div class="section">
+                <div class="input">
+                    <p>Date</p>
+                    <mat-form-field>
+                        <mat-label>Choose a date</mat-label>
+                        <input matInput [matDatepicker]="picker_1" formControlName = "date">
+                        <mat-datepicker-toggle matIconSuffix [for]="picker_1"></mat-datepicker-toggle>
+                        <mat-datepicker #picker_1></mat-datepicker>
+                      </mat-form-field>
+                </div> 
+
+                <div class="input">
+                    <div class="reminder-toggle">
+                      <p>Reminder</p>
+                      <mat-slide-toggle [(ngModel)]="reminder" [ngModelOptions]="{standalone: true}" name="reminderToggle"></mat-slide-toggle>
+                    </div>
+                    <mat-form-field>
+                      <mat-label>Choose a date</mat-label>
+                      <input matInput [matDatepicker]="picker_2" [disabled]='!reminder' 
+                      [(ngModel)]="reminder_date" [ngModelOptions]="{standalone: true}">
+                  
+                      <mat-datepicker-toggle matIconSuffix [for]="picker_2"></mat-datepicker-toggle>
+                      <mat-datepicker #picker_2></mat-datepicker>
+                    </mat-form-field>
+                </div>
+                  
+            </div>
+             
+
+            <!-- <div class="input">
+                <p>Company Website</p>
+                <mat-form-field>
+                    <mat-label>https://www.autodesk.com/careers</mat-label>
+                    <input type="url" matInput formControlName = "website">
+                </mat-form-field>
+            </div> -->
+            
+
+            <div class="section">
+                <div class="input">
+                    <p>HR Name</p>
+                    <mat-form-field>
+                        <mat-label>e.g. Tom H</mat-label>
+                        <input matInput formControlName = "hr_name">
+                    </mat-form-field> 
+                </div>
+    
+                <div class="input">
+                    <p>HR Mail</p>
+                    <mat-form-field>
+                        <mat-label>e.g. TomH@amazon.com*</mat-label>
+                        <input matInput formControlName = "hr_mail">
+                    </mat-form-field> 
+                </div>
+            </div>
+            
+
+            <div class="input">
+                <p>Message</p>
+                <mat-form-field>
+                    <mat-label>Write Your Message Here</mat-label>
+                    <textarea matInput formControlName="message"></textarea>
+                </mat-form-field> 
+            </div>
+                         
+
+            <div class="btns">
+              <button mat-raised-button id="reset" (click)="resetForm()">Reset</button>
+              <button mat-raised-button id="add" (click)="action==='add'?addReport() : editReport()">{{action==='add'?'Add Report' : 'Save Changes'}}</button>
+            </div>
+          
+        </form>
+
+    </div>
+
+
 </div>

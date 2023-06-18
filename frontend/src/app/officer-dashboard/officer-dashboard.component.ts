@@ -7,7 +7,7 @@ import { DataService } from '../service/data.service';
   styleUrls: ['./officer-dashboard.component.scss']
 })
 export class OfficerDashboardComponent {
-  cur_option = 'drive'
+  cur_option = 'reports'
   user_id = this.dataService.cur_user_data.name
 
   constructor(

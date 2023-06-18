@@ -7,7 +7,6 @@ class Report(models.Model):
     date = models.DateField(default=now, null=False)
     placement_officer_id = models.ForeignKey('PlacementOfficer', to_field='staff_id', on_delete=models.CASCADE)
     company = models.CharField(max_length=50, null=False)
-    website = models.URLField(null=False)
     HR_name = models.CharField(max_length=50, null=False)
     HR_mail = models.EmailField(null=False)
     contact_mode = models.CharField(max_length=50, null=False)

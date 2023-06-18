@@ -21,12 +21,12 @@ export interface Report {
     date: string,
     placement_officer_id: string,
     company: string,
-    website: string, 
     HR_name: string,
     HR_mail: string,
     contact_mode: string,
     message: string,
-    reminder_date: string
+    reminder_date: string,
+    visibility: string,
 }
 
 export interface drive{

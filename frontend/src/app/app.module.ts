@@ -21,6 +21,7 @@ import { LoginGuard } from './guard/login.guard';
 import { AuthGuard } from './guard/auth.guard';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+import { AgGridModule } from 'ag-grid-angular';
 
 @NgModule({
   declarations: [
@@ -46,7 +47,8 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
     CommonModule,
     MatTooltipModule,
     FormsModule,
-    MatSlideToggleModule
+    MatSlideToggleModule,
+    AgGridModule
   ],
   providers: [
     DatePipe,

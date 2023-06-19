@@ -37,5 +37,8 @@ urlpatterns = [
     path('add_report', include('app.urls')),
     path('delete_report', include('app.urls')),
     path('update_report', include('app.urls')),
+    path('get_reports', include('app.urls')),
+    
+    path('get_members', include('app.urls'))
     
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

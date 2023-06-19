@@ -13,7 +13,7 @@
             <hr id="line" style="width: 270px;">
         </div>
 
-        <div *ngIf="section==1 && role=='Officer'" class="add-drive" (click)="section=2">
+        <div *ngIf="section==1 && role=='Officer'" class="add-drive" (click)="changeSection(2)">
             <span class="material-symbols-outlined">
                 add_box
             </span>
@@ -23,44 +23,81 @@
     
     <div class="filter-box" *ngIf="section==1">
         <div class="container">
-            <div class="status-filter">
-                <a style="text-decoration: none;">
-                    <div class="status" [ngClass]="{'active-chip' : filter=='All', 'not-active-chip':filter!='All'}">
-                        <span class="material-symbols-outlined">
-                            done
-                        </span>
-                        <p>All</p>
+            <div class="filter-container">
+
+                <div class="temp-container">
+                    <p style="color:#35363a">Category</p>
+                    <div class="status-filter">
+                    
+                        <a style="text-decoration: none;">
+                            <div class="status" [ngClass]="{'active-chip-orange' : report_filter=='All', 'not-active-chip':report_filter!='All'}" (click)="changeFilter('report', 'All')">
+                                <span class="material-symbols-outlined">
+                                    done
+                                </span>
+                                <p>All Reports</p>
+                            </div>
+                        </a>
+                        
+                        <a style="text-decoration: none;">
+                            <div class="status" [ngClass]="{'active-chip-orange' : report_filter=='My', 'not-active-chip':report_filter!='My'}" (click)="changeFilter('report', 'My')">
+                                <span class="material-symbols-outlined">
+                                    done
+                                </span>
+                                <p>My Reports</p>
+                            </div>
+                        </a>
                     </div>
-                </a>
-                
+                </div>
+
+                <div class="temp-container">
+                    <p>Period</p>
+                    <div class="status-filter">
+                        
+                        <a style="text-decoration: none;">
+                            <div class="status" [ngClass]="{'active-chip-blue' : period_filter=='Today', 'not-active-chip':period_filter!='Today'}" (click)="changeFilter('period', 'Today')">
+                                <span class="material-symbols-outlined">
+                                    done
+                                </span>
+                                <p>Today</p>
+                            </div>
+                        </a>
+
+                        <a style="text-decoration: none;">
+                            <div class="status" [ngClass]="{'active-chip-blue' : period_filter=='Custom', 'not-active-chip':period_filter!='Custom'}" (click)="changeFilter('period', 'Custom')">
+                                <span class="material-symbols-outlined">
+                                    done
+                                </span>
+                                <p>Custom</p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="temp-container" *ngIf="report_filter==='My'">
+                    <p>Visibility</p>
+                    <div class="status-filter">
+                        <a style="text-decoration: none;">
+                            <div class="status" [ngClass]="{'active-chip-dark' : visibility==='Public', 'not-active-chip':visibility!='Public'}" (click)="changeFilter('vis', 'Public')">
+                                <span class="material-symbols-outlined">
+                                    done
+                                </span>
+                                <p>Public</p>
+                            </div>
+                        </a>
+                        
+                        <a style="text-decoration: none;">
+                            <div class="status" [ngClass]="{'active-chip-dark' : visibility==='Private', 'not-active-chip':visibility!=='Private'}" (click)="changeFilter('vis', 'Private')">
+                                <span class="material-symbols-outlined">
+                                    done
+                                </span>
+                                <p>Private</p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
     
-                <a style="text-decoration: none;">
-                    <div class="status" [ngClass]="{'active-chip' : filter=='Today', 'not-active-chip':filter!='Today'}">
-                        <span class="material-symbols-outlined">
-                            done
-                        </span>
-                        <p>Today</p>
-                    </div>
-                </a>
-                
-                <a style="text-decoration: none;">
-                    <div class="status" [ngClass]="{'active-chip' : filter=='Upcoming', 'not-active-chip':filter!='Upcoming'}">
-                        <span class="material-symbols-outlined">
-                            done
-                        </span>
-                        <p>Upcoming</p>    
-                    </div>
-                </a>
-    
-                <a style="text-decoration: none;">
-                    <div class="status" [ngClass]="{'active-chip' : filter=='Completed', 'not-active-chip':filter!='Completed'}">
-                        <span class="material-symbols-outlined">
-                            done
-                        </span>
-                        <p>Completed</p>    
-                    </div>
-                </a>
             </div>
+ 
             <a>
                 <span matTooltip="Refresh" class="material-symbols-outlined" id="refresh">
                     refresh
@@ -69,8 +106,7 @@
             
         </div>
         
-
-        <div class="date-filter" *ngIf="filter == 'All' || filter == 'Completed'">
+        <div class="date-filter" *ngIf="period_filter==='Custom'">
             
             <mat-form-field>
                 <mat-label>Filter By Date Range</mat-label>
@@ -83,13 +119,21 @@
                 <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
                 <mat-date-range-picker #picker></mat-date-range-picker>
             </mat-form-field>
-            <button mat-raised-button>Apply</button>
+            <button mat-raised-button (click)="applyFilter()">Apply</button>
         </div>
+    </div>
+
+    <div class="grid-container" *ngIf="section==1">
+        <ag-grid-angular
+            class="ag-theme-alpine"
+            style="width: 80%; height:500px"
+            [rowData]="row_data"
+            [columnDefs]="col_defs">
+        </ag-grid-angular>
     </div>
 
 
     <div class="add-report-box" *ngIf="section==2" [ngStyle]="visibility==='Private'? {'background-color' : '#35363a'} : {}">
-        <!-- [formGroup]="loginForm" (ngSubmit)="proceedLogin()" -->
 
         <mat-slide-toggle class="vis-toggle" color="accent"
         (click) = "visibility= visibility==='Public'?'Private' : 'Public'"
@@ -110,14 +154,6 @@
         </mat-slide-toggle>
 
         <form [formGroup]="addReportForm" *ngIf="section==2" [ngStyle]="visibility==='Private'? {'color' : 'white'} : {}">
-
-            <!-- <div class="input">
-                <p>Visibility</p>
-                <mat-form-field>
-                    <mat-label>Visibility</mat-label>
-                    <mat-slide-toggle formControlName = 'visibility'>Slide me!</mat-slide-toggle>
-                </mat-form-field> 
-            </div> -->
 
             <div class="section">
                 <div class="input">
@@ -165,16 +201,7 @@
                 </div>
                   
             </div>
-             
-
-            <!-- <div class="input">
-                <p>Company Website</p>
-                <mat-form-field>
-                    <mat-label>https://www.autodesk.com/careers</mat-label>
-                    <input type="url" matInput formControlName = "website">
-                </mat-form-field>
-            </div> -->
-            
+        
 
             <div class="section">
                 <div class="input">
@@ -194,13 +221,36 @@
                 </div>
             </div>
             
-
             <div class="input">
                 <p>Message</p>
                 <mat-form-field>
                     <mat-label>Write Your Message Here</mat-label>
                     <textarea matInput formControlName="message"></textarea>
                 </mat-form-field> 
+            </div>
+
+            <div class="input" *ngIf="visibility==='Private'">
+                <p>Visible To</p>
+                <mat-form-field class="example-chip-list">
+                    <mat-label>Add Members</mat-label>
+                    <mat-chip-grid #chipGrid aria-label="Enter members">
+                      <mat-chip-row *ngFor="let member of member_lst"
+                                    (removed)="remove(member)"
+                                    [editable]="true"
+                                    (edited)="edit(member, $event)"
+                                    [aria-description]="'press enter to edit ' + member">
+                        {{member}}
+                        <button matChipRemove [attr.aria-label]="'remove ' + member">
+                          <mat-icon>cancel</mat-icon>
+                        </button>
+                      </mat-chip-row>
+                      <input placeholder="New Member..."
+                             [matChipInputFor]="chipGrid"
+                             [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                             [matChipInputAddOnBlur]="addOnBlur"
+                             (matChipInputTokenEnd)="add($event)"/>
+                    </mat-chip-grid>
+                  </mat-form-field>
             </div>
                          
 

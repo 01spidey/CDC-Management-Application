@@ -1,4 +1,3 @@
-
 export interface serverResponse{
     success : boolean,
     message : string
@@ -65,3 +64,20 @@ export interface loginResponse{
     user_data : user
 }
   
+export interface filterOptions{
+    category : string,
+    period : string,
+    startDate : string,
+    endDate : string,
+    visbility : string
+}
+
+export interface getReportsResponse{
+    success : boolean,
+    reports : Report[]
+}
+
+export interface getMembersResponse{
+    success : boolean,
+    members : string[]
+}

@@ -1,3 +1,4 @@
+
 *{
     margin: 0;
     padding: 0;
@@ -43,7 +44,7 @@
         border-radius: 5px;
         margin-right: 50px;
         color: white;
-        background-color: #e5383b;
+        background-color: #35363a;
         margin-top: 10px;
         font-weight: 500;
 
@@ -71,14 +72,72 @@
         margin-left: 40px;
         margin-right: 40px;
 
-
         .container{
-            
             display: flex;
             align-items: center;
             justify-content: space-between;
             // background-color: #152b51;
             // width: 100%;
+            
+            .filter-container{
+                display: flex;
+                align-items: center;
+                justify-content: flex-start;
+                border-radius: 5px;
+                gap: 15px;
+
+                .temp-container{
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: flex-start;
+                    padding: 10px;
+                    gap: 5px;
+                    border: 1px solid #35363a;
+                    border-radius: 5px;
+
+                    p{
+                        font-family: 'Poppins';
+                        font-weight: 500;
+                        font-size: 1rem;
+                    }
+
+                    .status-filter{
+                        display: flex;
+                        gap: 15px;
+                        flex: 1;
+                        
+                        .status{
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            gap: 5px;
+                            padding: 3px 7px;
+                            // height: 20px;
+                            border-radius: 5px;
+                            font-family: 'Nunito';
+                            cursor: pointer;
+                            transition: 0.2s ease;
+
+                            p{
+                                font-family: 'Nunito';
+                            }
+            
+                            &:hover{
+                                opacity: 0.9;
+                            }
+            
+                            &:active{
+                                transform: scale(0.9);
+                                // transition: none;
+                            }
+            
+                            span{
+                                font-size: 1rem;
+                            }
+                        }
+                    }
+                }
+            }
 
             #refresh{
                 background-color:#198754;
@@ -97,37 +156,7 @@
                 }
             }
 
-            .status-filter{
-                display: flex;
-                gap: 15px;
-                
-    
-                .status{
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    gap: 5px;
-                    // background-color: #d8e5e5;
-                    padding: 3px 7px;
-                    border-radius: 5px;
-                    font-family: 'Nunito';
-                    cursor: pointer;
-                    transition: 0.2s ease;
-    
-                    &:hover{
-                        opacity: 0.9;
-                    }
-    
-                    &:active{
-                        transform: scale(0.9);
-                        // transition: none;
-                    }
-    
-                    span{
-                        font-size: 1rem;
-                    }
-                }
-            }
+            
         }
         
         
@@ -256,29 +285,41 @@
         left: 40px;
         cursor: pointer;
     }
+
+    .grid-container{
+        margin-top: 2%;
+        width: 90%;
+        // background-color: #198754;
+        height: fit-content;
+        display: flex;
+        justify-content: center;
+        // background-color: #198754;
+        // height: 100px;
+        margin-left: 40px;
+    }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 .not-active-chip{
     border: 1px solid rgb(104, 102, 102);
     color: rgb(104, 102, 102) ;
 }
-.active-chip{
+.active-chip-orange{
     border: 1px solid #ea4034;
     color: white;
     background-color: #ea4034;
 }
+
+.active-chip-blue{
+    border: 1px solid #1a6486;
+    color: white;
+    background-color: #1a6486;
+}
+
+.active-chip-dark{
+    border: 1px solid #35363a;
+    color: white;
+    background-color: #35363a;
+}
+
+

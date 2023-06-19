@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http'
-import { driveByIdResponse, driveByStatusResponse, loadMembersResponse, loginResponse, openMemberResponse, serverResponse } from '../models/model';
+import { driveByIdResponse, driveByStatusResponse, filterOptions, getMembersResponse, getReportsResponse, loadMembersResponse, loginResponse, openMemberResponse, serverResponse } from '../models/model';
 
 @Injectable({
   providedIn: 'root'
@@ -61,6 +61,14 @@ export class AppService {
 
   addReport(data:object){
     return this.http.post<serverResponse>(`${this.URL}/add_report`, data)
+  }
+
+  applyFilter(data:filterOptions){
+    return this.http.post<getReportsResponse>(`${this.URL}/get_reports`, data)
+  }
+
+  getAllMembers(){
+    return this.http.get<getMembersResponse>(`${this.URL}/get_members`)
   }
 
   // get_user(user_id: string, role: string) {

@@ -1,5 +1,7 @@
 from django.db import models
 from django.utils.timezone import now
+from django.contrib.postgres.fields import ArrayField
+
 
 # Create your models here.
 
@@ -13,6 +15,7 @@ class Report(models.Model):
     message = models.TextField(null=False)
     reminder_date = models.DateField(null=True, default=None)
     visibility = models.CharField(max_length=50, null=False, default='public')
+    visible_to = ArrayField(models.CharField(max_length=100), blank=True, null=True)
     
     class Meta:
         ordering = ['-date']

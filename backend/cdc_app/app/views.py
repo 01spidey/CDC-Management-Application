@@ -536,11 +536,12 @@ def add_report(request):
         reminder_date = formData['reminder_date']
         visibility = formData['visibility']
         staff_id = formData['staff_id']
+        visible_to = formData['visible_to']
         
         date_obj = datetime.strptime(report_date, '%d-%m-%Y').date()
-        reminder_date_obj = datetime.strptime(reminder_date, '%d-%m-%Y').date()
+        reminder_date_obj = None if reminder_date=='' else datetime.strptime(reminder_date, '%d-%m-%Y').date()
         
-        print(f'{company}\n{report_date}\n{hr_name}\n{hr_mail}\n{mode}\n{message}\n{reminder_date}\n{visibility}')
+        # print(f'{company}\n{report_date}\n{hr_name}\n{hr_mail}\n{mode}\n{message}\n{reminder_date}\n{visibility}\n{visible_to}')
         
         report = Report(
             date = date_obj,
@@ -551,9 +552,9 @@ def add_report(request):
             contact_mode = mode,
             message = message,
             reminder_date = reminder_date_obj,
-            visibility = visibility
+            visibility = visibility,
+            visible_to = visible_to
         )
-        
         report.save()
         
         data = {
@@ -597,4 +598,28 @@ def update_report(request):
     }
     
     return JsonResponse(data)
-     
+  
+@csrf_exempt
+def get_reports(request):
+    
+    reports = []
+    filter_options = json.loads(request.body)
+    print(filter_options)
+    
+    data = {
+        'success' : True,
+        'reports' : reports
+    }   
+    
+    return JsonResponse(data)
+
+@csrf_exempt
+def get_members(request):
+    staff_ids = PlacementOfficer.objects.values_list('staff_id', flat=True).distinct()
+
+    data = {
+        'success': True,
+        'members': list(staff_ids)
+    }
+    
+    return JsonResponse(data)

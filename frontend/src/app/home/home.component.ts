@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { AppService } from '../service/app.service';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
-import { DataService } from '../service/data.service';
 
 
 @Component({
@@ -16,24 +15,18 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
     sessionStorage.clear()
-    sessionStorage.setItem('user', 'null')
-    sessionStorage.setItem('role', 'null')
-
-    this.dataService.user_role = 'null'
-    this.dataService.user_id = 'null'
-
+    sessionStorage.setItem('user_id', 'null')
+    sessionStorage.setItem('user_role', 'null')
   }
   constructor(
     private service:AppService,
-    private dataService:DataService,
     private toastr:ToastrService,
     private router:Router){
 
   }
 
   loginAs(role:string){
-    sessionStorage.setItem('role',role);
-    this.dataService.user_role = role
+    sessionStorage.setItem('user_role',role);
     this.router.navigate(['login'])
   }
 

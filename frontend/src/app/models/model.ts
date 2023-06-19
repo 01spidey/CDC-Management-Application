@@ -17,15 +17,17 @@ export interface user{
 }
 
 export interface Report {
+    position : number
+    pk : number,
     date: string,
-    placement_officer_id: string,
+    staff_id: string,
     company: string,
     HR_name: string,
     HR_mail: string,
     contact_mode: string,
     message: string,
     reminder_date: string,
-    visibility: string,
+    visibility: string
 }
 
 export interface drive{
@@ -69,7 +71,8 @@ export interface filterOptions{
     period : string,
     startDate : string,
     endDate : string,
-    visbility : string
+    visibility : string,
+    staff_id : string
 }
 
 export interface getReportsResponse{

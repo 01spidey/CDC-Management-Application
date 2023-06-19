@@ -1,4 +1,11 @@
 
+.ag-theme-alpine {
+    // --ag-grid-size: 10px;
+    --ag-list-item-height: 10px;
+    // --ag-row-height : 50px;
+}
+
+
 *{
     margin: 0;
     padding: 0;
@@ -289,13 +296,14 @@
     .grid-container{
         margin-top: 2%;
         width: 90%;
-        // background-color: #198754;
+        padding: 4px;
+        // background-color:#152b51;
         height: fit-content;
-        display: flex;
-        justify-content: center;
+        align-self: center;
+        border-radius: 5px;
         // background-color: #198754;
         // height: 100px;
-        margin-left: 40px;
+        // margin-left: 40px;
     }
 }
 

@@ -5,16 +5,16 @@ import { user } from '../models/model';
   providedIn: 'root'
 })
 export class DataService {
-  user_role = "null"
-  user_id = "null"
+  // user_role = "null"
+  // user_id = "null"
 
-  cur_user_data:user = {
-    user_id: '',
-    name : '',
-    mail : '',
-    phone : '',
-    staff_id : ''
-  }
+  // cur_user_data:user = {
+  //   user_id: '',
+  //   name : '',
+  //   mail : '',
+  //   phone : '',
+  //   staff_id : ''
+  // }
 
   constructor() { }
 }

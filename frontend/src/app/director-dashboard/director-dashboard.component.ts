@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { user } from '../models/model';
-import { DataService } from '../service/data.service';
 
 @Component({
   selector: 'app-director-dashboard',
@@ -10,11 +9,10 @@ import { DataService } from '../service/data.service';
 export class DirectorDashboardComponent {
   
   cur_option = 'team'
-  user_id = this.dataService.cur_user_data.name
+  userData = JSON.parse(sessionStorage.getItem('cur_user_data')!);
+  user_id = this.userData.name
 
-  constructor(
-    private dataService : DataService
-  ){
+  constructor(){
 
   }
 

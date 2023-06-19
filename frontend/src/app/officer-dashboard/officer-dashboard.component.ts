@@ -8,7 +8,9 @@ import { DataService } from '../service/data.service';
 })
 export class OfficerDashboardComponent {
   cur_option = 'reports'
-  user_id = this.dataService.cur_user_data.name
+  userData = JSON.parse(sessionStorage.getItem('cur_user_data')!);
+
+  user_id = this.userData.name
 
   constructor(
     private dataService : DataService

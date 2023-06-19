@@ -4,7 +4,6 @@ import { AppService } from '../service/app.service';
 import { FormBuilder, Validators } from '@angular/forms';
 import { DatePipe, formatDate } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
-import { DataService } from '../service/data.service';
 
 @Component({
   selector: 'app-drive',
@@ -14,8 +13,9 @@ import { DataService } from '../service/data.service';
 export class DriveComponent implements OnInit {
 
   section = 1  
-  role:string = this.dataService.user_role
-  cur_user_id:string = this.dataService.cur_user_data.user_id
+  role = sessionStorage.getItem('user_role')!
+  userData = JSON.parse(sessionStorage.getItem('cur_user_data')!);
+  cur_user_id:string = this.userData.user_id
 
   drive_lst:drive[] = []
   selectedFile: File | null = null;
@@ -47,7 +47,6 @@ export class DriveComponent implements OnInit {
 
   constructor(
     private service : AppService,
-    private dataService : DataService,
     private builder : FormBuilder,
     private datePipe : DatePipe,
     private toastr:ToastrService
@@ -135,7 +134,7 @@ export class DriveComponent implements OnInit {
       formData.append('hr_mail',this.addDriveForm.value.hr_mail!)
       formData.append('description',this.addDriveForm.value.description!)
       formData.append('eligible_lst',this.selectedFile!)
-      formData.append('staff_id',this.dataService.cur_user_data.staff_id)
+      formData.append('staff_id',this.userData.staff_id)
       formData.append('mode',this.addDriveForm.value.mode!)
       
       console.log(formattedDate)
@@ -201,7 +200,7 @@ export class DriveComponent implements OnInit {
     formData.append('hr_mail',this.addDriveForm.value.hr_mail!)
     formData.append('description',this.addDriveForm.value.description!)
     formData.append('eligible_lst',this.selectedFile!)
-    formData.append('staff_id',this.dataService.cur_user_data.staff_id)
+    formData.append('staff_id',this.userData.staff_id)
     formData.append('mode',this.addDriveForm.value.mode!)
 
     formData.append('drive_id',this.edit_drive_id.toString())

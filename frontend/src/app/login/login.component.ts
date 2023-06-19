@@ -4,7 +4,6 @@ import { ToastrService } from 'ngx-toastr';
 import { AppService } from '../service/app.service';
 import {  loginResponse, serverResponse } from '../models/model';
 import { Router } from '@angular/router';
-import { DataService } from '../service/data.service';
 
 
 @Component({
@@ -22,14 +21,13 @@ export class LoginComponent implements OnInit{
   })
 
   ngOnInit(): void {
-      this.role = this.dataService.user_role
+      this.role = sessionStorage.getItem('user_role')!
   }
 
   constructor(
     private builder:FormBuilder, 
     private toastr:ToastrService,
     private service:AppService,
-    private dataService:DataService,
     private router:Router
   ){
 
@@ -41,17 +39,15 @@ export class LoginComponent implements OnInit{
     if(this.loginForm.valid){
       formData.append('user_id', this.loginForm.value.user_id!)
       formData.append('pass', this.loginForm.value.password!)
-      formData.append('role', this.role)
+      formData.append('user_role', this.role)
       
       this.service.login(formData).subscribe(
         (res:loginResponse)=>{
           if(res.success){
             this.toastr.success(res.message)
-            this.dataService.user_id = this.loginForm.value.user_id!
-            this.dataService.cur_user_data = res.user_data
+            sessionStorage.setItem('user_id', this.loginForm.value.user_id!)
+            sessionStorage.setItem('cur_user_data', JSON.stringify(res.user_data))
             
-            console.log(this.dataService.cur_user_data)
-
             if(this.role=='Director'){
               this.router.navigate(['director'])
             }else{

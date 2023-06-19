@@ -7,6 +7,7 @@ from .models import PlacementDirector,PlacementOfficer,Report, Drive
 from datetime import datetime, date, timedelta
 from django.core.files.storage import FileSystemStorage
 from django.contrib.sites.shortcuts import get_current_site
+from django.db.models import Q
 
 # from models import PlacementDirector
 
@@ -23,7 +24,7 @@ def test(request):
 def login(request):
     user_id = request.POST['user_id']
     password = request.POST['pass']
-    role = request.POST['role']
+    role = request.POST['user_role']
     
     success = True
     
@@ -604,8 +605,75 @@ def get_reports(request):
     
     reports = []
     filter_options = json.loads(request.body)
-    print(filter_options)
+    category = filter_options['category']
+    period = filter_options['period']
+    startDate = filter_options['startDate']
+    endDate = filter_options['endDate']
+    visibility = filter_options['visibility']
+    staff_id = filter_options['staff_id']
+
+    report_lst = Report.objects.all()
     
+    print(category, period, startDate, endDate, visibility, staff_id)
+    
+
+    if category == 'All':
+        if period == 'Today':
+            print(date.today())
+            # Filter for today's reports with visibility for all
+            report_lst = report_lst.filter(
+                Q(date=date.today(), visible_to__contains=[staff_id]) | 
+                Q(date=date.today(), visibility='Public') |
+                Q(date=date.today(), placement_officer_id=staff_id)
+            )
+            
+            print(report_lst)
+        else:
+            print(startDate, endDate)
+            # Filter based on start date and end date with visibility for all
+            report_lst = report_lst.filter(
+                Q(date__range=[startDate, endDate], visible_to__contains=[staff_id]) |
+                Q(date__range=[startDate, endDate], visibility='Public') |
+                Q(date__range=[startDate, endDate], placement_officer_id=staff_id)
+            )
+
+    elif category == 'My':
+        if period == 'Today':
+            if visibility == 'Public':
+                # Filter for today's reports with visibility as public and for the specific staff_id
+                report_lst = report_lst.filter(date=date.today(), visibility='Public', placement_officer_id=staff_id)
+            elif visibility == 'Private':
+                # Filter for today's reports with visibility as private and for the specific staff_id
+                report_lst = report_lst.filter(date=date.today(), visibility='Private', placement_officer_id=staff_id)
+        else:
+            if visibility == 'Public':
+                # Filter based on start date, end date, visibility as public, and for the specific staff_id
+                report_lst = report_lst.filter(date__range=[startDate, endDate], visibility='Public', placement_officer_id=staff_id)
+            elif visibility == 'Private':
+                # Filter based on start date, end date, visibility as private, and for the specific staff_id
+                report_lst = report_lst.filter(date__range=[startDate, endDate], visibility='Private', placement_officer_id=staff_id)
+    
+    # reports_temp = list(report_lst)
+    # print(reports_temp)
+    a=1
+    for report in report_lst:
+        reports.append({
+            'position' : a,
+            'pk' : report.pk,
+            'date': report.date,
+            'staff_id': report.placement_officer_id,
+            'company': report.company,
+            'HR_name': report.HR_name,
+            'HR_mail': report.HR_mail,
+            'contact_mode': report.contact_mode,
+            'message': report.message,
+            'reminder_date': report.reminder_date,
+            'visibility': report.visibility
+        })
+        a+=1
+    
+    # report_lst = report_lst.values('pk', 'date', 'placement_officer_id', 'company', 'HR_name', 'HR_mail', 'contact_mode', 'message', 'reminder_date', 'visibility')
+
     data = {
         'success' : True,
         'reports' : reports

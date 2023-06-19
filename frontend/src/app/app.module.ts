@@ -22,6 +22,7 @@ import { AuthGuard } from './guard/auth.guard';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import { AgGridModule } from 'ag-grid-angular';
+// import {Mo} from 'ag-grid-enterprise'
 
 @NgModule({
   declarations: [
@@ -48,7 +49,7 @@ import { AgGridModule } from 'ag-grid-angular';
     MatTooltipModule,
     FormsModule,
     MatSlideToggleModule,
-    AgGridModule
+    AgGridModule,
   ],
   providers: [
     DatePipe,

@@ -1,28 +1,34 @@
-import { Component, OnInit, ViewChild, inject, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChild, inject, AfterViewInit, Pipe, PipeTransform } from '@angular/core';
 import { DataService } from '../service/data.service';
 import { ToastrService } from 'ngx-toastr';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { AppService } from '../service/app.service';
 import { DatePipe, formatDate } from '@angular/common';
 import { filterOptions, getMembersResponse, getReportsResponse, serverResponse, Report, reportByIdResponse } from '../models/model';
-import { ColDef, GridApi, GridReadyEvent } from 'ag-grid-community';
+import { ColDef, GridApi, GridReadyEvent, GridOptions } from 'ag-grid-community';
+
+import {EditButtonComponent} from '../buttonRenders/edit-button/edit-button.component'
+// import{DeleteButtonRenderer} from '../buttonRenders/DeleteButtonRenderer.component'
 
 import 'ag-grid-enterprise';
 
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import {MatChipEditedEvent, MatChipInputEvent, MatChipsModule} from '@angular/material/chips';
+import { DeleteButtonComponent } from '../buttonRenders/delete-button/delete-button.component';
 
 
 export interface Member {
   name: string;
 }
 
+
 @Component({
   selector: 'app-reports',
   templateUrl: './reports.component.html',
-  styleUrls: ['./reports.component.scss']
+  styleUrls: ['./reports.component.scss'], 
 })
+
 export class ReportsComponent implements OnInit{
 
   addOnBlur = true;
@@ -36,7 +42,8 @@ export class ReportsComponent implements OnInit{
 
   role = sessionStorage.getItem('user_role')!
   userData = JSON.parse(sessionStorage.getItem('cur_user_data')!);
-  
+ 
+  searchText!: string;
   period_filter  = 'Today'
   report_filter = 'All'
   visibility = 'All'
@@ -62,43 +69,48 @@ export class ReportsComponent implements OnInit{
   row_data:any[] = []
 
   col_defs : ColDef[] = [
-    {field : 'date',
-    filter: 'agDateColumnFilter'},
+    {field : 'company'},
+
+    {field : 'date', filter: 'agDateColumnFilter'},
 
     {field : 'staff_id'},
 
-    {field : 'company'},
-    
     {field : 'HR_name'},
     
     {field : 'HR_mail'},
-    
-    {field : 'message'},
 
     {field : 'contact_mode'},
+
+    {field : 'message'},
     
     {
       headerName: 'Edit',
-      cellRenderer: 'editButtonRenderer',
+      cellRenderer: EditButtonComponent,
+      cellRendererParams: {
+        staff_id: this.userData.staff_id,
+      },
       width: 100,
     },
     {
       headerName: 'Delete',
-      cellRenderer: 'deleteButtonRenderer',
+      cellRenderer: DeleteButtonComponent,
+      cellRendererParams: {
+        staff_id: this.userData.staff_id,
+      },
       width: 100,
     }
   ]
 
   defaultColDef: ColDef = {
-    editable: true,
     sortable: true,
-    // filter: 'agTextColumnFilter',
     cellStyle: { 'font-size': '15px','font-family':'Nunito', 'white-space': 'normal' },
     filter: 'agSetColumnFilter',
     menuTabs: ['filterMenuTab'],
     resizable: true,
     minWidth: 130,
-    autoHeight: true
+    autoHeight: true,
+    // enableRowGroup: true,
+    // rowGroup: true,
   };
 
   gridOptions = {
@@ -398,8 +410,19 @@ export class ReportsComponent implements OnInit{
     this.applyFilter()
   }
 
-  onBtnExport(){
-    this.gridApi.exportDataAsCsv();
+  onBtnExport() {
+    const params = {
+      skipHeader: false,
+      skipFooters: true,
+      skipGroups: true,
+      skipFloatingTop: true,
+      skipFloatingBottom: true,
+      allColumns: false,
+      onlySelected: false,
+      columnKeys: ['company', 'date', 'staff_id', 'HR_name', 'HR_mail', 'contact_mode', 'message']
+    };
+  
+    this.gridApi.exportDataAsCsv(params);
   }
 
   onGridReady(params: GridReadyEvent) {

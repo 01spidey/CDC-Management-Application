@@ -22,6 +22,8 @@ import { AuthGuard } from './guard/auth.guard';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import { AgGridModule } from 'ag-grid-angular';
+import { EditButtonComponent } from './buttonRenders/edit-button/edit-button.component';
+import { DeleteButtonComponent } from './buttonRenders/delete-button/delete-button.component';
 // import {Mo} from 'ag-grid-enterprise'
 
 @NgModule({
@@ -35,7 +37,9 @@ import { AgGridModule } from 'ag-grid-angular';
     DriveComponent,
     ProfileComponent,
     AddMemberComponent,
-    ReportsComponent
+    ReportsComponent,
+    EditButtonComponent,
+    DeleteButtonComponent
   ],
   imports: [
     BrowserModule,

@@ -1,0 +1,12 @@
+span{
+    cursor: pointer;
+    transition: 0.2s ease;
+    color: #aaa;
+    &:hover{
+        transform: scale(1.2);
+        color: black;
+    }
+}
+div{
+    padding: 5px;
+}

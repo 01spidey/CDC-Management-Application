@@ -128,20 +128,26 @@
         <p>No Data Found...</p>
     </div>
 
-    <div class="grid-container" *ngIf="section==1">
-        <!-- <button (click)="onBtnExport()">Download CSV export file</button> -->
 
-        <!-- <ag-grid-angular
+    <div class="grid-container" *ngIf="section==1">
+        <button id="csv-export" (click)="onBtnExport()">
+            <span class="material-symbols-outlined">
+                download
+            </span>
+            Export as CSV
+        </button>
+        <ag-grid-angular
+            style="width: 100%; height: 500px;"
             class="ag-theme-alpine"
-            style="width: 100%; height:500px;"
             [rowData]="row_data"
             [columnDefs]="col_defs"
-            [gridOptions]="gridOptions"
             [defaultColDef]="defaultColDef"
-            (gridReady)="onGridReady($event)">
-        </ag-grid-angular> -->
+            [enableRangeSelection]="true"
+            (gridReady)="onGridReady($event)"
+            ></ag-grid-angular>
 
-        <table *ngIf="section==1 && row_data.length>0">
+        
+        <!-- <table *ngIf="section==1 && row_data.length>0">
             <tr>
                 <th>Position</th>
                 <th>Date</th>
@@ -175,61 +181,9 @@
                     </span>
                 </td>
             </tr>
-        </table>
+        </table> -->
     </div>
 
-
-    <!-- <div class="grid-container" *ngIf="section==1">
-        <div class="mat-elevation-z8">
-            <table mat-table [dataSource]="dataSource">
-          
-              <ng-container matColumnDef="position">
-                <th mat-header-cell *matHeaderCellDef> No. </th>
-                <td mat-cell *matCellDef="let report"> {{report.position}} </td>
-              </ng-container>
-
-              <ng-container matColumnDef="date">
-                <th mat-header-cell *matHeaderCellDef> Date </th>
-                <td mat-cell *matCellDef="let report"> {{report.date}} </td>
-              </ng-container>
-          
-              <ng-container matColumnDef="placement_officer_id">
-                <th mat-header-cell *matHeaderCellDef> Placement Officer ID </th>
-                <td mat-cell *matCellDef="let report"> {{report.placement_officer_id}} </td>
-              </ng-container>
-          
-              
-              <ng-container matColumnDef="panel">
-                <th mat-header-cell *matHeaderCellDef> Report </th>
-                <td mat-cell *matCellDef="let report">
-                    
-                </td>
-              </ng-container>
-
-              <ng-container matColumnDef="edit">
-                <th mat-header-cell *matHeaderCellDef> Edit </th>
-                <td mat-cell *matCellDef="let report">
-                    
-                </td>
-              </ng-container>
-
-              <ng-container matColumnDef="delete">
-                <th mat-header-cell *matHeaderCellDef> Delete </th>
-                <td mat-cell *matCellDef="let report">
-                    
-                </td>
-              </ng-container>
-          
-              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-            </table>
-          
-            <mat-paginator [pageSizeOptions]="[5, 10]"
-                           showFirstLastButtons>
-            </mat-paginator>
-          </div>
-          
-    </div> -->
 
 
     <div class="add-report-box" *ngIf="section==2" [ngStyle]="vis_toggle==='Private'? {'background-color' : '#35363a'} : {}">

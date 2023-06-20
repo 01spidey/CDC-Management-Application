@@ -18,6 +18,26 @@
     padding-bottom: 5%;
     position: relative;
 
+    .no-data{
+        // background-color: #152b51;
+        width: 80%;
+        height: 60vh;
+        align-self: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+
+        img{
+            height: 70%;
+        }
+
+        p{
+            font-family: 'Poppins';
+            font-size: 20px;
+        }
+    }
+
     .title{
         margin-top: 30px;
         margin-left: 40px;
@@ -295,15 +315,50 @@
 
     .grid-container{
         margin-top: 2%;
-        width: 90%;
+        width: 80%;
         padding: 4px;
-        // background-color:#152b51;
         height: fit-content;
         align-self: center;
         border-radius: 5px;
-        // background-color: #198754;
-        // height: 100px;
-        // margin-left: 40px;
+        display: flex;
+        justify-content: center;
+
+        table{
+            border: 1px solid #35363a;
+            border-collapse: collapse;
+            border-radius: 5px;
+            // width: 80%;
+
+            
+
+            th{
+                font-family: 'Poppins';
+                font-weight: 500;
+                padding: 10px;
+                border: 1px solid #35363a;
+                background-color: #1a6486;
+                color: white;
+            }
+            td{
+                font-family: 'Nunito';
+                padding: 10px;
+                border: 1px solid;
+                white-space: nowrap;
+                text-align: center;
+            }
+            .edit,.delete{
+                padding: 0px 15px;
+                cursor: pointer;
+                transition: 0.3s ease;
+            }
+
+            .edit:hover{
+                transform: scale(1.3);
+            }
+            .delete:hover{
+                transform: scale(1.3);
+            }
+        }
     }
 }
 
@@ -330,4 +385,18 @@
     background-color: #35363a;
 }
 
+.normal-cell{
+    background-color: white;
+    border-color: #35363a;
+}
+.dark-cell{ 
+    background-color: #35363a;
+    border-color: white;
+    color: white;
+}
+
+.inactive-tool{
+    pointer-events: none;
+    opacity: 0;
+}
 

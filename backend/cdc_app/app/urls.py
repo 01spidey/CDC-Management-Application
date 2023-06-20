@@ -19,6 +19,7 @@ urlpatterns = [
     path('delete_report', views.delete_report),
     path('update_report', views.update_report),
     path('get_reports', views.get_reports),
-    path('get_members', views.get_members)
+    path('get_members', views.get_members),
+    path('get_report_by_id', views.get_report_by_id),
     
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

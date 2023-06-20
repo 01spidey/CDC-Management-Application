@@ -55,6 +55,22 @@ export interface driveByIdResponse{
     drive : drive
 }
 
+export interface reportByIdResponse{
+    success : boolean,
+    report : {
+        date: string,
+        staff_id: string,
+        company: string,
+        HR_name: string,
+        HR_mail: string,
+        contact_mode: string,
+        message: string,
+        reminder_date: string,
+        visibility: string,
+        visible_to : string[]
+    }
+}
+
 export interface openMemberResponse{
     success : boolean,
     report_lst : Report[]

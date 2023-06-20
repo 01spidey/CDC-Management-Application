@@ -4,7 +4,7 @@ import { ToastrService } from 'ngx-toastr';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { AppService } from '../service/app.service';
 import { DatePipe, formatDate } from '@angular/common';
-import { filterOptions, getMembersResponse, getReportsResponse, serverResponse, Report } from '../models/model';
+import { filterOptions, getMembersResponse, getReportsResponse, serverResponse, Report, reportByIdResponse } from '../models/model';
 import { ColDef, GridApi, GridReadyEvent } from 'ag-grid-community';
 
 import 'ag-grid-enterprise';
@@ -39,15 +39,19 @@ export class ReportsComponent implements OnInit{
   
   period_filter  = 'Today'
   report_filter = 'All'
-  visibility = 'Public'
+  visibility = 'All'
+  vis_toggle = 'Public'
+  vis_toggle_data = false
   
   startDate = ''
   endDate = ''
   today = new Date();
   threeMonthsAgo = new Date(this.today.getFullYear(), this.today.getMonth() - 3, this.today.getDate());
   action = 'add'
+  pkey = 0
 
   reminder = false
+  // rem_toggle = false
   reminder_date = ''
   date_control = new FormControl()
 
@@ -179,7 +183,7 @@ export class ReportsComponent implements OnInit{
 
   changeSection(section:number){
     this.section = section
-    this.visibility = 'Public'
+    this.vis_toggle = 'Public'
     this.service.getAllMembers().subscribe(
       (res:getMembersResponse)=>{
         if(res.success){
@@ -215,10 +219,10 @@ export class ReportsComponent implements OnInit{
           hr_mail:this.addReportForm.value.hr_mail,
           message:this.addReportForm.value.message,
           mode : this.addReportForm.value.mode,
-          visibility : this.visibility,
+          visibility : this.vis_toggle,
           reminder_date : formattedReminderDate,
           staff_id : this.userData.user_id,
-          visible_to : this.member_lst
+          visible_to : this.member_lst,
         }
 
         console.log(data)
@@ -228,7 +232,7 @@ export class ReportsComponent implements OnInit{
         this.service.addReport(data).subscribe(
           (res:serverResponse)=>{
             if(res.success){
-              this.toastr.success('Report added successfully')
+              this.toastr.success(res.message)
               this.reminder = false
             }else{
               this.toastr.warning('Something went wrong')
@@ -245,15 +249,99 @@ export class ReportsComponent implements OnInit{
 
   }
 
-  editReport(){
+  editReport(pk : number){
+    this.section = 2
+    this.vis_toggle = 'Public'
+    this.action = 'edit'
+    this.pkey = pk
+    this.service.getReportById(pk).subscribe(
+      (res:reportByIdResponse)=>{
+        if(res.success){
+          let report = res.report
+          this.addReportForm.patchValue({
+            'date' : report.date,
+            'company' : report.company,
+            'hr_name' : report.HR_name,
+            'hr_mail' : report.HR_mail,
+            'mode' : report.contact_mode,
+            'message' : report.message,
+          })
+          this.vis_toggle = report.visibility
+          this.reminder_date = report.reminder_date
+          this.reminder = this.reminder_date.length>0?true:false
+          this.vis_toggle_data = report.visibility==='Public'?false:true
+          this.member_lst = report.visible_to
+
+        }else{
+          this.toastr.error('Some Technical Error!!')
+        }
+        
+      },
+      err=>{ this.toastr.error('Server Not Responding!!') }
+    )
+
 
   }
 
-  deleteReport(){
+  updateReport(){
+    const formattedDate = this.datePipe.transform(this.addReportForm.value.date!, 'dd-MM-yyyy');
+    const formattedReminderDate = (!this.reminder)?'' : this.datePipe.transform(this.reminder_date, 'dd-MM-yyyy');
+        // console.log(formattedDate+' '+formattedReminderDate)
+    console.log(this.action)
+    let data = {
+      pk : this.pkey,
+      company:this.addReportForm.value.company,
+      date:formattedDate,
+      hr_name:this.addReportForm.value.hr_name,
+      hr_mail:this.addReportForm.value.hr_mail,
+      message:this.addReportForm.value.message,
+      mode : this.addReportForm.value.mode,
+      visibility : this.vis_toggle,
+      reminder_date : formattedReminderDate,
+      staff_id : this.userData.user_id,
+      visible_to : this.member_lst,
+    }
 
+    this.service.updateReport(data).subscribe(
+      (res:serverResponse)=>{
+        if(res.success){
+          this.toastr.success(res.message)
+          this.reminder = false
+        }else{
+          this.toastr.warning('Something went wrong')
+        }
+      },
+      (err)=>{
+        this.toastr.error('Server Not Responding!!')
+      }
+    )
+  }
+
+
+  deleteReport(pk:number){
+    let data:FormData = new FormData()
+    data.append('pk', pk.toString())
+    this.service.deleteReport(data).subscribe(
+      (res:serverResponse)=>{
+        if(res.success){ 
+          this.toastr.success(res.message)
+          this.applyFilter()
+        }
+        else this.toastr.warning(res.message)
+      },
+      err=>{
+        this.toastr.error('Server Not Responding!!')
+      }
+    )
   }
 
   resetForm(){
+    this.addReportForm.reset()
+    this.vis_toggle = 'Public'
+    this.reminder_date = ''
+    this.reminder = false
+    this.vis_toggle_data = false
+    this.member_lst = []
 
   }
 
@@ -296,7 +384,7 @@ export class ReportsComponent implements OnInit{
   changeFilter(category : string, value:string){
     if(category==='report'){ 
       this.report_filter=value
-      this.visibility = 'Public'
+      this.visibility = 'All'
     }
     else if(category==='period'){ 
       this.period_filter=value
@@ -316,6 +404,19 @@ export class ReportsComponent implements OnInit{
 
   onGridReady(params: GridReadyEvent) {
     this.gridApi = params.api;
+  }
+
+  back(){
+    this.section = 1
+    this.addReportForm.reset()
+    this.member_lst = []
+    this.vis_toggle = 'Public'
+    this.reminder_date = ''
+    this.reminder = false
+    this.vis_toggle_data = false
+    // this.member_lst 
+
+    this.applyFilter()
   }
 
 

@@ -1,6 +1,6 @@
 <div class="main">
 
-    <img (click) = "section=1" src="../../assets/back.png" *ngIf="section==2" class="back">
+    <img (click) = "back()" src="../../assets/back.png" *ngIf="section==2" class="back">
 
     <div class="top">
         <div class="title" *ngIf="section==1">
@@ -77,11 +77,11 @@
                     <p>Visibility</p>
                     <div class="status-filter">
                         <a style="text-decoration: none;">
-                            <div class="status" [ngClass]="{'active-chip-dark' : visibility==='Public', 'not-active-chip':visibility!='Public'}" (click)="changeFilter('vis', 'Public')">
+                            <div class="status" [ngClass]="{'active-chip-dark' : visibility==='All', 'not-active-chip':visibility!='All'}" (click)="changeFilter('vis', 'All')">
                                 <span class="material-symbols-outlined">
                                     done
                                 </span>
-                                <p>Public</p>
+                                <p>All</p>
                             </div>
                         </a>
                         
@@ -123,10 +123,15 @@
         </div>
     </div>
 
-    <div class="grid-container" *ngIf="section==1">
-        <button (click)="onBtnExport()">Download CSV export file</button>
+    <div class="no-data" *ngIf="row_data.length==0 && section==1">
+        <img src="../../assets/no-data.svg" alt="no-data.svg">
+        <p>No Data Found...</p>
+    </div>
 
-        <ag-grid-angular
+    <div class="grid-container" *ngIf="section==1">
+        <!-- <button (click)="onBtnExport()">Download CSV export file</button> -->
+
+        <!-- <ag-grid-angular
             class="ag-theme-alpine"
             style="width: 100%; height:500px;"
             [rowData]="row_data"
@@ -134,7 +139,43 @@
             [gridOptions]="gridOptions"
             [defaultColDef]="defaultColDef"
             (gridReady)="onGridReady($event)">
-        </ag-grid-angular>
+        </ag-grid-angular> -->
+
+        <table *ngIf="section==1 && row_data.length>0">
+            <tr>
+                <th>Position</th>
+                <th>Date</th>
+                <th>Staff_ID</th>
+                <th>Company</th>
+                <th>HR_Name</th>
+                <th>HR_mail</th>
+                <th>Message</th>
+                <th>Contact Mode</th>
+                <th>Edit</th>
+                <th>Delete</th>
+            </tr>
+            <tr *ngFor="let report of row_data">
+                <td [ngClass]="{'dark-cell': report.visibility==='Private', 'normal-cell' : report.visibility==='Public'}" >{{report.position}}</td>
+                <td [ngClass]="{'dark-cell': report.visibility==='Private', 'normal-cell' : report.visibility==='Public'}">{{report.date}}</td>
+                <td [ngClass]="{'dark-cell': report.visibility==='Private', 'normal-cell' : report.visibility==='Public'}">{{report.staff_id}}</td>
+                <td [ngClass]="{'dark-cell': report.visibility==='Private', 'normal-cell' : report.visibility==='Public'}">{{report.company}}</td>
+                <td [ngClass]="{'dark-cell': report.visibility==='Private', 'normal-cell' : report.visibility==='Public'}">{{report.HR_name}}</td>
+                <td [ngClass]="{'dark-cell': report.visibility==='Private', 'normal-cell' : report.visibility==='Public'}">{{report.HR_mail}}</td>
+                <td [ngClass]="{'dark-cell': report.visibility==='Private', 'normal-cell' : report.visibility==='Public'}">{{report.message}}</td>
+                <td [ngClass]="{'dark-cell': report.visibility==='Private', 'normal-cell' : report.visibility==='Public'}">{{report.contact_mode}}</td>
+                
+                <td [ngClass]="{'dark-cell': report.visibility==='Private', 'normal-cell' : report.visibility==='Public'}">
+                    <span matTooltip="Edit" class="material-symbols-outlined edit" (click)="editReport(report.pk)" *ngIf="report.staff_id===userData.staff_id">
+                        edit
+                    </span>
+                </td>
+                <td [ngClass]="{'dark-cell': report.visibility==='Private', 'normal-cell' : report.visibility==='Public'}" >
+                    <span matTooltip="Delete" class="material-symbols-outlined delete" *ngIf="report.staff_id===userData.staff_id" (click)="deleteReport(report.pk)">
+                        delete
+                    </span>
+                </td>
+            </tr>
+        </table>
     </div>
 
 
@@ -191,27 +232,27 @@
     </div> -->
 
 
-    <div class="add-report-box" *ngIf="section==2" [ngStyle]="visibility==='Private'? {'background-color' : '#35363a'} : {}">
+    <div class="add-report-box" *ngIf="section==2" [ngStyle]="vis_toggle==='Private'? {'background-color' : '#35363a'} : {}">
 
         <mat-slide-toggle class="vis-toggle" color="accent"
-        (click) = "visibility= visibility==='Public'?'Private' : 'Public'"
-        [ngStyle]="visibility==='Private'? {'background-color' : 'white'} : {'background-color' : '#35363a'}">
+        (click) = "vis_toggle= vis_toggle==='Public'?'Private' : 'Public'"
+        [ngStyle]="vis_toggle==='Private'? {'background-color' : 'white'} : {'background-color' : '#35363a'}" [(ngModel)]="vis_toggle_data">
         
-            <div class="toggle-txt" [ngStyle]="visibility==='Private'? {'color' : '#35363a'} : {'color' : 'white'}">
-                <span class="material-symbols-outlined" *ngIf="visibility==='Public'">
+            <div class="toggle-txt" [ngStyle]="vis_toggle==='Private'? {'color' : '#35363a'} : {'color' : 'white'}">
+                <span class="material-symbols-outlined" *ngIf="vis_toggle==='Public'">
                     lock_open
                 </span>
     
-                <span class="material-symbols-outlined" *ngIf="visibility==='Private'">
+                <span class="material-symbols-outlined" *ngIf="vis_toggle==='Private'">
                     lock
                 </span>
     
-                <p> {{visibility}} </p>
+                <p> {{vis_toggle}} </p>
             </div>
             
         </mat-slide-toggle>
 
-        <form [formGroup]="addReportForm" *ngIf="section==2" [ngStyle]="visibility==='Private'? {'color' : 'white'} : {}">
+        <form [formGroup]="addReportForm" *ngIf="section==2" [ngStyle]="vis_toggle==='Private'? {'color' : 'white'} : {}">
 
             <div class="section">
                 <div class="input">
@@ -287,7 +328,7 @@
                 </mat-form-field> 
             </div>
 
-            <div class="input" *ngIf="visibility==='Private'">
+            <div class="input" *ngIf="vis_toggle==='Private'">
                 <p>Visible To</p>
                 <mat-form-field class="example-chip-list">
                     <mat-label>Add Members</mat-label>
@@ -314,7 +355,7 @@
 
             <div class="btns">
               <button mat-raised-button id="reset" (click)="resetForm()">Reset</button>
-              <button mat-raised-button id="add" (click)="action==='add'?addReport() : editReport()">{{action==='add'?'Add Report' : 'Save Changes'}}</button>
+              <button mat-raised-button id="add" (click) = "action==='add'?addReport() :updateReport()">{{action==='add'?'Add Report' : 'Save Changes'}}</button>
             </div>
           
         </form>

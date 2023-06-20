@@ -491,32 +491,26 @@ def update_drive(request):
 
     except Exception as e:
         # print(request.POST.get('eligible_lst'))
-        if(request.POST.get('eligible_lst') == 'null'):
-            updated_data = {
-                'job_role' : job_role,
-                'date' : date_obj,
-                'company' : company,
-                'website' : website,
-                'HR_name'  : hr_name,
-                'HR_mail' : hr_mail,
-                'drive_mode' : mode,
-                'description' : description,
-            }
+        updated_data = {
+            'job_role' : job_role,
+            'date' : date_obj,
+            'company' : company,
+            'website' : website,
+            'HR_name'  : hr_name,
+            'HR_mail' : hr_mail,
+            'drive_mode' : mode,
+            'description' : description,
+        }
+    
+        Drive.objects.filter(pk=drive_id).update(**updated_data)
+        data = {
+            'success':True,
+            'message' : f'Drive updated Successfully!!'
+        }
+    
+        return JsonResponse(data)
         
-            Drive.objects.filter(pk=drive_id).update(**updated_data)
-            data = {
-                'success':True,
-                'message' : f'Drive updated Successfully!!'
-            }
-        
-            return JsonResponse(data)
-        
-        else:
-            data = {
-                    'success':False,
-                    'message' : f'Some Technical Error !!'
-                }
-            return JsonResponse(data)
+   
      
 
 @csrf_exempt
@@ -577,28 +571,80 @@ def add_report(request):
 @csrf_exempt
 def delete_report(request):
     
-    formData = request.POST
-    print(formData)
+    report_id = request.POST.get('pk')
+    # print(formData)
+    try:
+        report = Report.objects.get(pk = report_id)
+        report.delete()
+        data = {
+            'success':True,
+            'message' : 'Report deleted Successfully!!'
+        }
+        return JsonResponse(data)
     
-    data = {
-        'success':True,
-        'message' : 'Report deleted Successfully!!'
-    }
+    except Exception as e:
+        print(e)
     
-    return JsonResponse(data)
+        data = {
+            'success':False,
+            'message' : 'Some Technical Error!!'
+        }
+        
+        return JsonResponse(data)
 
 @csrf_exempt
 def update_report(request):
     
-    formData = request.POST
+    formData = json.loads(request.body)
     print(formData)
+    date_obj = datetime.strptime(formData['date'], '%d-%m-%Y').date()
+    reminder_date_obj = None if formData['reminder_date']=='' else datetime.strptime(formData['reminder_date'], '%d-%m-%Y').date()
     
-    data = {
-        'success':True,
-        'message' : 'Report updated Successfully!!'
-    }
+    try:
+        updated_data = {
+            'date' : date_obj,
+            'placement_officer_id': formData['staff_id'],
+            'company' : formData['company'],
+            'HR_name': formData['hr_name'],
+            'HR_mail' : formData['hr_mail'],
+            'contact_mode' : formData['mode'],
+            'message' : formData['message'],
+            'reminder_date' : reminder_date_obj,
+            'visibility' : formData['visibility'],
+            'visible_to' : formData['visible_to'],
+        }
+        
+        print(updated_data)
+        
+        Report.objects.filter(pk=formData['pk']).update(**updated_data)
+        
+    #     pk : this.pkey,
+    #   company:this.addReportForm.value.company,
+    #   date:formattedDate,
+    #   hr_name:this.addReportForm.value.hr_name,
+    #   hr_mail:this.addReportForm.value.hr_mail,
+    #   message:this.addReportForm.value.message,
+    #   mode : this.addReportForm.value.mode,
+    #   visibility : this.vis_toggle,
+    #   reminder_date : formattedReminderDate,
+    #   staff_id : this.userData.user_id,
+    #   visi
+        
+        data = {
+                'success':True,
+                'message' : f'Report updated Successfully!!'
+            }
+        
+        return JsonResponse(data)
     
-    return JsonResponse(data)
+    except Exception as e:
+        print(e)
+        data = {
+            'success':False,
+            'message' : 'Some Technical Error!!'
+        }
+        
+        return JsonResponse(data)
   
 @csrf_exempt
 def get_reports(request):
@@ -639,16 +685,17 @@ def get_reports(request):
 
     elif category == 'My':
         if period == 'Today':
-            if visibility == 'Public':
+            if visibility == 'All':
                 # Filter for today's reports with visibility as public and for the specific staff_id
-                report_lst = report_lst.filter(date=date.today(), visibility='Public', placement_officer_id=staff_id)
+                print(staff_id)
+                report_lst = report_lst.filter(date=date.today(), placement_officer_id=staff_id)
             elif visibility == 'Private':
                 # Filter for today's reports with visibility as private and for the specific staff_id
                 report_lst = report_lst.filter(date=date.today(), visibility='Private', placement_officer_id=staff_id)
         else:
-            if visibility == 'Public':
+            if visibility == 'All':
                 # Filter based on start date, end date, visibility as public, and for the specific staff_id
-                report_lst = report_lst.filter(date__range=[startDate, endDate], visibility='Public', placement_officer_id=staff_id)
+                report_lst = report_lst.filter(date__range=[startDate, endDate],placement_officer_id=staff_id)
             elif visibility == 'Private':
                 # Filter based on start date, end date, visibility as private, and for the specific staff_id
                 report_lst = report_lst.filter(date__range=[startDate, endDate], visibility='Private', placement_officer_id=staff_id)
@@ -680,6 +727,56 @@ def get_reports(request):
     }   
     
     return JsonResponse(data)
+
+@csrf_exempt
+def get_report_by_id(request):
+    report_id = request.GET.get('report_id')
+    report_obj = {}
+    
+    try:
+        report = Report.objects.get(pk = report_id)
+        
+        date = report.date
+        staff_id = report.placement_officer_id
+        company = report.company
+        HR_name = report.HR_name
+        HR_mail = report.HR_mail
+        contact_mode = report.contact_mode
+        message = report.message
+        reminder_date = report.reminder_date
+        visibility = report.visibility
+        visible_to = report.visible_to
+        
+        print(f'{date}\n{reminder_date}\n{visibility}\n{visible_to}')
+        
+        data = {
+            'success' : True,
+            'report' : {
+                'date' : date,
+                'staff_id' : staff_id,
+                'company' : company,
+                'HR_name' : HR_name,
+                'HR_mail' : HR_mail,
+                'contact_mode' : contact_mode,
+                'message' : message,
+                'reminder_date' : reminder_date,
+                'visibility' : visibility,
+                'visible_to' : visible_to
+                
+            }
+        }
+        
+        return JsonResponse(data)
+        
+        
+    except Exception as e:
+        print(e)
+        data = {
+            'success' : False,
+            'report' : {}
+        }
+        
+        return JsonResponse(data)
 
 @csrf_exempt
 def get_members(request):

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http'
-import { driveByIdResponse, driveByStatusResponse, filterOptions, getMembersResponse, getReportsResponse, loadMembersResponse, loginResponse, openMemberResponse, serverResponse } from '../models/model';
+import { driveByIdResponse, driveByStatusResponse, filterOptions, getMembersResponse, getReportsResponse, loadMembersResponse, loginResponse, openMemberResponse, reportByIdResponse, serverResponse } from '../models/model';
+import { P } from '@angular/cdk/keycodes';
 
 @Injectable({
   providedIn: 'root'
@@ -60,7 +61,24 @@ export class AppService {
   }
 
   addReport(data:object){
-    return this.http.post<serverResponse>(`${this.URL}/add_report`, data)
+    // if(action==='add'){
+      return this.http.post<serverResponse>(`${this.URL}/add_report`, data)
+    // }else{
+    //   return this.http.post<serverResponse>(`${this.URL}/update_report`, data)
+    // }
+  }
+
+  updateReport(data:object){
+    return this.http.post<serverResponse>(`${this.URL}/update_report`, data)
+  }
+
+  getReportById(report_id : number){
+    const params = { report_id : report_id }
+    return this.http.get<reportByIdResponse>(`${this.URL}/get_report_by_id`, { params : params })
+  }
+
+  deleteReport(formdata : FormData){
+    return this.http.post<serverResponse>(`${this.URL}/delete_report`, formdata)
   }
 
   applyFilter(data:filterOptions){

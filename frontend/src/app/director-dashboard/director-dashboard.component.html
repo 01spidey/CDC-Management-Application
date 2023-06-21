@@ -18,6 +18,13 @@
             </span>
             <p>My Team</p>
         </div>
+
+        <div class="nav" (click)="selectMenu('summary')" [ngClass] = "{active: cur_option =='summary'}">
+            <span class="material-symbols-outlined">
+                article
+            </span>
+            <p>Summary</p>
+        </div>
         
         <div class="nav" (click)="selectMenu('profile')" [ngClass] ="{active: cur_option =='profile'}">
             <span class="material-symbols-outlined">
@@ -37,6 +44,7 @@
         <app-drive *ngIf="cur_option=='drive'"></app-drive>
         <app-my-team *ngIf="cur_option=='team'"></app-my-team>
         <app-profile *ngIf="cur_option=='profile'"></app-profile>
+        <app-summary *ngIf="cur_option=='summary'"></app-summary>
 
     </div>
 </section>

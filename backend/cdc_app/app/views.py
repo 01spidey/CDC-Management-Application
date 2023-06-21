@@ -8,6 +8,8 @@ from datetime import datetime, date, timedelta
 from django.core.files.storage import FileSystemStorage
 from django.contrib.sites.shortcuts import get_current_site
 from django.db.models import Q
+from django.db.models import Count
+
 
 # from models import PlacementDirector
 
@@ -788,3 +790,43 @@ def get_members(request):
     }
     
     return JsonResponse(data)
+
+
+def get_report_summary_by_id(staff_id):
+    # staff_id = request.GET.get('staff_id', 'default_staff_id')
+
+    report_data = Report.objects.filter(placement_officer_id=staff_id)
+    name = PlacementOfficer.objects.get(staff_id=staff_id).name
+    companies = report_data.values_list('company', flat=True)
+
+    response_data = {
+        'staff_id': staff_id, # staff id of the placement officer
+        'name': name, # name of the placement officer
+        'total_reports': len(report_data), # total number of reports
+        'companies': list(companies), # list of companies contacted by the placement officer
+    }
+    
+    return response_data
+    
+    
+
+@csrf_exempt
+def get_report_summary(request):
+    staff_ids = PlacementOfficer.objects.values_list('staff_id', flat=True).distinct()
+    staff_ids_array = list(staff_ids)
+    report_summary = []
+    a = 1
+    for staff_id in staff_ids_array:
+        summary = get_report_summary_by_id(staff_id)
+        summary['position'] = a
+        report_summary.append(summary)
+        a+=1
+        
+    data = {
+        'success': True,
+        'report_summary': report_summary
+    }
+
+
+    return JsonResponse(data)
+        

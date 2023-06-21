@@ -1,0 +1,128 @@
+<div class="main">
+
+    <!-- <img (click) = 'goBack()' src="../../assets/back.png" *ngIf="section==2" class="back"> -->
+
+    <div class="top">
+        <div class="title" *ngIf="section==1">
+            <h1>Report Summary</h1>
+            <hr id="line" style="width: 380px;">
+        </div>
+
+        <!-- <div *ngIf="section==1 && role=='Officer'" class="add-drive" (click)="section=2">
+            <span class="material-symbols-outlined">
+                add_box
+            </span>
+            <p>Add Drive</p>
+        </div> -->
+
+    </div>
+
+    <div class="filter-box" *ngIf="section==1">
+        <div class="container">
+            <div class="filter-container">
+
+                <div class="temp-container">
+                    <p>Period</p>
+                    <div class="status-filter">
+                        
+                        <a style="text-decoration: none;">
+                            <div class="status" [ngClass]="{'active-chip-blue' : period_filter=='Today', 'not-active-chip':period_filter!='Today'}" (click)="applyFilter('Today')">
+                                <span class="material-symbols-outlined">
+                                    done
+                                </span>
+                                <p>Today</p>
+                            </div>
+                        </a>
+
+                        <a style="text-decoration: none;">
+                            <div class="status" [ngClass]="{'active-chip-blue' : period_filter=='Custom', 'not-active-chip':period_filter!='Custom'}" (click)="applyFilter('Custom')">
+                                <span class="material-symbols-outlined">
+                                    done
+                                </span>
+                                <p>Custom</p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+    
+            </div>
+ 
+            <a>
+                <span matTooltip="Refresh" class="material-symbols-outlined" id="refresh" >
+                    <!-- (click)="applyFilter()" -->
+                    refresh
+                </span>
+            </a>
+            
+        </div>
+        
+        <div class="date-filter" *ngIf="period_filter==='Custom'">
+            
+            <mat-form-field>
+                <mat-label>Filter By Date Range</mat-label>
+                
+                <mat-date-range-input [rangePicker]="picker">
+                  <input matStartDate placeholder="Start date" [(ngModel)]="startDate">
+                  <input matEndDate placeholder="End date" [(ngModel)]="endDate">
+                </mat-date-range-input>
+
+                <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-date-range-picker #picker></mat-date-range-picker>
+            </mat-form-field>
+            <button mat-raised-button >Apply</button>
+            <!-- (click)="applyFilter()" -->
+        </div>
+    </div>
+
+    <div class="main-container">
+        <table>
+            <tr>
+                <th>S.No</th>
+                <th>Staff ID</th>
+                <th>Staff Name</th>
+                <th>No.Of Reports</th>
+                <th style="flex:3;">Companies</th> 
+                <th>Details</th>
+            </tr>
+            <tr *ngFor="let summary of report_summary">
+                <td>{{summary.position}}</td>
+                <td>{{summary.staff_id}}</td>
+                <td>{{summary.name}}</td>
+                <td>
+                    <p class="count">{{summary.total_reports}}</p>
+                </td>
+                <td style="flex:3;">
+                    <div class="company-chips-box">
+                        <div class="company-chip" *ngFor="let company of summary.companies">
+                            <p>{{company}}</p>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <span class="material-symbols-outlined">
+                        open_in_new
+                    </span>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+<!-- 
+    <div class="grid-container" *ngIf="section==1">
+        <button id="csv-export" (click)="onBtnExport()">
+            <span class="material-symbols-outlined">
+                download
+            </span>
+            Export as CSV
+        </button>
+        <ag-grid-angular
+            style="width: 100%; height: 500px;"
+            class="ag-theme-alpine"
+            [rowData]="row_data"
+            [columnDefs]="col_defs"
+            [defaultColDef]="defaultColDef"
+            [enableRangeSelection]="true"
+            (gridReady)="onGridReady($event)"
+            ></ag-grid-angular>
+    </div> -->
+</div>

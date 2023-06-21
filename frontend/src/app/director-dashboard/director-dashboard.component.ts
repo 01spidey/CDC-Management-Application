@@ -8,7 +8,7 @@ import { user } from '../models/model';
 })
 export class DirectorDashboardComponent {
   
-  cur_option = 'team'
+  cur_option = 'summary'
   userData = JSON.parse(sessionStorage.getItem('cur_user_data')!);
   user_id = this.userData.name
 

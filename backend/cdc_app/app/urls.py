@@ -21,5 +21,6 @@ urlpatterns = [
     path('get_reports', views.get_reports),
     path('get_members', views.get_members),
     path('get_report_by_id', views.get_report_by_id),
+    path('get_report_summary', views.get_report_summary),
     
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

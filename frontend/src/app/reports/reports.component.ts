@@ -82,6 +82,8 @@ export class ReportsComponent implements OnInit{
     {field : 'contact_mode'},
 
     {field : 'message'},
+
+    {field : 'visibility'},
     
     {
       headerName: 'Edit',
@@ -419,7 +421,7 @@ export class ReportsComponent implements OnInit{
       skipFloatingBottom: true,
       allColumns: false,
       onlySelected: false,
-      columnKeys: ['company', 'date', 'staff_id', 'HR_name', 'HR_mail', 'contact_mode', 'message']
+      columnKeys: ['company', 'date', 'staff_id', 'HR_name', 'HR_mail', 'contact_mode', 'message', 'visibility']
     };
   
     this.gridApi.exportDataAsCsv(params);

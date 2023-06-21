@@ -100,3 +100,16 @@ export interface getMembersResponse{
     success : boolean,
     members : string[]
 }
+
+export interface reportSummaryResponse{
+    success : boolean,
+    report_summary : summaryObject[]
+}
+
+export interface summaryObject{
+    position : number,
+    staff_id : string,
+    name : string,
+    total_reports : number,
+    companies : string[]
+}

@@ -1,0 +1,263 @@
+.ag-theme-alpine {
+    // --ag-grid-size: 10px;
+    --ag-list-item-height: 10px;
+    // --ag-row-height : 50px;
+}
+
+
+*{
+    margin: 0;
+    padding: 0;
+}
+
+.main{
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 5%;
+    position: relative;
+
+    .no-data{
+        // background-color: #152b51;
+        width: 80%;
+        height: 60vh;
+        align-self: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+
+        img{
+            height: 70%;
+        }
+
+        p{
+            font-family: 'Poppins';
+            font-size: 20px;
+        }
+    }
+
+    .title{
+        margin-top: 30px;
+        margin-left: 40px;
+        font-family: 'Poppins';
+        font-size: 1.5rem;
+        letter-spacing: 2px;
+        color: #152b51ff;
+
+        h2{
+            font-size: 1.5rem;
+            background-color: #198754;
+            display: inline-block;
+            padding: 5px 20px;
+            color: white;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+    }
+    
+    #line{
+        height: 3px;
+        background-color: #152b51ff;
+        border-radius: 10px;
+    }
+
+    .filter-box{
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        flex: 1;
+        margin-top: 30px;
+        margin-left: 40px;
+        margin-right: 40px;
+
+        .container{
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            // background-color: #152b51;
+            // width: 100%;
+            
+            .filter-container{
+                display: flex;
+                align-items: center;
+                justify-content: flex-start;
+                border-radius: 5px;
+                gap: 15px;
+
+                .temp-container{
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: flex-start;
+                    padding: 10px;
+                    gap: 5px;
+                    border: 1px solid #35363a;
+                    border-radius: 5px;
+
+                    p{
+                        font-family: 'Poppins';
+                        font-weight: 500;
+                        font-size: 1rem;
+                    }
+
+                    .status-filter{
+                        display: flex;
+                        gap: 15px;
+                        flex: 1;
+                        
+                        .status{
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            gap: 5px;
+                            padding: 3px 7px;
+                            // height: 20px;
+                            border-radius: 5px;
+                            font-family: 'Nunito';
+                            cursor: pointer;
+                            transition: 0.2s ease;
+
+                            p{
+                                font-family: 'Nunito';
+                            }
+            
+                            &:hover{
+                                opacity: 0.9;
+                            }
+            
+                            &:active{
+                                transform: scale(0.9);
+                                // transition: none;
+                            }
+            
+                            span{
+                                font-size: 1rem;
+                            }
+                        }
+                    }
+                }
+            }
+
+            #refresh{
+                background-color:#198754;
+                color: white;
+                font-size: 1.2rem;
+                padding: 5px;
+                border-radius: 5px;
+                cursor: pointer;
+
+                &:hover{
+                    opacity: 0.85;
+                }
+
+                &:active{
+                    transform: scale(0.9);
+                }
+            } 
+        }
+        
+        .date-filter{
+            width: fit-content;
+            display: flex;
+            gap: 20px;
+
+            mat-form-field{
+                color: white;
+                display: flex;
+            }
+            button{
+                margin-top: 10px;
+                background-color: #198754ff;
+                color: white;
+            }
+        }
+    }
+
+    .main-container{
+        // background-color: #198754;
+        margin-left: 40px;
+        height: 300px;
+        width: 95%;
+        margin-top: 2%;
+
+        table, th, td{
+            border: 1px solid black;
+            border-collapse: collapse;
+            width: 100%;
+        }
+        tr{
+            display: flex;
+        }
+        th,td{
+            padding: 10px;
+            flex: 1;
+            text-align: center;
+            font-family: 'Nunito';
+        }
+        td{
+            display: flex;
+            justify-content: center;
+            background-color: white;
+            .count{
+                background-color: #198754;
+                color:white;
+                width:fit-content;
+                padding : 5px 10px;
+                border-radius:5px
+            }
+            span{
+                color: #aaa;
+                transition: 0.3s ease;
+                cursor: pointer;
+                &:hover{
+                    color: black;
+                }
+            }
+        }
+        th{
+            background-color: #1a6486;
+            color: white;
+            font-family: 'Poppins';
+            font-weight: 500;
+            // border-left: 1px solid white;
+            // border-right: 1px solid white;
+        }
+
+        .company-chips-box{
+            display: flex;
+            gap: 5px;
+            align-items: center;
+            justify-content: center;
+            .company-chip{
+                background-color: #ea4034;
+                color: white;
+                padding: 5px 10px;
+                border-radius: 5px;
+            }
+        }
+    }
+}
+
+
+
+.not-active-chip{
+    border: 1px solid rgb(104, 102, 102);
+    color: rgb(104, 102, 102) ;
+}
+.active-chip-orange{
+    border: 1px solid #ea4034;
+    color: white;
+    background-color: #ea4034;
+}
+
+.active-chip-blue{
+    border: 1px solid #1a6486;
+    color: white;
+    background-color: #1a6486;
+}
+
+.active-chip-dark{
+    border: 1px solid #35363a;
+    color: white;
+    background-color: #35363a;
+}

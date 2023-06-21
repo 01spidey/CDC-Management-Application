@@ -24,7 +24,7 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import { AgGridModule } from 'ag-grid-angular';
 import { EditButtonComponent } from './buttonRenders/edit-button/edit-button.component';
 import { DeleteButtonComponent } from './buttonRenders/delete-button/delete-button.component';
-// import {Mo} from 'ag-grid-enterprise'
+import { SummaryComponent } from './summary/summary.component';
 
 @NgModule({
   declarations: [
@@ -39,7 +39,8 @@ import { DeleteButtonComponent } from './buttonRenders/delete-button/delete-butt
     AddMemberComponent,
     ReportsComponent,
     EditButtonComponent,
-    DeleteButtonComponent
+    DeleteButtonComponent,
+    SummaryComponent
   ],
   imports: [
     BrowserModule,

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http'
-import { driveByIdResponse, driveByStatusResponse, filterOptions, getMembersResponse, getReportsResponse, loadMembersResponse, loginResponse, openMemberResponse, reportByIdResponse, serverResponse } from '../models/model';
+import { driveByIdResponse, driveByStatusResponse, filterOptions, getMembersResponse, getReportsResponse, loadMembersResponse, loginResponse, openMemberResponse, reportByIdResponse, reportSummaryResponse, serverResponse } from '../models/model';
 import { P } from '@angular/cdk/keycodes';
 
 @Injectable({
@@ -87,6 +87,10 @@ export class AppService {
 
   getAllMembers(){
     return this.http.get<getMembersResponse>(`${this.URL}/get_members`)
+  }
+
+  getReportSummary(){
+    return this.http.get<reportSummaryResponse>(`${this.URL}/get_report_summary`)
   }
 
   // get_user(user_id: string, role: string) {

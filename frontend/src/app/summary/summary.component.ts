@@ -16,6 +16,9 @@ export class SummaryComponent implements OnInit {
   section = 1
   period_filter  = 'Today'
 
+  tot_reports = 0
+  tot_companies = 0
+
   startDate = ''
   endDate = ''
   today = new Date();
@@ -33,14 +36,42 @@ export class SummaryComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.startDate = this.datePipe.transform(this.threeMonthsAgo, 'yyyy-MM-dd')!;
+    this.endDate = this.datePipe.transform(this.today, 'yyyy-MM-dd')!;
+    this.applyFilter(this.period_filter)
+  }
 
-      this.applyFilter(this.period_filter)
+  changeFilter(filter:string){
+    this.period_filter = filter
+    this.tot_reports = 0
+    this.tot_companies = 0
+    this.applyFilter(this.period_filter)
   }
 
 
   applyFilter(filter:string){
+    
+    let data = {
+      start_date : this.datePipe.transform(this.startDate, 'yyyy-MM-dd')!,
+      end_date : this.datePipe.transform(this.endDate, 'yyyy-MM-dd')!,
+      filter : filter
+    }
 
-
+    this.service.getReportSummary(data).subscribe(
+      (res:reportSummaryResponse)=>{
+        if(res.success){
+          console.log(res.report_summary)
+          this.report_summary = res.report_summary
+          for(let report in this.report_summary){
+            this.tot_reports+=(this.report_summary[report].total_reports)
+            this.tot_companies+=(this.report_summary[report].companies.length)
+          }
+        }else this.toastr.warning('Failed to get report summary')
+      },
+      err=>{
+        this.toastr.warning('Serveer Not Responding')
+      }
+    )
   }
 
 }

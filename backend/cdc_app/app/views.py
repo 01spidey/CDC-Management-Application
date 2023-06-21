@@ -792,10 +792,17 @@ def get_members(request):
     return JsonResponse(data)
 
 
-def get_report_summary_by_id(staff_id):
+def get_report_summary_by_id(staff_id, filter, start_date, end_date):
     # staff_id = request.GET.get('staff_id', 'default_staff_id')
-
-    report_data = Report.objects.filter(placement_officer_id=staff_id)
+    report_data = Report.objects.all()
+    
+    if filter == 'Today':
+        report_data = Report.objects.filter(placement_officer_id=staff_id, date=date.today())
+    else:
+        # startDate = datetime.strptime(str(start_date), '%Y-%m-%d').strftime('%d-%m-%Y')
+        # endDate = datetime.strptime(str(end_date), '%Y-%m-%d').strftime('%d-%m-%Y')
+        report_data = Report.objects.filter(placement_officer_id=staff_id, date__range=[start_date, end_date])
+    
     name = PlacementOfficer.objects.get(staff_id=staff_id).name
     companies = report_data.values_list('company', flat=True)
 
@@ -812,21 +819,40 @@ def get_report_summary_by_id(staff_id):
 
 @csrf_exempt
 def get_report_summary(request):
-    staff_ids = PlacementOfficer.objects.values_list('staff_id', flat=True).distinct()
-    staff_ids_array = list(staff_ids)
+    
+    data = json.loads(request.body)
+    filter = data['filter']
+    start_date = data['start_date']
+    end_date = data['end_date']
+    
     report_summary = []
-    a = 1
-    for staff_id in staff_ids_array:
-        summary = get_report_summary_by_id(staff_id)
-        summary['position'] = a
-        report_summary.append(summary)
-        a+=1
+       
+    print(filter, start_date, end_date) 
+    
+    try:
+        staff_ids = PlacementOfficer.objects.values_list('staff_id', flat=True).distinct()
+        staff_ids_array = list(staff_ids)
         
-    data = {
-        'success': True,
-        'report_summary': report_summary
-    }
+        a = 1
+        for staff_id in staff_ids_array:
+            summary = get_report_summary_by_id(staff_id, filter, start_date, end_date)
+            summary['position'] = a
+            report_summary.append(summary)
+            a+=1
+            
+        data = {
+            'success': True,
+            'report_summary': report_summary
+        }
 
+        return JsonResponse(data)
+    
+    except Exception as e:
+        print(e)
+        data = {
+            'success': False,
+            'report_summary': []
+        }
 
-    return JsonResponse(data)
+        return JsonResponse(data)
         

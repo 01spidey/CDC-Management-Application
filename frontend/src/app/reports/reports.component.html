@@ -129,7 +129,7 @@
     </div>
 
 
-    <div class="grid-container" *ngIf="section==1">
+    <div class="grid-container" *ngIf="section==1 && row_data.length>0">
         <button id="csv-export" (click)="onBtnExport()">
             <span class="material-symbols-outlined">
                 download

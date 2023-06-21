@@ -26,7 +26,7 @@
                     <div class="status-filter">
                         
                         <a style="text-decoration: none;">
-                            <div class="status" [ngClass]="{'active-chip-blue' : period_filter=='Today', 'not-active-chip':period_filter!='Today'}" (click)="applyFilter('Today')">
+                            <div class="status" [ngClass]="{'active-chip-blue' : period_filter=='Today', 'not-active-chip':period_filter!='Today'}" (click)="changeFilter('Today')">
                                 <span class="material-symbols-outlined">
                                     done
                                 </span>
@@ -35,7 +35,7 @@
                         </a>
 
                         <a style="text-decoration: none;">
-                            <div class="status" [ngClass]="{'active-chip-blue' : period_filter=='Custom', 'not-active-chip':period_filter!='Custom'}" (click)="applyFilter('Custom')">
+                            <div class="status" [ngClass]="{'active-chip-blue' : period_filter=='Custom', 'not-active-chip':period_filter!='Custom'}" (click)="changeFilter('Custom')">
                                 <span class="material-symbols-outlined">
                                     done
                                 </span>
@@ -48,7 +48,7 @@
             </div>
  
             <a>
-                <span matTooltip="Refresh" class="material-symbols-outlined" id="refresh" >
+                <span matTooltip="Refresh" class="material-symbols-outlined" id="refresh" (click)="applyFilter('Custom')">
                     <!-- (click)="applyFilter()" -->
                     refresh
                 </span>
@@ -69,13 +69,44 @@
                 <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
                 <mat-date-range-picker #picker></mat-date-range-picker>
             </mat-form-field>
-            <button mat-raised-button >Apply</button>
-            <!-- (click)="applyFilter()" -->
+            <button mat-raised-button (click)="changeFilter('Custom')">Apply</button>
+            <!--  -->
         </div>
     </div>
 
+    <!-- <div class="no-data" *ngIf="report_summary.length==0 && section==1">
+        <img src="../../assets/no-data.svg" alt="no-data.svg">
+        <p>No Data Found...</p>
+    </div> -->
+
     <div class="main-container">
-        <table>
+        
+        <div class="stats-box">
+            <div class="card-1">
+                <div class="card-title">Total Reports</div>
+                <div class="card-content">
+                    <img class="img" src="../../assets/reports.svg" style="height: 110px;">
+                    <h1 class="val">{{tot_reports}}</h1>
+                </div>
+                
+            </div>
+            <div class="card-2">
+                <div class="card-title">Active Staffs</div>
+                <div class="card-content">
+                    <img class="img" src="../../assets/officers.svg" style="width: 50px;">
+                    <h1 class="val">{{report_summary.length}}</h1>
+                </div>
+            </div>
+            <div class="card-3">
+                <div class="card-title">Total Companies</div>
+                <div class="card-content">
+                    <img class="img" src="../../assets/companies.svg" style="height: 90px;">
+                    <h1 class="val">{{tot_companies}}</h1>
+                </div>
+            </div>
+        </div>
+
+        <table *ngIf="report_summary.length>0 && section==1">
             <tr>
                 <th>S.No</th>
                 <th>Staff ID</th>

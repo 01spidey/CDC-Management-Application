@@ -89,8 +89,8 @@ export class AppService {
     return this.http.get<getMembersResponse>(`${this.URL}/get_members`)
   }
 
-  getReportSummary(){
-    return this.http.get<reportSummaryResponse>(`${this.URL}/get_report_summary`)
+  getReportSummary(data:object){
+    return this.http.post<reportSummaryResponse>(`${this.URL}/get_report_summary`, data)
   }
 
   // get_user(user_id: string, role: string) {

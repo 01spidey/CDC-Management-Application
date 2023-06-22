@@ -1,5 +1,3 @@
-import { DataService } from '../service/data.service';
-
 
 import { Injectable } from '@angular/core';
 import { CanActivate, Router } from '@angular/router';

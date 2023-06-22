@@ -1,5 +1,4 @@
 import { Component, OnInit, ViewChild, inject, AfterViewInit, Pipe, PipeTransform } from '@angular/core';
-import { DataService } from '../service/data.service';
 import { ToastrService } from 'ngx-toastr';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { AppService } from '../service/app.service';
@@ -150,7 +149,6 @@ export class ReportsComponent implements OnInit{
 
   constructor(
     private service : AppService,
-    private dataService : DataService,
     private builder : FormBuilder,
     private datePipe : DatePipe,
     private toastr:ToastrService

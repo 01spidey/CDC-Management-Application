@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { DataService } from '../service/data.service';
 
 @Component({
   selector: 'app-officer-dashboard',
@@ -7,14 +6,12 @@ import { DataService } from '../service/data.service';
   styleUrls: ['./officer-dashboard.component.scss']
 })
 export class OfficerDashboardComponent {
-  cur_option = 'reports'
+  cur_option = 'notification'
   userData = JSON.parse(sessionStorage.getItem('cur_user_data')!);
 
   user_id = this.userData.name
 
-  constructor(
-    private dataService : DataService
-  ){
+  constructor( ){
 
   }
 

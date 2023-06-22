@@ -1,1 +1,64 @@
-<p>profile works!</p>
+<div class="main">
+
+    <div class="top">
+        <div class="title" *ngIf="section==1">
+            <h1>My Profile</h1>
+            <hr id="line" style="width: 230px;">
+        </div>
+
+    </div>
+
+    <div class="main-container">
+        <!-- <div class="reset-container">
+            <div class="reset-box">
+                <div class="card-title">
+                    <h2>Reset Password</h2>
+                </div>
+            </div>
+            <div class="reset-box">
+                <div class="card-title">
+                    <h2>Reset Username</h2>
+                </div>
+            </div>
+        </div> -->
+
+        <div class="member-details-box" *ngIf="section==1">
+            <div class="img" style="background-image: url('../../assets/team-img.jpg');"></div>
+            <div class="details">
+    
+                <div class="top">
+                    <h2>Tom H</h2>
+                    <p>19KPR001</p>
+                </div>
+                
+    
+                <div class="info">
+                    <p class="field">User ID : </p>
+                    <p class="value">01tom</p>
+                </div>
+    
+                <div class="info">
+                    <p class="field">Mail ID : </p>
+                    <p class="value">01tom@gmail.com</p>
+                </div>
+    
+                <div class="info">
+                    <p class="field">Contact : </p>
+                    <p class="value">01tom</p>
+                </div>
+
+                <div class="tool-box">
+                    <div class="tool">
+                        <span class="material-icons">edit</span>
+                        <p>Edit</p>
+                    </div>
+                    <div class="tool">
+                        <span class="material-icons">delete</span>
+                        <p>Delete</p>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>

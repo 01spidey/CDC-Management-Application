@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { AppService } from '../service/app.service';
-import { DataService } from '../service/data.service';
 import { FormBuilder } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
@@ -18,6 +17,7 @@ export class SummaryComponent implements OnInit {
 
   tot_reports = 0
   tot_companies = 0
+  active_staffs = 0
 
   startDate = ''
   endDate = ''
@@ -43,8 +43,7 @@ export class SummaryComponent implements OnInit {
 
   changeFilter(filter:string){
     this.period_filter = filter
-    this.tot_reports = 0
-    this.tot_companies = 0
+    
     this.applyFilter(this.period_filter)
   }
 
@@ -62,9 +61,13 @@ export class SummaryComponent implements OnInit {
         if(res.success){
           console.log(res.report_summary)
           this.report_summary = res.report_summary
+          this.tot_reports = 0
+          this.tot_companies = 0
+          this.active_staffs = 0
           for(let report in this.report_summary){
             this.tot_reports+=(this.report_summary[report].total_reports)
             this.tot_companies+=(this.report_summary[report].companies.length)
+            if(this.report_summary[report].total_reports>0) this.active_staffs+=1
           }
         }else this.toastr.warning('Failed to get report summary')
       },

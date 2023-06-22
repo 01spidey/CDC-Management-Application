@@ -1,0 +1,103 @@
+<div class="main">
+
+    <div class="top">
+        <div class="title">
+            <h1>Notifications</h1>
+            <hr id="line" style="width: 300px;">
+        </div>
+        <a>
+            <span matTooltip="Refresh" class="material-symbols-outlined" id="refresh" (click)="applyFilter(category)">
+                refresh
+            </span>
+        </a>
+    </div>
+
+    <div class="title-box">
+        <p *ngIf="user_role==='Officer'">Report Notifications</p>
+        <p>Drive Notifications</p>
+    </div>
+
+    <div class="main-container">
+        <div class="notification-container" *ngIf="user_role==='Officer'" >
+            <div class="no-data" *ngIf="report_notifications.length==0">
+                <img src="../../assets/no-data.svg" >
+                <p >No Notifications...</p>
+            </div>
+            <div class="notification" *ngFor="let item of report_notifications">
+                <div class="left">
+                    <p class="noti-title">{{item.company}}</p>
+                    
+                    <div class="temp">
+                        <span class="material-symbols-outlined">
+                            chat_bubble
+                        </span>
+                        <p class = "noti-sub">{{item.last_message}}</p>
+                    </div>
+
+                    <div class="temp">
+                        <span class="material-symbols-outlined">
+                            history
+                        </span>
+                        <p class="noti-sub">{{item.date}}</p>
+                    </div>
+                </div>
+                <div class="right">
+                    <div class="temp">
+                        <span class="material-symbols-outlined">
+                            event
+                        </span>
+                        <p class="date">{{item.date}}</p>
+                    </div>
+                    
+                    <div class="rem" [ngStyle]="item.days_left>=10 ? {'background-color' : '#198754'} : item.days_left>=6? {'background-color' : '#ffaa00'} : item.days_left>=1 ? {'background-color' : '#ff7b00'} : {'background-color' : '#d62828'}">
+                        <p class="days">{{item.days_left==0?"Today" : item.days_left==1? "Tomorrow" : item.days_left}}</p>
+                        <p *ngIf="item.days_left>1">Days Left</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="notification-container">
+            <div class="no-data" *ngIf="drive_notifications.length==0">
+                <img src="../../assets/no-data.svg" >
+                <p >No Notifications...</p>
+            </div>
+            <div class="notification"  *ngFor="let item of drive_notifications">
+                <div class="left">
+                    <p class="noti-title">{{item.company}}</p>
+                    <div class="temp">
+                        <span class="material-symbols-outlined">
+                            work
+                        </span>
+                        <p class = "noti-sub">{{item.role}}</p>
+                    </div>
+                    <div class="temp">
+                        <span class="material-symbols-outlined">
+                            location_on
+                        </span>
+                        <p class="noti-sub">{{item.mode}}</p>
+                    </div>
+                    
+                    
+                </div>
+                <div class="right">
+                    <div class="temp">
+                        <span class="material-symbols-outlined">
+                            event
+                        </span>
+                        <p class="date">{{item.date}}</p>
+                    </div>
+
+                    <div class="rem" [ngStyle]="item.days_left>=10 ? {'background-color' : '#198754'} : item.days_left>=6? {'background-color' : '#ffaa00'} : item.days_left>=1 ? {'background-color' : '#ff7b00'} : {'background-color' : '#d62828'}">
+                        <p class="days">{{item.days_left==0?"Today" : item.days_left==1? "Tomorrow" : item.days_left}}</p>
+                        <p *ngIf="item.days_left>1">Days Left</p>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+
+</div>

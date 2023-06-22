@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http'
-import { driveByIdResponse, driveByStatusResponse, filterOptions, getMembersResponse, getReportsResponse, loadMembersResponse, loginResponse, openMemberResponse, reportByIdResponse, reportSummaryResponse, serverResponse } from '../models/model';
+import { driveByIdResponse, driveByStatusResponse, filterOptions, getMembersResponse, getReportsResponse, loadMembersResponse, loginResponse, notificationResponse, openMemberResponse, reportByIdResponse, reportSummaryResponse, serverResponse } from '../models/model';
 import { P } from '@angular/cdk/keycodes';
 
 @Injectable({
@@ -61,11 +61,7 @@ export class AppService {
   }
 
   addReport(data:object){
-    // if(action==='add'){
       return this.http.post<serverResponse>(`${this.URL}/add_report`, data)
-    // }else{
-    //   return this.http.post<serverResponse>(`${this.URL}/update_report`, data)
-    // }
   }
 
   updateReport(data:object){
@@ -91,6 +87,14 @@ export class AppService {
 
   getReportSummary(data:object){
     return this.http.post<reportSummaryResponse>(`${this.URL}/get_report_summary`, data)
+  }
+
+  getNotifications(cat : string, staff_id : string){
+    const data = {
+      category : cat,
+      staff_id : staff_id
+    }
+    return this.http.get<notificationResponse>(`${this.URL}/get_notifications`, {params : data})
   }
 
   // get_user(user_id: string, role: string) {

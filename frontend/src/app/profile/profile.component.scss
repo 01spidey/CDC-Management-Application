@@ -1,0 +1,187 @@
+.ag-theme-alpine {
+    // --ag-grid-size: 10px;
+    --ag-list-item-height: 10px;
+    // --ag-row-height : 50px;
+}
+
+
+*{
+    margin: 0;
+    padding: 0;
+}
+
+.main{
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 5%;
+    position: relative;
+
+    .no-data{
+        // background-color: #152b51;
+        width: 80%;
+        height: 60vh;
+        align-self: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+
+        img{
+            height: 70%;
+        }
+
+        p{
+            font-family: 'Poppins';
+            font-size: 20px;
+        }
+    }
+
+    .title{
+        margin-top: 30px;
+        margin-left: 40px;
+        font-family: 'Poppins';
+        font-size: 1.5rem;
+        letter-spacing: 2px;
+        color: #152b51ff;
+
+        h2{
+            font-size: 1.5rem;
+            background-color: #198754;
+            display: inline-block;
+            padding: 5px 20px;
+            color: white;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+    }
+    
+    #line{
+        height: 3px;
+        background-color: #152b51ff;
+        border-radius: 10px;
+    }
+
+    .filter-box{
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        flex: 1;
+        margin-top: 30px;
+        margin-left: 40px;
+        margin-right: 40px;
+
+        .container{
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            
+            
+            #refresh{
+                background-color:#198754;
+                color: white;
+                font-size: 1.2rem;
+                padding: 5px;
+                border-radius: 5px;
+                cursor: pointer;
+
+                &:hover{
+                    opacity: 0.85;
+                }
+
+                &:active{
+                    transform: scale(0.9);
+                }
+            } 
+        }
+        
+    }
+
+    .main-container{
+        // background-color: #198754;
+        margin-left: 40px;
+        height: fit-content;
+        width: 95%;
+        margin-top: 2%;
+        // background-color: #152b51ff;
+        display: flex;
+        flex-direction: column;
+
+        .member-details-box{
+            // border: 1px solid #198754;
+            height: fit-content;
+            width: 80%;
+            margin-top: 20px;
+            margin-left: 40px;
+            border-radius: 5px;
+            gap: 10px;
+        
+            display: flex;
+        
+            .img{
+                background-color: #152b51;
+                height: 200px;
+                width: 200px;
+                border-radius: 5px 0px 0px 5px;
+                padding: 15px;
+        
+                display: flex;
+                align-items: center;
+                justify-content: center;
+        
+                background-position: center;
+                background-size: cover;
+                border-radius: 5px;
+            }
+        
+            .details{
+                display: flex;
+                flex: 1;
+                flex-direction: column;
+                gap: 15px;
+                justify-content: center;
+        
+                background-color: white;
+                border: 1px solid black;
+                padding: 10px 20px;
+                border-radius: 0px 5px 5px 0px;
+                position: relative;
+        
+                .top{
+                    justify-self: flex-start;
+                    margin-bottom: 15px;
+                    h2{
+                        color: #152b51;
+                        margin-bottom: 3px;
+                    }
+                    p{
+                        font-weight: bold;
+                        font-family:Nunito;
+                        color: #198754;
+                    }
+                }
+        
+                .info{
+                    display: flex;
+                    gap: 10px;
+                    .field{
+                        font-weight: 500;
+                        color: #152b51;
+                    }
+        
+                    .value{
+                        font-family: 'Nunito';
+                    }
+                }
+
+                .tool-box{
+                    display: flex;
+                    .tool{
+                        display: flex;
+                        font-size: 1rem;
+                    }
+                }
+            }
+        }
+    }
+}

@@ -19,6 +19,13 @@
             </span>
             <p>Reports</p>
         </div>
+
+        <div class="nav" (click)="selectMenu('notification')" [ngClass] ="{active: cur_option =='notification'}">
+            <span class="material-symbols-outlined">
+                notifications_active
+            </span>
+            <p>Notifications</p>
+        </div>
         
         <div class="nav" (click)="selectMenu('profile')" [ngClass] ="{active: cur_option =='profile'}">
             <span class="material-symbols-outlined">
@@ -39,6 +46,7 @@
         <app-drive *ngIf="cur_option=='drive'"></app-drive>
         <app-reports *ngIf="cur_option=='reports'"></app-reports>
         <app-profile *ngIf="cur_option=='profile'"></app-profile>
+        <app-notification *ngIf="cur_option=='notification'"></app-notification>
     </div>
 
 </section>

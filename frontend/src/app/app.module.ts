@@ -25,6 +25,8 @@ import { AgGridModule } from 'ag-grid-angular';
 import { EditButtonComponent } from './buttonRenders/edit-button/edit-button.component';
 import { DeleteButtonComponent } from './buttonRenders/delete-button/delete-button.component';
 import { SummaryComponent } from './summary/summary.component';
+import { NotificationComponent } from './notification/notification.component';
+import { NgxUiLoaderHttpModule, NgxUiLoaderModule } from 'ngx-ui-loader';
 
 @NgModule({
   declarations: [
@@ -40,7 +42,8 @@ import { SummaryComponent } from './summary/summary.component';
     ReportsComponent,
     EditButtonComponent,
     DeleteButtonComponent,
-    SummaryComponent
+    SummaryComponent,
+    NotificationComponent
   ],
   imports: [
     BrowserModule,
@@ -55,6 +58,8 @@ import { SummaryComponent } from './summary/summary.component';
     FormsModule,
     MatSlideToggleModule,
     AgGridModule,
+    NgxUiLoaderHttpModule.forRoot({ showForeground: true }),
+    NgxUiLoaderModule
   ],
   providers: [
     DatePipe,

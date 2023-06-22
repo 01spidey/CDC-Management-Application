@@ -113,3 +113,24 @@ export interface summaryObject{
     total_reports : number,
     companies : string[]
 }
+
+export interface driveNotification{
+    company : string,
+    date : string,
+    role : string,
+    mode : string,
+    days_left : number,
+}
+
+export interface reportNotification{
+    company : string,
+    date : string,
+    last_message : string,
+    last_message_date : string,
+    days_left : number,
+}
+
+export interface notificationResponse{
+    success : boolean,
+    notifications : driveNotification[] | reportNotification[],
+}

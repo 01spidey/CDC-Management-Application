@@ -512,9 +512,6 @@ def update_drive(request):
     
         return JsonResponse(data)
         
-   
-     
-
 @csrf_exempt
 def add_report(request):
     
@@ -814,8 +811,6 @@ def get_report_summary_by_id(staff_id, filter, start_date, end_date):
     }
     
     return response_data
-    
-    
 
 @csrf_exempt
 def get_report_summary(request):
@@ -855,4 +850,71 @@ def get_report_summary(request):
         }
 
         return JsonResponse(data)
+ 
+ 
+def get_remaining_days(date_string):
+    # Convert the date string to a datetime object
+    # target_date = datetime.strptime(date_string, '%d-%m-%Y')
+
+    # Get the current date
+    current_date = datetime.now().date()
+
+    # Calculate the difference in days between the target date and current date
+    remaining_days = (date_string - current_date).days
+
+    return remaining_days
+ 
+def convert_date_format(date):
+    converted_date = date.strftime('%d-%m-%Y')
+    return converted_date 
+       
+@csrf_exempt
+def get_notifications(request):
+    category = request.GET.get('category')
+    staff_id = request.GET.get('staff_id')
+    
+    # print(category, staff_id)
+    report_notifications = []
+    drive_notifications = []
+    
+    today = date.today()
+    
+    if(category=='report_alerts'):
+        reports = Report.objects.filter(Q(placement_officer_id=staff_id, reminder_date__gt=today) | Q(placement_officer_id=staff_id, reminder_date=today))
+        for report in reports:
+            report_notifications.append(
+                {
+                    'company' : report.company,
+                    'date' : convert_date_format(report.reminder_date),
+                    'last_message' : report.message,
+                    'last_message_date' : convert_date_format(report.date),
+                    'days_left' : get_remaining_days(report.reminder_date),
+                }
+            )
+        print(today)
+            
+        data = {
+            'success': True,
+            'notifications': report_notifications
+        }
         
+        return JsonResponse(data)
+        
+    else:
+        drives = Drive.objects.filter(Q(date__gt=today) | Q(date=today))
+        for drive in drives:
+            drive_notifications.append(
+              {
+                    'company' : drive.company,
+                    'date' : convert_date_format(drive.date),
+                    'role' : drive.job_role,
+                    'mode' : drive.drive_mode,
+                    'days_left' : get_remaining_days(drive.date),
+                }  
+            )
+        
+        data = {
+            'success': True,
+            'notifications': drive_notifications
+        }
+        return JsonResponse(data)

@@ -31,7 +31,8 @@ section{
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 5%;
+        // gap: 5%;
+        gap: 30px;
 
         &:hover{
             width: 210px;
@@ -101,7 +102,7 @@ section{
         }
 
         #btm-nav{
-            margin-top: 300px;
+            // margin-top: 300px;
             color: white;
             height: 30px;
             background-color: red;

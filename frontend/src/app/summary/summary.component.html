@@ -1,19 +1,10 @@
 <div class="main">
 
-    <!-- <img (click) = 'goBack()' src="../../assets/back.png" *ngIf="section==2" class="back"> -->
-
     <div class="top">
         <div class="title" *ngIf="section==1">
             <h1>Report Summary</h1>
             <hr id="line" style="width: 380px;">
         </div>
-
-        <!-- <div *ngIf="section==1 && role=='Officer'" class="add-drive" (click)="section=2">
-            <span class="material-symbols-outlined">
-                add_box
-            </span>
-            <p>Add Drive</p>
-        </div> -->
 
     </div>
 
@@ -48,7 +39,7 @@
             </div>
  
             <a>
-                <span matTooltip="Refresh" class="material-symbols-outlined" id="refresh" (click)="applyFilter('Custom')">
+                <span matTooltip="Refresh" class="material-symbols-outlined" id="refresh" (click)="changeFilter(period_filter)">
                     <!-- (click)="applyFilter()" -->
                     refresh
                 </span>
@@ -74,11 +65,6 @@
         </div>
     </div>
 
-    <!-- <div class="no-data" *ngIf="report_summary.length==0 && section==1">
-        <img src="../../assets/no-data.svg" alt="no-data.svg">
-        <p>No Data Found...</p>
-    </div> -->
-
     <div class="main-container">
         
         <div class="stats-box">
@@ -94,7 +80,7 @@
                 <div class="card-title">Active Staffs</div>
                 <div class="card-content">
                     <img class="img" src="../../assets/officers.svg" style="width: 50px;">
-                    <h1 class="val">{{report_summary.length}}</h1>
+                    <h1 class="val">{{active_staffs}}</h1>
                 </div>
             </div>
             <div class="card-3">

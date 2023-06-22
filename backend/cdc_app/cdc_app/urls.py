@@ -44,5 +44,8 @@ urlpatterns = [
     
     path('get_report_summary', include('app.urls')),
     path('get_notifications', include('app.urls')),
+    path('get_member_by_id', include('app.urls')),
+    path('update_member', include('app.urls')),
+    path('delete_member', include('app.urls'))
     
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

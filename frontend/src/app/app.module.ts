@@ -11,7 +11,6 @@ import { LoginComponent } from './login/login.component';
 import { MaterialModule } from './material.module';
 import { DirectorDashboardComponent } from './director-dashboard/director-dashboard.component';
 import { OfficerDashboardComponent } from './officer-dashboard/officer-dashboard.component';
-import { MyTeamComponent } from './my-team/my-team.component';
 import { DriveComponent } from './drive/drive.component';
 import { ProfileComponent } from './profile/profile.component';
 import { AddMemberComponent } from './add-member/add-member.component';
@@ -35,7 +34,6 @@ import { NgxUiLoaderHttpModule, NgxUiLoaderModule } from 'ngx-ui-loader';
     LoginComponent,
     DirectorDashboardComponent,
     OfficerDashboardComponent,
-    MyTeamComponent,
     DriveComponent,
     ProfileComponent,
     AddMemberComponent,

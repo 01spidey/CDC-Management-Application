@@ -1,3 +1,5 @@
+import { Member } from "../reports/reports.component"
+
 export interface serverResponse{
     success : boolean,
     message : string
@@ -9,6 +11,7 @@ export interface loadMembersResponse{
 }
 
 export interface user{
+    pk : number,
     user_id: string
     name : string,
     mail : string,
@@ -71,6 +74,11 @@ export interface reportByIdResponse{
     }
 }
 
+export interface userByIdResponse{
+    success : boolean,
+    user : user
+}
+
 export interface openMemberResponse{
     success : boolean,
     report_lst : Report[]
@@ -100,6 +108,11 @@ export interface getMembersResponse{
     success : boolean,
     members : string[]
 }
+
+// export interface getMemberByIdResponse{
+//     success : boolean,
+//     member : user
+// }
 
 export interface reportSummaryResponse{
     success : boolean,

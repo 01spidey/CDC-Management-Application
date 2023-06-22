@@ -1,9 +1,11 @@
 <div class="main">
 
+    <img (click) = "back()" src="../../assets/back.png" *ngIf="section==2" class="back">
+
     <div class="top">
-        <div class="title" *ngIf="section==1">
-            <h1>My Profile</h1>
-            <hr id="line" style="width: 230px;">
+        <div class="title">
+            <h1>{{section==1?'My Profile' : (section==2 && action==='add')? 'Add Member' : (section==2 && action==='edit')? 'Edit Member' : 'Title' }}</h1>
+            <hr id="line" [ngStyle]="section==1?{'width' : '230px'} : section==2? {'width' : '300px'} : {}">
         </div>
 
     </div>
@@ -27,32 +29,39 @@
             <div class="details">
     
                 <div class="top">
-                    <h2>Tom H</h2>
-                    <p>19KPR001</p>
+                    <h2>{{name}}</h2>
+                    <p>{{staff_id}}</p>
                 </div>
                 
     
                 <div class="info">
+                    <span class="material-icons">person</span>
                     <p class="field">User ID : </p>
-                    <p class="value">01tom</p>
+                    <p class="value">{{user_id}}</p>
                 </div>
     
                 <div class="info">
+                    <span class="material-icons">mail</span>
                     <p class="field">Mail ID : </p>
-                    <p class="value">01tom@gmail.com</p>
+                    <p class="value">{{mail_id}}</p>
                 </div>
     
                 <div class="info">
+                    <span class="material-icons">call</span>
                     <p class="field">Contact : </p>
-                    <p class="value">01tom</p>
+                    <p class="value">+91 {{contact}}</p>
                 </div>
 
                 <div class="tool-box">
-                    <div class="tool">
+                    <div class="tool" id="add">
+                        <span class="material-icons">add</span>
+                        <p>Admin</p>
+                    </div>
+                    <div class="tool" id="edit">
                         <span class="material-icons">edit</span>
                         <p>Edit</p>
                     </div>
-                    <div class="tool">
+                    <div class="tool" id="delete">
                         <span class="material-icons">delete</span>
                         <p>Delete</p>
                     </div>
@@ -60,5 +69,118 @@
                 
             </div>
         </div>
+
+        <div class="members-container" *ngIf="section==1 && user_role==='Director'">
+            <div class="top">
+                <h3>My Team</h3>
+                <div class="add-member" (click)="section=2" >
+                    <span class="material-symbols-outlined">
+                        add_box
+                    </span>
+                    <p>Add Member</p>
+                </div>
+            </div>
+            
+            <div class="team-members-grid">
+                <div class="member-info-card" *ngFor="let member of team_lst">
+                    <div class="title-info">
+                        <p class="name">{{member.name}}</p>
+                        <p class="staff-id">{{member.staff_id}}</p>
+                    </div>
+
+                    <div class="content">
+                        <div class="info">
+                            <span class="material-icons">person</span>
+                            <p class="field">User ID : </p>
+                            <p class="value">{{member.user_id}}</p>
+                        </div>
+            
+                        <div class="info">
+                            <span class="material-icons">mail</span>
+                            <p class="field">Mail ID : </p>
+                            <p class="value">{{member.mail}}</p>
+                        </div>
+            
+                        <div class="info">
+                            <span class="material-icons">call</span>
+                            <p class="field">Contact : </p>
+                            <p class="value">{{member.phone}}</p>
+                        </div>
+                    </div>
+
+                    <div class="options-box">
+                        <!-- (click)='getDriveById(drive.id)' -->
+                        <span class="material-symbols-outlined" id="edit" matTooltip="edit" (click)="getMemberById(member.pk)">
+                            edit
+                        </span>
+                        <span class="material-symbols-outlined" id="delete" matTooltip="delete"  (click)="show_delete = member.pk" >
+                            delete
+                        </span>
+                    </div>
+
+                    <div class="delete-box" *ngIf="show_delete === member.pk">
+                
+                        <div class="dialog-box">
+                            <p>Are you sure you want to delete this Member?</p>
+                            <div class="btns">
+                                <p class="del-btn" style="background-color: #198754;" (click)="deleteMember(member.pk)">Yes</p>
+                                <p class = "del-btn" style="background-color: #e5383b;"  (click)="show_delete = 0">No</p>
+                            </div>
+                        </div>
+        
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="add-member-box" *ngIf="section==2">
+            <!-- [formGroup]="loginForm" (ngSubmit)="proceedLogin()" -->
+            <form [formGroup]="addMemberForm" *ngIf="section==2">
+                
+                <div class="input">
+                    <p>Name</p>
+                    <mat-form-field class="input">
+                        <mat-label>Tom H</mat-label>
+                        <input matInput formControlName = "name">
+                    </mat-form-field>
+                </div>
+                
+                <div class="input">
+                    <p>E-mail ID</p>
+                    <mat-form-field>
+                        <mat-label>tom@kpriet.ac.in</mat-label>
+                        <input matInput formControlName = "mail">
+                    </mat-form-field>
+                </div>    
+                
+                
+                <div class="input">
+                    <p>Staff ID</p>
+                    <mat-form-field>
+                        <mat-label>19KPR001</mat-label>
+                        <input matInput formControlName = "staff_id">
+                    </mat-form-field>
+                </div>
+                
+    
+                <div class="input">
+                    <p>Contact</p>
+                    <mat-form-field>
+                        <mat-label>xxxxxxxxxx</mat-label>
+                        <span matPrefix>+91 &nbsp;</span>
+                        <input matInput formControlName = "contact">
+                    </mat-form-field> 
+                </div>
+                             
+    
+                <div class="btns">
+                  <button mat-raised-button id="reset" (click)="addMemberForm.reset()">Reset</button>
+                  <button mat-raised-button id="add" (click)="action==='add'?addMember() : updateMember()">{{action==='add'?'Add Member' : 'Save Changes'}}</button>
+                </div>
+              
+            </form>
+    
+        </div>
+
     </div>
 </div>

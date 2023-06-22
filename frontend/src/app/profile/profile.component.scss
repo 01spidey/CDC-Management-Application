@@ -10,12 +10,23 @@
     padding: 0;
 }
 
+
+
 .main{
     flex: 1;
     display: flex;
     flex-direction: column;
     padding-bottom: 5%;
     position: relative;
+    padding-bottom: 100px;
+
+    .back{
+        height: 30px;
+        width: 30px;
+        position: absolute;
+        left: 40px;
+        cursor: pointer;
+    }    
 
     .no-data{
         // background-color: #152b51;
@@ -62,41 +73,6 @@
         border-radius: 10px;
     }
 
-    .filter-box{
-        display: flex;
-        flex-direction: column;
-        gap: 20px;
-        flex: 1;
-        margin-top: 30px;
-        margin-left: 40px;
-        margin-right: 40px;
-
-        .container{
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            
-            
-            #refresh{
-                background-color:#198754;
-                color: white;
-                font-size: 1.2rem;
-                padding: 5px;
-                border-radius: 5px;
-                cursor: pointer;
-
-                &:hover{
-                    opacity: 0.85;
-                }
-
-                &:active{
-                    transform: scale(0.9);
-                }
-            } 
-        }
-        
-    }
-
     .main-container{
         // background-color: #198754;
         margin-left: 40px;
@@ -106,6 +82,7 @@
         // background-color: #152b51ff;
         display: flex;
         flex-direction: column;
+        // align-items: center;
 
         .member-details-box{
             // border: 1px solid #198754;
@@ -115,9 +92,8 @@
             margin-left: 40px;
             border-radius: 5px;
             gap: 10px;
-        
+            align-self: center; 
             display: flex;
-        
             .img{
                 background-color: #152b51;
                 height: 200px;
@@ -163,7 +139,11 @@
         
                 .info{
                     display: flex;
-                    gap: 10px;
+                    align-items: center;
+                    gap: 5px;
+                    span{
+                        font-size: 1.3rem;
+                    }
                     .field{
                         font-weight: 500;
                         color: #152b51;
@@ -176,11 +156,285 @@
 
                 .tool-box{
                     display: flex;
+                    gap: 15px;
+                    position: absolute;
+                    bottom: 10px;
+                    right: 20px;
                     .tool{
                         display: flex;
+                        font-size: .9rem;
+                        align-items: center;
+                        gap: 5px;
+                        
+                    }
+                    #edit, #delete, #add{
+                        background-color: #2f96b4ff;
+                        padding: 3px 10px;
+                        border-radius: 5px;
+                        color: white;
+                        cursor: pointer;
+                        transition: 0.3s ease;
                         font-size: 1rem;
+                        &:hover{
+                            opacity: 0.85;
+                        }
+                        span{
+                            font-size: 1rem;
+                        }
+                    }
+                    #delete{
+                        background-color: #ea4034;
+                    }
+                    #add{
+                        background-color: #198754ff;
                     }
                 }
+            }
+        }
+
+        .members-container{
+            margin-top: 50px;
+            height: 300px;
+            // background-color: #152b51;
+            .top{
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+
+                .add-member{
+                    display: flex;
+                    align-items: center;
+                    width: fit-content;
+                    padding: 5px 10px;
+                    border-radius: 5px;
+                    margin-right: 50px;
+                    background-color: #198754;
+                    color: white;
+                    margin-top: 10px;
+                    font-weight: 500;
+                    font-size: 1rem;
+            
+                    gap: 10px;
+                    align-self: flex-end;
+                    transition: 0.3s ease;
+                    cursor: pointer;
+            
+                    p{
+                        font-family: 'Nunito';
+                    }
+            
+                    &:hover{
+                        opacity: 0.85;
+                    }
+                }
+                
+                h3{
+                    font-size: 1.5rem;
+                    width: fit-content;
+                    padding-right: 15px;
+                    border-bottom: 2px solid #152b51;
+                    font-family: 'Poppins';
+                    color: #152b51;
+                }
+            }
+            
+            .team-members-grid{
+                display: grid;
+                grid-template-columns: 1fr 1fr 1fr;
+                margin-top: 20px;
+                gap: 20px;
+
+                .member-info-card{
+                    height: fit-content;
+                    background-color: white;
+                    box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.3);
+                    border-radius: 5px;
+                    padding: 15px;
+                    font-family: 'Poppins';
+                    display: flex;
+                    flex-direction: column;
+                    gap: 20px;
+                    position: relative;
+                    transition: 0.3s ease;
+
+                    &:hover{
+                        box-shadow: 3px 5px 7px 1px rgba(0,0,0,0.6);
+        
+                        .options-box{
+                            opacity: 1;
+                            pointer-events: all;
+                            cursor: pointer;
+                        }
+                    }
+
+                    .title-info{
+                        display: flex;
+                        flex-direction: column;
+                        // border-bottom: 1px dashed;
+                        // padding-bottom: 10px;
+                        .name{
+                            font-size: 1.5rem;
+                            font-weight: 700;
+                            color: #152b51;
+                        }
+                        .staff-id{
+                            font-family: 'Nunito';
+                            background-color: #198754;
+                            color: white;
+                            width: fit-content;
+                            padding: 5px;
+                            border-radius: 5px;
+                            font-size: .8rem;
+                        }
+                    }
+
+                    .content{
+                        display: flex;
+                        flex-direction: column;
+                        gap: 10px;
+                        .info{
+                            display: flex;
+                            align-items: center;
+                            gap: 5px;
+                            font-size: .9rem;
+                            span{
+                                font-size: 1.2rem;
+                            }
+                            .field{
+                                font-weight: 500;
+                            }
+                            .value{
+                                font-family: 'Nunito';
+                            }
+                        }
+                    }
+
+                    .options-box{
+                        position: absolute;
+                        display: flex;
+                        flex-direction: column;
+                        right: 15px;
+                        top: 0;
+                        bottom: 0;
+                        gap: 15px;
+                        font-size: .85rem;
+                        justify-content: center;
+                        
+                        opacity: 0;
+                        pointer-events: none;
+                        transition: 0.3s ease;
+                        color: #868585;
+
+                        #edit, #delete{
+                            padding: 3px;
+                            border-radius: 5px;
+                            transition: .3s ease;
+                            font-size: 1.3rem;
+                        }
+    
+                        #edit:hover{
+                            background-color: #198754de;
+                            color: white;
+                        }
+                        #delete:hover{
+                            background-color: #2f96b4de;
+                            color: white;
+                        }
+                    }
+
+                    .delete-box{
+                        position: absolute;
+                        top: 5px;
+                        bottom: 5px;
+                        left: 5px;
+                        right: 5px;
+                        background-color: white;
+                        z-index: 200;
+        
+                        padding: 20px 20px;
+                        border-radius: 20px;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        gap: 5px;
+        
+                        .dialog-box{
+                            display: flex;
+                            flex-direction: column;
+                            gap: 10px;
+                            align-items: center;
+                            font-family: 'Nunito';
+                            font-weight: 500;
+        
+                            .btns{
+                                display: flex;
+                                gap: 40px;
+                                justify-content: center;
+                                width: 100%;
+        
+                                .del-btn{
+                                    padding: 5px 20px;
+                                    border-radius: 5px;
+                                    color: white;
+                                    cursor: pointer;
+                                    font-size: .9rem;
+                                    transition: 0.3s ease;
+                                    &:hover{
+                                        opacity: 0.85;
+                                    }
+                                }
+                            }
+                            
+                        }
+                    }
+
+                }
+            }
+        }
+
+        .add-member-box{
+            display: flex;
+            flex-direction: column;
+            padding: 30px;
+            width: 80%;
+            align-self: start;
+            margin-left: 40px;
+            margin-top: 2%;
+            border: 1px dashed #152b51ff;
+            border-radius: 10px;
+    
+            form{
+                width: 50%;
+                display: flex;
+                flex-direction: column;
+                gap: 40px;
+                padding: 10px 50px;
+    
+                mat-form-field{
+                    width: 100%;
+                }
+                p{
+                    font-weight: 500;
+                    margin-bottom: 10px;
+                }
+            }
+    
+            .btns{
+                display: flex;
+                justify-content: space-between;
+            }
+    
+            #add{
+                background-color: #198754;
+                color: white;
+                font-weight: bold;
+                padding: 0px 10px;
+            }
+            
+            #reset{
+                border: 1px solid #198754;
+                color: #198754;
+                font-weight: bold;
             }
         }
     }

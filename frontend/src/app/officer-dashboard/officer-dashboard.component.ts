@@ -6,7 +6,7 @@ import { Component } from '@angular/core';
   styleUrls: ['./officer-dashboard.component.scss']
 })
 export class OfficerDashboardComponent {
-  cur_option = 'notification'
+  cur_option = 'profile'
   userData = JSON.parse(sessionStorage.getItem('cur_user_data')!);
 
   user_id = this.userData.name

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http'
-import { driveByIdResponse, driveByStatusResponse, filterOptions, getMembersResponse, getReportsResponse, loadMembersResponse, loginResponse, notificationResponse, openMemberResponse, reportByIdResponse, reportSummaryResponse, serverResponse } from '../models/model';
+import { driveByIdResponse, driveByStatusResponse, filterOptions, getMembersResponse, getReportsResponse, loadMembersResponse, loginResponse, notificationResponse, openMemberResponse, reportByIdResponse, reportSummaryResponse, serverResponse, user, userByIdResponse } from '../models/model';
 import { P } from '@angular/cdk/keycodes';
 
 @Injectable({
@@ -24,6 +24,14 @@ export class AppService {
 
   add_member(formData:FormData){
     return this.http.post<serverResponse>(`${this.URL}/add_member`, formData);
+  }
+
+  update_member(data:FormData){
+    return this.http.post<serverResponse>(`${this.URL}/update_member`, data);
+  }
+
+  delete_member(data : object){
+    return this.http.post<serverResponse>(`${this.URL}/delete_member`, data);
   }
 
   load_members(){
@@ -95,6 +103,12 @@ export class AppService {
       staff_id : staff_id
     }
     return this.http.get<notificationResponse>(`${this.URL}/get_notifications`, {params : data})
+  }
+
+  getMemberById(pk:number){
+    const data = {pk : pk}
+    return this.http.get<userByIdResponse>(`${this.URL}/get_member_by_id`, {params : data})
+
   }
 
   // get_user(user_id: string, role: string) {

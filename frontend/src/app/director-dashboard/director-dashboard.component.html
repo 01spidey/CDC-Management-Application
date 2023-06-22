@@ -12,13 +12,6 @@
             <p>Placement Drive</p>
         </div>
 
-        <div class="nav" (click)="selectMenu('team')" [ngClass] = "{active: cur_option =='team'}">
-            <span class="material-symbols-outlined">
-                groups
-            </span>
-            <p>My Team</p>
-        </div>
-
         <div class="nav" (click)="selectMenu('summary')" [ngClass] = "{active: cur_option =='summary'}">
             <span class="material-symbols-outlined">
                 article
@@ -49,7 +42,6 @@
     </div>
     <div class="main">
         <app-drive *ngIf="cur_option=='drive'"></app-drive>
-        <app-my-team *ngIf="cur_option=='team'"></app-my-team>
         <app-profile *ngIf="cur_option=='profile'"></app-profile>
         <app-summary *ngIf="cur_option=='summary'"></app-summary>
         <app-notification *ngIf="cur_option=='notification'"></app-notification>

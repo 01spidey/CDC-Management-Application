@@ -150,7 +150,7 @@ def add_member(request):
             password = password,
             name = name,
             mail = mail,
-            phone = '+91 '+contact,
+            phone = contact,
             staff_id = staff_id
         )
         
@@ -171,6 +171,7 @@ def load_members(request):
     for officer in PlacementOfficer.objects.all():
         team_lst.append(
             {
+                'pk' : officer.pk,
                 'user_id' : officer.user_id,
                 'name' : officer.name,
                 'mail' : officer.mail,
@@ -788,7 +789,6 @@ def get_members(request):
     
     return JsonResponse(data)
 
-
 def get_report_summary_by_id(staff_id, filter, start_date, end_date):
     # staff_id = request.GET.get('staff_id', 'default_staff_id')
     report_data = Report.objects.all()
@@ -849,8 +849,7 @@ def get_report_summary(request):
             'report_summary': []
         }
 
-        return JsonResponse(data)
- 
+        return JsonResponse(data) 
  
 def get_remaining_days(date_string):
     # Convert the date string to a datetime object
@@ -918,3 +917,90 @@ def get_notifications(request):
             'notifications': drive_notifications
         }
         return JsonResponse(data)
+        
+@csrf_exempt
+def get_member_by_id(request):
+    pk = request.GET.get('pk')
+    
+    
+    try:
+        user = PlacementOfficer.objects.get(pk = pk)
+        
+        data = {
+            'success' : True,
+            'user' : {
+                'pk' : pk,
+                'name' : user.name,
+                'user_id' : user.user_id,
+                'staff_id' : user.staff_id,
+                'mail' : user.mail,
+                'phone' : user.phone
+            }
+        }
+        return JsonResponse(data)
+    
+    except Exception as e:
+        print(e)
+        data = {
+            'success' : False,
+            'user' : { }
+        }
+        return JsonResponse(data)
+
+@csrf_exempt
+def update_member(request):
+    pk = request.POST['pk']
+    name = request.POST['name']
+    mail = request.POST['mail']
+    contact = request.POST['contact']
+    staff_id = request.POST['staff_id']
+    
+    try:
+        updated_data = {
+            'name' : name,
+            'mail' : mail,
+            'phone' : contact,
+            'staff_id' : staff_id
+        }
+        
+        PlacementOfficer.objects.filter(pk=pk).update(**updated_data)
+        
+        data = {
+            'success':True,
+            'message' : f'Member updated Successfully!!'
+        }
+    
+        return JsonResponse(data)
+    
+    except Exception as e:
+        print(e)
+        data = {
+            'success':False,
+            'message' : f'Some Technical Error!!'
+        }
+    
+        return JsonResponse(data)
+    
+@csrf_exempt
+def delete_member(request):
+    pk = (json.loads(request.body))['pk']
+    try:
+        officer = PlacementOfficer.objects.get(pk = pk)
+        officer.delete()
+        data = {
+            'success':True,
+            'message' : f'Member deleted Successfully!!'
+        }
+    
+        return JsonResponse(data)
+    
+    except Exception as e:
+        print(e)
+        data = {
+            'success':False,
+            'message' : f'Some Technical Error!!'
+        }
+    
+        return JsonResponse(data)
+    
+        

@@ -1,14 +1,16 @@
 <div class="main">
 
+    <img (click) = "back()" src="../../assets/back.png" *ngIf="section==2" class="back">
+
     <div class="top">
-        <div class="title" *ngIf="section==1">
+        <div class="title">
             <h1>Report Summary</h1>
             <hr id="line" style="width: 380px;">
         </div>
 
     </div>
 
-    <div class="filter-box" *ngIf="section==1">
+    <div class="filter-box" >
         <div class="container">
             <div class="filter-container">
 
@@ -67,7 +69,7 @@
 
     <div class="main-container">
         
-        <div class="stats-box">
+        <div class="stats-box" *ngIf="section==1">
             <div class="card-1">
                 <div class="card-title">Total Reports</div>
                 <div class="card-content">
@@ -91,15 +93,14 @@
                 </div>
             </div>
         </div>
-
-        <table *ngIf="report_summary.length>0 && section==1">
+        
+        <table *ngIf="section==1">
             <tr>
                 <th>S.No</th>
                 <th>Staff ID</th>
                 <th>Staff Name</th>
                 <th>No.Of Reports</th>
                 <th style="flex:3;">Companies</th> 
-                <th>Details</th>
             </tr>
             <tr *ngFor="let summary of report_summary">
                 <td>{{summary.position}}</td>
@@ -115,13 +116,41 @@
                         </div>
                     </div>
                 </td>
-                <td>
-                    <span class="material-symbols-outlined">
-                        open_in_new
-                    </span>
-                </td>
             </tr>
         </table>
+
+        <div class="more" *ngIf="section==1">
+            <button (click)= 'goto(2)'>
+                <p>View More</p>
+                <span class="material-symbols-outlined">
+                    arrow_forward_ios
+                </span>
+            </button>
+        </div>
+
+        <div class="no-data" *ngIf="row_data.length==0 && section==2">
+            <img src="../../assets/no-data.svg" alt="no-data.svg">
+            <p>No Data Found...</p>
+        </div>
+
+        <div class="grid-container" *ngIf="section==2 && row_data.length>0">
+            <button id="csv-export" (click)="onBtnExport()">
+                <span class="material-symbols-outlined">
+                    download
+                </span>
+                Export as CSV
+            </button>
+            <ag-grid-angular
+                style="width: 100%; height: 500px;"
+                class="ag-theme-alpine"
+                [rowData]="row_data"
+                [columnDefs]="col_defs"
+                [defaultColDef]="defaultColDef"
+                [enableRangeSelection]="true"
+                (gridReady)="onGridReady($event)"
+                ></ag-grid-angular>
+        </div>
+        
     </div>
 
 <!-- 

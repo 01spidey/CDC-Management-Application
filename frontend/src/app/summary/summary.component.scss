@@ -14,9 +14,17 @@
     flex: 1;
     display: flex;
     flex-direction: column;
-    padding-bottom: 5%;
+    // padding-bottom: 5%;
     position: relative;
 
+    .back{
+        height: 30px;
+        width: 30px;
+        position: absolute;
+        left: 40px;
+        cursor: pointer;
+    }
+    
     .no-data{
         // background-color: #152b51;
         width: 80%;
@@ -180,12 +188,37 @@
         width: 95%;
         margin-top: 2%;
        
+        .more{
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            margin-top: 15px;
+            button{
+                background-color: #35363a;
+                color: white;
+                display: flex;
+                align-items: center;
+                gap: 5px;
+                border-radius: 5px;
+                padding: 3px 7px;
+                cursor: pointer;
+                p{
+                    font-family: 'Poppins';
+                    font-weight: 500;
+                }
+                span{
+                    font-size: 1rem;
+                }
+            }
+        }
 
         table, th, td{
             // border: 1px solid black;
             // border-collapse: collapse;
             width: 100%;
         }
+
         tr{
             display: flex;
             margin-bottom: 3px;
@@ -300,6 +333,56 @@
                 color: white;
                 padding: 5px 10px;
                 border-radius: 5px;
+            }
+        }
+
+        .grid-container{
+            width: 95%;
+            padding: 5px;
+            height: fit-content;
+            align-self: start;
+            display: flex;
+            flex-direction: column;
+            // justify-content: center;
+    
+            #csv-export{
+                padding: 7px 10px;
+                border-radius: 5px;
+                border: none;
+                background-color: #e5383b;
+                color: white;
+                font-family: 'Poppins';
+                align-self: flex-end;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 10px;
+                cursor: pointer;
+            }
+    
+            ag-grid-angular{
+                border: 5px solid #152b51ff;
+                margin-top: 15px;
+            }
+        }
+
+        .no-data{
+            // background-color: #152b51;
+            width: 100%;
+            height: 60vh;
+            align-self: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+    
+            img{
+                height: 80%;
+            }
+    
+            p{
+                font-family: 'Poppins';
+                font-size: 20px;
             }
         }
     }

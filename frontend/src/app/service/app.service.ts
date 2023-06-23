@@ -105,6 +105,15 @@ export class AppService {
     return this.http.post<getReportsResponse>(`${this.URL}/get_reports`, data)
   }
 
+  getReports(data:any){
+    // const params = {
+    //   start_date : data.start_date,
+    //   end_date : data.en,
+    //   period : data['period'],
+    // }
+    return this.http.get<getReportsResponse>(`${this.URL}/get_reports`, {params : data})
+  }
+
   getAllMembers(){
     return this.http.get<getMembersResponse>(`${this.URL}/get_members`)
   }

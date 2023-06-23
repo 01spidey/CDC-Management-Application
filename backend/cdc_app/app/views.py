@@ -586,83 +586,132 @@ def update_report(request):
 def get_reports(request):
     
     reports = []
-    filter_options = json.loads(request.body)
-    category = filter_options['category']
-    period = filter_options['period']
-    startDate = filter_options['startDate']
-    endDate = filter_options['endDate']
-    visibility = filter_options['visibility']
-    staff_id = filter_options['staff_id']
+    try:
+        if(request.method == 'POST'):
+            filter_options = json.loads(request.body)
+            category = filter_options['category']
+            period = filter_options['period']
+            startDate = filter_options['startDate']
+            endDate = filter_options['endDate']
+            visibility = filter_options['visibility']
+            staff_id = filter_options['staff_id']
 
-    report_lst = Report.objects.all()
-    
-    print(category, period, startDate, endDate, visibility, staff_id)
-    
-
-    if category == 'All':
-        if period == 'Today':
-            print(date.today())
-            # Filter for today's reports with visibility for all
-            report_lst = report_lst.filter(
-                Q(date=date.today(), visible_to__contains=[staff_id]) | 
-                Q(date=date.today(), visibility='Public') |
-                Q(date=date.today(), placement_officer_id=staff_id)
-            )
+            report_lst = Report.objects.all()
             
-            print(report_lst)
-        else:
-            print(startDate, endDate)
-            # Filter based on start date and end date with visibility for all
-            report_lst = report_lst.filter(
-                Q(date__range=[startDate, endDate], visible_to__contains=[staff_id]) |
-                Q(date__range=[startDate, endDate], visibility='Public') |
-                Q(date__range=[startDate, endDate], placement_officer_id=staff_id)
-            )
+            print(category, period, startDate, endDate, visibility, staff_id)
+            
 
-    elif category == 'My':
-        if period == 'Today':
-            if visibility == 'All':
-                # Filter for today's reports with visibility as public and for the specific staff_id
-                print(staff_id)
-                report_lst = report_lst.filter(date=date.today(), placement_officer_id=staff_id)
-            elif visibility == 'Private':
-                # Filter for today's reports with visibility as private and for the specific staff_id
-                report_lst = report_lst.filter(date=date.today(), visibility='Private', placement_officer_id=staff_id)
-        else:
-            if visibility == 'All':
-                # Filter based on start date, end date, visibility as public, and for the specific staff_id
-                report_lst = report_lst.filter(date__range=[startDate, endDate],placement_officer_id=staff_id)
-            elif visibility == 'Private':
-                # Filter based on start date, end date, visibility as private, and for the specific staff_id
-                report_lst = report_lst.filter(date__range=[startDate, endDate], visibility='Private', placement_officer_id=staff_id)
-    
-    # reports_temp = list(report_lst)
-    # print(reports_temp)
-    a=1
-    for report in report_lst:
-        reports.append({
-            'position' : a,
-            'pk' : report.pk,
-            'date': report.date,
-            'staff_id': report.placement_officer_id,
-            'company': report.company,
-            'HR_name': report.HR_name,
-            'HR_mail': report.HR_mail,
-            'contact_mode': report.contact_mode,
-            'message': report.message,
-            'reminder_date': report.reminder_date,
-            'visibility': report.visibility
-        })
-        a+=1
-    
-    # report_lst = report_lst.values('pk', 'date', 'placement_officer_id', 'company', 'HR_name', 'HR_mail', 'contact_mode', 'message', 'reminder_date', 'visibility')
+            if category == 'All':
+                if period == 'Today':
+                    print(date.today())
+                    # Filter for today's reports with visibility for all
+                    report_lst = report_lst.filter(
+                        Q(date=date.today(), visible_to__contains=[staff_id]) | 
+                        Q(date=date.today(), visibility='Public') |
+                        Q(date=date.today(), placement_officer_id=staff_id)
+                    )
+                    
+                    print(report_lst)
+                else:
+                    print(startDate, endDate)
+                    # Filter based on start date and end date with visibility for all
+                    report_lst = report_lst.filter(
+                        Q(date__range=[startDate, endDate], visible_to__contains=[staff_id]) |
+                        Q(date__range=[startDate, endDate], visibility='Public') |
+                        Q(date__range=[startDate, endDate], placement_officer_id=staff_id)
+                    )
 
-    data = {
-        'success' : True,
-        'reports' : reports
-    }   
+            elif category == 'My':
+                if period == 'Today':
+                    if visibility == 'All':
+                        # Filter for today's reports with visibility as public and for the specific staff_id
+                        print(staff_id)
+                        report_lst = report_lst.filter(date=date.today(), placement_officer_id=staff_id)
+                    elif visibility == 'Private':
+                        # Filter for today's reports with visibility as private and for the specific staff_id
+                        report_lst = report_lst.filter(date=date.today(), visibility='Private', placement_officer_id=staff_id)
+                else:
+                    if visibility == 'All':
+                        # Filter based on start date, end date, visibility as public, and for the specific staff_id
+                        report_lst = report_lst.filter(date__range=[startDate, endDate],placement_officer_id=staff_id)
+                    elif visibility == 'Private':
+                        # Filter based on start date, end date, visibility as private, and for the specific staff_id
+                        report_lst = report_lst.filter(date__range=[startDate, endDate], visibility='Private', placement_officer_id=staff_id)
+            
+            # reports_temp = list(report_lst)
+            # print(reports_temp)
+            a=1
+            for report in report_lst:
+                reports.append({
+                    'position' : a,
+                    'pk' : report.pk,
+                    'date': report.date,
+                    'staff_id': report.placement_officer_id,
+                    'company': report.company,
+                    'HR_name': report.HR_name,
+                    'HR_mail': report.HR_mail,
+                    'contact_mode': report.contact_mode,
+                    'message': report.message,
+                    'reminder_date': report.reminder_date,
+                    'visibility': report.visibility
+                })
+                a+=1
+            
+            # report_lst = report_lst.values('pk', 'date', 'placement_officer_id', 'company', 'HR_name', 'HR_mail', 'contact_mode', 'message', 'reminder_date', 'visibility')
+
+            data = {
+                'success' : True,
+                'reports' : reports
+            }   
+            
+            return JsonResponse(data)
     
-    return JsonResponse(data)
+        elif(request.method == 'GET'):
+            start_date = request.GET.get('start_date')
+            end_date = request.GET.get('end_date')
+            filter = request.GET.get('filter')
+            report_lst = Report.objects.all()
+            
+            print(start_date, end_date, filter)
+            
+            if(filter=='Today'):
+                report_lst = report_lst.filter(date=date.today())
+            else:
+                report_lst = report_lst.filter(date__range=[start_date, end_date])
+                
+
+            a=1
+            for report in report_lst:
+                reports.append({
+                    'position' : a,
+                    'pk' : report.pk,
+                    'date': report.date,
+                    'staff_id': report.placement_officer_id,
+                    'company': report.company,
+                    'HR_name': report.HR_name,
+                    'HR_mail': report.HR_mail,
+                    'contact_mode': report.contact_mode,
+                    'message': report.message,
+                    'reminder_date': report.reminder_date,
+                    'visibility': report.visibility
+                })
+                a+=1
+            
+            data = {
+                    'success' : True,
+                    'reports' : reports
+                }
+            
+            return JsonResponse(data)
+    
+    except Exception as e:
+        print(e)
+        data ={
+            'success' : False,
+            'reports' : reports,
+        }
+        
+        return JsonResponse(data)
 
 @csrf_exempt
 def get_report_by_id(request):

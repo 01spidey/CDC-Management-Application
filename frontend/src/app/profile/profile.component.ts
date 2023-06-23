@@ -25,6 +25,14 @@ export class ProfileComponent implements OnInit {
   title = 'My Profile'
   pk = 0
 
+  reports_today = 10
+  reports_week = 13
+  reports_month = 20
+  
+  drives_today = 2
+  drives_week = 3
+  drives_month = 5
+
   team_lst : user[] = []
   admin_lst:user[] = []
 

@@ -81,10 +81,10 @@ WSGI_APPLICATION = 'cdc_app.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'cdc-app',
-        'USER' : 'postgres',
-        'PASSWORD' : 'abc',
-        'HOST' : 'localhost'
+        'NAME': 'kpr_cdc_db',
+        'USER' : 'kpr_cdc',
+        'PASSWORD' : 'kprcdc123',
+        'HOST' : 'kpr-cdc-db.co8tdg7i8awz.ap-south-1.rds.amazonaws.com'
     }
 }
 

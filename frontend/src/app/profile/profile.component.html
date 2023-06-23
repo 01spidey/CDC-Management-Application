@@ -71,6 +71,53 @@
             </div>
         </div>
 
+        <div class="member-stats-container" *ngIf="section==1 && user_role==='Officer'">
+            <h3>Performance Statistics</h3> 
+            <div class="member-stats-box">
+                <div class="stats-box">
+                    <p class="card-title">Today</p>
+                    <div class="val-box" >
+                        <div class="val" style="border-right: 1px dashed;">
+                            <p class="val-name" style="background-color: #1a6486;">Reports</p>
+                            <p class="val-value">{{reports_today}}</p>
+                        </div>
+                        <div class="val">
+                            <p class="val-name" style="background-color: #ea4034;">Drives</p>
+                            <p class="val-value">{{drives_today}}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stats-box">
+                    <p class="card-title">This Week</p>
+                    <div class="val-box" >
+                        <div class="val" style="border-right: 1px dashed;">
+                            <p class="val-name" style="background-color: #1a6486;">Reports</p>
+                            <p class="val-value">{{reports_week}}</p>
+                        </div>
+                        <div class="val">
+                            <p class="val-name" style="background-color: #ea4034;">Drives</p>
+                            <p class="val-value">{{drives_week}}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stats-box">
+                    <p class="card-title">This Month</p>
+                    <div class="val-box" >
+                        <div class="val" style="border-right: 1px dashed;">
+                            <p class="val-name" style="background-color: #1a6486;">Reports</p>
+                            <p class="val-value">{{reports_month}}</p>
+                        </div>
+                        <div class="val">
+                            <p class="val-name" style="background-color: #ea4034;">Drives</p>
+                            <p class="val-value">{{drives_month}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="members-container" *ngIf="section==1 && user_role==='Director'">
             <div class="top">
                 <h3>System Admins</h3>

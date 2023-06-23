@@ -20,10 +20,13 @@ export class ProfileComponent implements OnInit {
   user_role = sessionStorage.getItem('user_role')!
 
   show_delete = 0
-  action = 'add'
+  action = 'Add'
+  role = 'Member'
+  title = 'My Profile'
   pk = 0
 
   team_lst : user[] = []
+  admin_lst:user[] = []
 
   constructor(
     private service : AppService,
@@ -31,15 +34,22 @@ export class ProfileComponent implements OnInit {
     private builder : FormBuilder
   ){  }
 
+  // Both ADMIN and MEMBER can use this function
   ngOnInit(): void {
-      this.loadMembers()
+    if(this.user_role=='Director'){
+      this.loadMembers('member')
+      this.loadMembers('admin')
+    }
   }
 
-  loadMembers(){
-    this.service.load_members().subscribe(
+  // Both ADMIN and MEMBER can use this function
+  loadMembers(role:string){
+    this.service.load_members(role).subscribe(
       (res:loadMembersResponse)=>{
         if(res.success){
-          this.team_lst = res.team_lst
+          console.log(res.team_lst)
+          if(role==='member') this.team_lst = res.team_lst
+          else this.admin_lst = res.team_lst
         }else{
           this.toastr.warning('Some Technical Error!!')
         }
@@ -51,6 +61,7 @@ export class ProfileComponent implements OnInit {
     )
   }
 
+  
   addMemberForm = this.builder.group({
     
     name:this.builder.control('', Validators.compose([
@@ -79,6 +90,7 @@ export class ProfileComponent implements OnInit {
   });
 
 
+  // Both ADMIN and MEMBER can use this function
   addMember(){
     let formData = new FormData()
 
@@ -87,13 +99,14 @@ export class ProfileComponent implements OnInit {
       formData.append('mail', this.addMemberForm.value.mail!)
       formData.append('contact', this.addMemberForm.value.contact!)
       formData.append('staff_id', this.addMemberForm.value.staff_id!)
+      formData.append('role', this.role)
 
       this.service.add_member(formData).subscribe(
         (res:serverResponse)=>{
           if(res.success){
-            this.toastr.success('Member Added Successfully!!')
+            this.toastr.success(res.message)
           }else{
-            this.toastr.warning('Member Already Exists!!')
+            this.toastr.warning(res.message)
           }
         },
         err=>{
@@ -107,12 +120,17 @@ export class ProfileComponent implements OnInit {
     
   }
 
-  getMemberById(pk : number){
-    this.service.getMemberById(pk).subscribe(
+  // Both ADMIN and MEMBER can use this function
+  getMemberById(pk : number, role:string){
+
+    this.service.getMemberById(pk, role).subscribe(
       (res:userByIdResponse)=>{
         if(res.success){
-          this.action = 'edit'
-          this.section = 2
+          
+          if(role==='member') this.changeSection(2, 'Edit', 'Member')
+          else this.changeSection(2, 'Edit', 'Admin')
+
+
           this.pk = pk
           console.log(res.user)
           this.addMemberForm.patchValue({
@@ -131,6 +149,7 @@ export class ProfileComponent implements OnInit {
     ) 
   }
 
+  // Both ADMIN and MEMBER can use this function
   updateMember(){
     let formData = new FormData()
 
@@ -140,6 +159,7 @@ export class ProfileComponent implements OnInit {
       formData.append('mail', this.addMemberForm.value.mail!)
       formData.append('contact', this.addMemberForm.value.contact!)
       formData.append('staff_id', this.addMemberForm.value.staff_id!)
+      formData.append('role', this.role)
 
       this.service.update_member(formData).subscribe(
         (res:serverResponse)=>{
@@ -160,16 +180,20 @@ export class ProfileComponent implements OnInit {
     
   }
 
-  deleteMember(pk : number){
+  // Both ADMIN and MEMBER can use this function
+  deleteMember(pk : number, role:string, staff_id:string){
     let data = {
-      pk : pk
+      pk : pk,
+      role : role
     }
     this.service.delete_member(data).subscribe(
       (res:serverResponse)=>{
         if(res.success){
           this.toastr.success(res.message)
-          this.loadMembers()
+          if(role==='admin') this.loadMembers('admin')
+          if(role==='member') this.loadMembers('member')
           this.show_delete = 0
+          if(staff_id===this.staff_id) this.service.logout()
         }else{
           this.toastr.warning(res.message)
         }
@@ -180,10 +204,21 @@ export class ProfileComponent implements OnInit {
     )
   }
 
+  changeSection(section:number, action : string, role : string){
+    this.section = section
+    this.action = action
+    this.role = role
+    this.title = action + ' ' + role
+  }
+
   back(){
     this.section = 1
-    this.action = 'add'
-    this.loadMembers()
+    this.action = 'Add'
+    this.title = 'My Profile'
+
+    this.loadMembers('member')
+    this.loadMembers('admin')
+
     this.addMemberForm.reset()
   }
 

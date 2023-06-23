@@ -122,70 +122,6 @@ def add_admin(request):
         
         return JsonResponse(data)
         
-@csrf_exempt
-def add_member(request):
-    
-    user_id = request.POST['staff_id']
-    password = request.POST['staff_id']
-    name = request.POST['name']
-    mail = request.POST['mail']
-    contact = request.POST['contact']
-    staff_id = request.POST['staff_id']
-    
-    print(f'{user_id}\n{password}\n{name}\n{mail}\n{contact}\n{staff_id}')
-    
-    if PlacementOfficer.objects.filter(user_id=user_id) or PlacementOfficer.objects.filter(staff_id =staff_id):     
-        
-        return JsonResponse(
-            {
-                'success':False,
-                'message' : 'Member already Exists!!'
-            }
-        )
-            
-        
-    else:
-        officer = PlacementOfficer(
-            user_id = user_id,
-            password = password,
-            name = name,
-            mail = mail,
-            phone = contact,
-            staff_id = staff_id
-        )
-        
-        officer.save()
-        
-        
-    data = {
-        'success':True,
-        'message' : 'Member added Successfully!!'
-    }
-    
-    return JsonResponse(data)
-
-@csrf_exempt
-def load_members(request):
-    team_lst = []
-    
-    for officer in PlacementOfficer.objects.all():
-        team_lst.append(
-            {
-                'pk' : officer.pk,
-                'user_id' : officer.user_id,
-                'name' : officer.name,
-                'mail' : officer.mail,
-                'phone' : officer.phone,
-                'staff_id' : officer.staff_id
-            }
-        )
-    
-    data = {
-        'success':True,
-        'team_lst' : team_lst
-    }
-    
-    return JsonResponse(data)
  
 @csrf_exempt
 def get_drive_by_status(request):
@@ -917,27 +853,173 @@ def get_notifications(request):
             'notifications': drive_notifications
         }
         return JsonResponse(data)
+
+
+
+
+# Implemented for both admin and member
+@csrf_exempt
+def load_members(request):
+    team_lst = []
+    role = request.GET.get('role')
+    if(role=='admin'):
+        for director in PlacementDirector.objects.all():
+            team_lst.append(
+                {
+                    'pk' : director.pk,
+                    'user_id' : director.user_id,
+                    'name' : director.name,
+                    'mail' : director.mail,
+                    'phone' : director.phone,
+                    'staff_id' : director.staff_id
+                }
+            )
         
+        data = {
+            'success':True,
+            'team_lst' : team_lst
+        }
+        
+        return JsonResponse(data)
+    
+    else:
+        for officer in PlacementOfficer.objects.all():
+            team_lst.append(
+                {
+                    'pk' : officer.pk,
+                    'user_id' : officer.user_id,
+                    'name' : officer.name,
+                    'mail' : officer.mail,
+                    'phone' : officer.phone,
+                    'staff_id' : officer.staff_id
+                }
+            )
+        
+        data = {
+            'success':True,
+            'team_lst' : team_lst
+        }
+        
+        return JsonResponse(data)
+    
+# Implemented for both admin and member
+@csrf_exempt
+def add_member(request):
+    
+    user_id = request.POST['staff_id']
+    password = request.POST['staff_id']
+    name = request.POST['name']
+    mail = request.POST['mail']
+    contact = request.POST['contact']
+    staff_id = request.POST['staff_id']
+    role = request.POST['role']
+    
+    print(f'{user_id}\n{password}\n{name}\n{mail}\n{contact}\n{staff_id}')
+    
+    try:
+        if(role=='Admin'):
+            if PlacementDirector.objects.filter(user_id=user_id) or PlacementDirector.objects.filter(staff_id =staff_id):     
+                
+                return JsonResponse(
+                    {
+                        'success':False,
+                        'message' : 'Admin already Exists!!'
+                    }
+                )  
+            else:
+                director = PlacementDirector(
+                    user_id = user_id,
+                    password = password,
+                    name = name,
+                    mail = mail,
+                    phone = contact,
+                    staff_id = staff_id
+                )  
+                
+                director.save()
+                
+                data = {
+                    'success':True,
+                    'message' : 'Admin added Successfully!!'
+                }
+                
+                return JsonResponse(data)
+        
+        else :
+            if PlacementOfficer.objects.filter(user_id=user_id) or PlacementOfficer.objects.filter(staff_id =staff_id):     
+                
+                return JsonResponse(
+                    {
+                        'success':False,
+                        'message' : 'Member already Exists!!'
+                    }
+                )
+                    
+            else:
+                officer = PlacementOfficer(
+                    user_id = user_id,
+                    password = password,
+                    name = name,
+                    mail = mail,
+                    phone = contact,
+                    staff_id = staff_id
+                )
+                
+                officer.save()
+            
+            
+                data = {
+                    'success':True,
+                    'message' : 'Member added Successfully!!'
+                }
+                
+                return JsonResponse(data)
+    
+    except Exception as e:
+        print(e)
+        data = {
+           'success':False,
+            'message' : 'Some Technical Error!!' 
+        }
+
+# Implemented for both admin and member 
 @csrf_exempt
 def get_member_by_id(request):
     pk = request.GET.get('pk')
-    
+    role = request.GET.get('role')
     
     try:
-        user = PlacementOfficer.objects.get(pk = pk)
-        
-        data = {
-            'success' : True,
-            'user' : {
-                'pk' : pk,
-                'name' : user.name,
-                'user_id' : user.user_id,
-                'staff_id' : user.staff_id,
-                'mail' : user.mail,
-                'phone' : user.phone
+        if(role=='admin'):
+            user = PlacementDirector.objects.get(pk = pk)
+            
+            data = {
+                'success' : True,
+                'user' : {
+                    'pk' : pk,
+                    'name' : user.name,
+                    'user_id' : user.user_id,
+                    'staff_id' : user.staff_id,
+                    'mail' : user.mail,
+                    'phone' : user.phone
+                }
             }
-        }
-        return JsonResponse(data)
+            return JsonResponse(data)
+        
+        else:
+            user = PlacementOfficer.objects.get(pk = pk)
+            
+            data = {
+                'success' : True,
+                'user' : {
+                    'pk' : pk,
+                    'name' : user.name,
+                    'user_id' : user.user_id,
+                    'staff_id' : user.staff_id,
+                    'mail' : user.mail,
+                    'phone' : user.phone
+                }
+            }
+            return JsonResponse(data)
     
     except Exception as e:
         print(e)
@@ -947,6 +1029,7 @@ def get_member_by_id(request):
         }
         return JsonResponse(data)
 
+# Implemented for both admin and member
 @csrf_exempt
 def update_member(request):
     pk = request.POST['pk']
@@ -954,6 +1037,7 @@ def update_member(request):
     mail = request.POST['mail']
     contact = request.POST['contact']
     staff_id = request.POST['staff_id']
+    role = request.POST['role']
     
     try:
         updated_data = {
@@ -963,14 +1047,28 @@ def update_member(request):
             'staff_id' : staff_id
         }
         
-        PlacementOfficer.objects.filter(pk=pk).update(**updated_data)
+        print(role)
+        print(pk)
         
-        data = {
-            'success':True,
-            'message' : f'Member updated Successfully!!'
-        }
-    
-        return JsonResponse(data)
+        if(role=='Member'):
+            PlacementOfficer.objects.filter(pk=pk).update(**updated_data)
+            
+            data = {
+                'success':True,
+                'message' : f'Member updated Successfully!!'
+            }
+        
+            return JsonResponse(data)
+        
+        else:
+            PlacementDirector.objects.filter(pk=pk).update(**updated_data)
+            
+            data = {
+                'success':True,
+                'message' : f'Admin updated Successfully!!'
+            }
+        
+            return JsonResponse(data)
     
     except Exception as e:
         print(e)
@@ -980,19 +1078,33 @@ def update_member(request):
         }
     
         return JsonResponse(data)
-    
+ 
+# Implemented for both admin and member   
 @csrf_exempt
 def delete_member(request):
-    pk = (json.loads(request.body))['pk']
-    try:
-        officer = PlacementOfficer.objects.get(pk = pk)
-        officer.delete()
-        data = {
-            'success':True,
-            'message' : f'Member deleted Successfully!!'
-        }
+    data = json.loads(request.body)
+    pk = data['pk']
+    role = data['role']
     
-        return JsonResponse(data)
+    try:
+        if(role=='admin'):
+            director = PlacementDirector.objects.get(pk = pk)
+            director.delete()
+            data = {
+                'success':True,
+                'message' : f'Admin deleted Successfully!!'
+            }
+        
+            return JsonResponse(data)
+        else:
+            officer = PlacementOfficer.objects.get(pk = pk)
+            officer.delete()
+            data = {
+                'success':True,
+                'message' : f'Member deleted Successfully!!'
+            }
+        
+            return JsonResponse(data)
     
     except Exception as e:
         print(e)

@@ -29,7 +29,6 @@ class PlacementOfficer(models.Model):
     staff_id = models.CharField(max_length=50, null=False, unique=True)
     profile_img = models.ImageField(upload_to='backend\cdc_app\app\officer_profiles', null=True)
 
-
 class PlacementDirector(models.Model):
     user_id = models.CharField(max_length=50, null=False, primary_key=True)
     password = models.CharField(max_length=50, null=False)

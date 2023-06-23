@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http'
 import { driveByIdResponse, driveByStatusResponse, filterOptions, getMembersResponse, getReportsResponse, loadMembersResponse, loginResponse, notificationResponse, openMemberResponse, reportByIdResponse, reportSummaryResponse, serverResponse, user, userByIdResponse } from '../models/model';
 import { P } from '@angular/cdk/keycodes';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +11,9 @@ export class AppService {
 
   URL = "http://127.0.0.1:8000/";
 
-  constructor(private http:HttpClient) {
+  constructor(
+    private http:HttpClient,
+    private router:Router) {
 
   }
 
@@ -22,20 +25,34 @@ export class AppService {
     return this.http.post<loginResponse>(`${this.URL}/login`, formData);
   }
 
+  // Both ADMIN and MEMBER can use this function
   add_member(formData:FormData){
     return this.http.post<serverResponse>(`${this.URL}/add_member`, formData);
   }
 
+  // Both ADMIN and MEMBER can use this function
   update_member(data:FormData){
     return this.http.post<serverResponse>(`${this.URL}/update_member`, data);
   }
 
+  // Both ADMIN and MEMBER can use this function
   delete_member(data : object){
     return this.http.post<serverResponse>(`${this.URL}/delete_member`, data);
   }
 
-  load_members(){
-    return this.http.get<loadMembersResponse>(`${this.URL}/load_members`)
+  // Both ADMIN and MEMBER can use this function
+  load_members(role:string){
+    let params = {role : ''}
+    if(role==='admin') params = {role : 'admin'}
+    else params = {role : 'member'}
+    
+    return this.http.get<loadMembersResponse>(`${this.URL}/load_members`, {params : params})
+  }
+
+  // Both ADMIN and MEMBER can use this function
+  getMemberById(pk:number, role:string){
+    const data = {pk : pk, role:role}
+    return this.http.get<userByIdResponse>(`${this.URL}/get_member_by_id`, {params : data})
   }
   
   getDriveByStatus(status: string) {
@@ -47,7 +64,6 @@ export class AppService {
   getDriveByDateRange(formData: FormData) {
     return this.http.post<driveByStatusResponse>(`${this.URL}/get_drive_by_dateRange`, formData);
   }
-  
 
   add_drive(formData:FormData){
     console.log(formData.get('eligible_lst'))
@@ -105,11 +121,12 @@ export class AppService {
     return this.http.get<notificationResponse>(`${this.URL}/get_notifications`, {params : data})
   }
 
-  getMemberById(pk:number){
-    const data = {pk : pk}
-    return this.http.get<userByIdResponse>(`${this.URL}/get_member_by_id`, {params : data})
+  
 
+  logout(){
+    this.router.navigate([''])
   }
+  
 
   // get_user(user_id: string, role: string) {
   //   let params = new HttpParams()

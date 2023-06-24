@@ -58,10 +58,13 @@
                         <span class="material-icons">add</span>
                         <p>Admin</p>
                     </div>
-                    <div class="tool" id="edit">
+
+                    <!-- (click)="getMemberById(member.pk, 'member')" -->
+                    <div class="tool" id="edit" (click) = "user_role==='Director'?changeSection(2, 'Edit', 'Admin') : changeSection(2, 'Edit', 'Member')">
                         <span class="material-icons">edit</span>
                         <p>Edit</p>
                     </div>
+                    
                     <div class="tool" id="delete">
                         <span class="material-icons">delete</span>
                         <p>Delete</p>

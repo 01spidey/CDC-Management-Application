@@ -30,6 +30,7 @@ urlpatterns = [
    
     path('get_member_by_id', views.get_member_by_id),
     path('update_member', views.update_member),
-    path('delete_member', views.delete_member)
+    path('delete_member', views.delete_member),
+    path('get_user_stats', views.get_user_stats),
     
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

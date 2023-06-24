@@ -147,3 +147,15 @@ export interface notificationResponse{
     success : boolean,
     notifications : driveNotification[] | reportNotification[],
 }
+
+export interface getUserStatsResponse{
+    success : boolean,
+    stats : {
+        reports_today : number,
+        reports_week : number,
+        reports_month : number,
+        drives_today : number,
+        drives_week : number,
+        drives_month : number
+    }
+}

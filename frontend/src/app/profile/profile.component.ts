@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AppService } from '../service/app.service';
-import { loadMembersResponse, serverResponse, user, userByIdResponse } from '../models/model';
+import { getUserStatsResponse, loadMembersResponse, serverResponse, user, userByIdResponse } from '../models/model';
 import { ToastrService } from 'ngx-toastr';
 import { FormBuilder, Validators } from '@angular/forms';
 
@@ -25,13 +25,13 @@ export class ProfileComponent implements OnInit {
   title = 'My Profile'
   pk = 0
 
-  reports_today = 10
-  reports_week = 13
-  reports_month = 20
+  reports_today = 0
+  reports_week = 0
+  reports_month = 0
   
-  drives_today = 2
-  drives_week = 3
-  drives_month = 5
+  drives_today = 0
+  drives_week = 0
+  drives_month = 0
 
   team_lst : user[] = []
   admin_lst:user[] = []
@@ -47,6 +47,9 @@ export class ProfileComponent implements OnInit {
     if(this.user_role=='Director'){
       this.loadMembers('member')
       this.loadMembers('admin')
+    }
+    if(this.user_role=='Officer'){
+      this.getUserStats()
     }
   }
 
@@ -212,6 +215,27 @@ export class ProfileComponent implements OnInit {
     )
   }
 
+  getUserStats(){
+    this.service.getUserStats(this.userData.staff_id).subscribe(
+      (res:getUserStatsResponse)=>{
+        if(res.success){
+          this.reports_today = res.stats.reports_today
+          this.reports_week = res.stats.reports_week
+          this.reports_month = res.stats.reports_month
+          this.drives_today = res.stats.drives_today
+          this.drives_week = res.stats.drives_week
+          this.drives_month = res.stats.drives_month
+          this.toastr.success('Stats Updated!!')
+        }else{
+          this.toastr.warning('Some Technical Error!!')
+        }
+      },
+      err=>{
+        this.toastr.error('Server Not Reachable!!')
+      }
+    )
+  }
+
   changeSection(section:number, action : string, role : string){
     this.section = section
     this.action = action
@@ -224,8 +248,10 @@ export class ProfileComponent implements OnInit {
     this.action = 'Add'
     this.title = 'My Profile'
 
-    this.loadMembers('member')
-    this.loadMembers('admin')
+    if(this.user_role=='Director'){
+      this.loadMembers('member')
+      this.loadMembers('admin')
+    }
 
     this.addMemberForm.reset()
   }

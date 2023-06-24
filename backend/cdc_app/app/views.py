@@ -1163,5 +1163,58 @@ def delete_member(request):
         }
     
         return JsonResponse(data)
+
+@csrf_exempt
+def get_user_stats(request):
+    reports_today = 0
+    reports_week = 0
+    reports_month = 0
+    drives_today = 0
+    drives_week = 0
+    drives_month = 0
+    
+    staff_id = request.GET.get('staff_id')
+    today = date.today()
+    
+    try:
+        
+        reports = Report.objects.filter(date = today, placement_officer_id = staff_id)
+        drives = Drive.objects.filter(date = today, placement_officer_id = staff_id)
+        reports_today = len(reports)
+        drives_today = len(drives)
+        
+        reports = Report.objects.filter(date__range = [today - timedelta(days=7), today], placement_officer_id = staff_id)
+        drives = Drive.objects.filter(date__range = [today - timedelta(days=7), today], placement_officer_id = staff_id)
+        reports_week = len(reports)
+        drives_week = len(drives)
+        
+        reports = Report.objects.filter(date__range = [today - timedelta(days=30), today], placement_officer_id = staff_id)
+        drives = Drive.objects.filter(date__range = [today - timedelta(days=30), today], placement_officer_id = staff_id)
+        reports_month = len(reports)
+        drives_month = len(drives)
+        
+        data = {
+            'success':True,
+            'stats' : {
+                'reports_today' : reports_today,
+                'reports_week' : reports_week,
+                'reports_month' : reports_month,
+                'drives_today' : drives_today,
+                'drives_week' : drives_week,
+                'drives_month' : drives_month
+            }
+        } 
+    
+        return JsonResponse(data)
+    
+    except Exception as e:
+        print(e)
+        data = {
+            'success': False,
+            'stats' : {}
+        }
+        
+        return JsonResponse(data)
+    
     
         

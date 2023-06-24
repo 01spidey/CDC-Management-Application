@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http'
-import { driveByIdResponse, driveByStatusResponse, filterOptions, getMembersResponse, getReportsResponse, loadMembersResponse, loginResponse, notificationResponse, openMemberResponse, reportByIdResponse, reportSummaryResponse, serverResponse, user, userByIdResponse } from '../models/model';
+import { driveByIdResponse, driveByStatusResponse, filterOptions, getMembersResponse, getReportsResponse, getUserStatsResponse, loadMembersResponse, loginResponse, notificationResponse, openMemberResponse, reportByIdResponse, reportSummaryResponse, serverResponse, user, userByIdResponse } from '../models/model';
 import { P } from '@angular/cdk/keycodes';
 import { Router } from '@angular/router';
 
@@ -130,7 +130,12 @@ export class AppService {
     return this.http.get<notificationResponse>(`${this.URL}/get_notifications`, {params : data})
   }
 
-  
+  getUserStats(staff_id : string){
+    const data = {
+      staff_id : staff_id
+    }
+    return this.http.get<getUserStatsResponse>(`${this.URL}/get_user_stats`, {params : data})
+  }
 
   logout(){
     this.router.navigate([''])

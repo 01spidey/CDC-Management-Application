@@ -15,8 +15,8 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
     sessionStorage.clear()
-    sessionStorage.setItem('user_id', 'null')
-    sessionStorage.setItem('user_role', 'null')
+    // sessionStorage.setItem('user_id', 'null')
+    // sessionStorage.setItem('user_role', 'null')
   }
   constructor(
     private service:AppService,

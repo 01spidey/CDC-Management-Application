@@ -33,4 +33,6 @@ urlpatterns = [
     path('delete_member', views.delete_member),
     path('get_user_stats', views.get_user_stats),
     
+    path('send_otp', views.send_otp),
+    
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

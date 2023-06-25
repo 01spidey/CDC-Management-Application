@@ -1,19 +1,39 @@
-import { Injectable } from '@angular/core';
-import { CanActivate, Router } from '@angular/router';
+import { CanActivateFn, Router } from '@angular/router';
 
-@Injectable()
-export class LoginGuard implements CanActivate {
+export const loginGuard: CanActivateFn = (route, state) => {
+  const router = new Router();
+  if(sessionStorage.getItem('user_role')==null){
+    // trying to access login page from home page
+    router.navigate([''])
+    return false;
+  }
 
-  constructor(private router: Router) {}
+  else{
+    // trying to access login page from dashboard
 
-  canActivate(route:any, state:any): boolean {
-    // console.log(this.dataService.user_role);
-  
-    if (sessionStorage.getItem('user_role') == 'null') {
-      this.router.navigate(['']);
-      return false;
+    if(sessionStorage.getItem('user_role')=='Director'){
+      if(sessionStorage.getItem('cur_user_data')==null){
+        // trying to access login page from director login
+        return true;
+      }
+      else{
+        // trying to access login page from director dashboard
+        router.navigate(['director'])
+        return false;
+      }
     }
-  
-    return true;
+
+    else if(sessionStorage.getItem('user_role')=='Officer'){
+      if(sessionStorage.getItem('cur_user_data')==null){
+        // trying to access login page from officer login
+        return true;
+      }
+      else{
+        // trying to access login page from officer dashboard
+        router.navigate(['officer'])
+        return false;
+      }
+    }
+    else return true;
   }
 }

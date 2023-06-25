@@ -16,8 +16,7 @@ import { ProfileComponent } from './profile/profile.component';
 import { AddMemberComponent } from './add-member/add-member.component';
 import { ReportsComponent } from './reports/reports.component';
 import { CommonModule, DatePipe } from '@angular/common';
-import { LoginGuard } from './guard/login.guard';
-import { AuthGuard } from './guard/auth.guard';
+
 import { MatTooltipModule } from '@angular/material/tooltip';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import { AgGridModule } from 'ag-grid-angular';
@@ -26,6 +25,7 @@ import { DeleteButtonComponent } from './buttonRenders/delete-button/delete-butt
 import { SummaryComponent } from './summary/summary.component';
 import { NotificationComponent } from './notification/notification.component';
 import { NgxUiLoaderHttpModule, NgxUiLoaderModule } from 'ngx-ui-loader';
+import { NgxOtpInputModule } from 'ngx-otp-input';
 
 @NgModule({
   declarations: [
@@ -57,12 +57,11 @@ import { NgxUiLoaderHttpModule, NgxUiLoaderModule } from 'ngx-ui-loader';
     MatSlideToggleModule,
     AgGridModule,
     NgxUiLoaderHttpModule.forRoot({ showForeground: true }),
-    NgxUiLoaderModule
+    NgxUiLoaderModule,
+    NgxOtpInputModule
   ],
   providers: [
-    DatePipe,
-    LoginGuard,
-    AuthGuard],
+    DatePipe,],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

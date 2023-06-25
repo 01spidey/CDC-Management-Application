@@ -84,21 +84,80 @@ section{
 
     .right{
         padding: 20px;
-        border: 1px solid #152b51;
+        // border: 1px solid #152b51;
         background-color: #152b51;
         border-radius: 10px;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 20px;
         
         form{
             display: flex;
             flex-direction: column;
             width: 70%;
             text-align: center;
+            
+            // background-color: #198754;
+            .message{
+                color: white;
+                display: flex;
+                gap: 5px;
+                justify-content: center;
+                align-items: flex-end;
+                // background-color: #198754;
+                p{
+                    font-family:'Nunito'; 
+                    margin-top: 50px;
+                    font-size: .8rem;
+                    // background-color: #152b51;
+                }
+                span{
+                    // background-color: #152b51;
+                    height: fit-content;
+                }
+            }
+
+            ngx-otp-input{
+                align-self: center;
+                margin-bottom: 20px;
+            }
         }
 
-        #login{
+        .reset{
+            color : white;
+            font-family: 'Nunito';
+            font-size: .85rem;
+            border: 1px solid white;
+            padding: 2px 5px;
+            border-radius: 5px;
+            cursor: pointer;
+
+            position: absolute;
+            bottom: 30px;
+            transition: 0.3s ease;
+
+            &:hover{
+                background-color: black;
+                border-color: black;
+                // color: black;
+            }
+        }
+
+        .btns{
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+        }
+        #login, #send, #resend{
             padding: 10px 30px;
             background-color: #198754;
             color: white;
+        }
+        #send, #resend{
+            background-color: black;
         }
     }
     

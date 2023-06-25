@@ -8,8 +8,9 @@ from datetime import datetime, date, timedelta
 from django.core.files.storage import FileSystemStorage
 from django.contrib.sites.shortcuts import get_current_site
 from django.db.models import Q
-from django.db.models import Count
-
+from django.core.mail import send_mail
+from random import sample
+from cryptography.fernet import Fernet
 
 # from models import PlacementDirector
 
@@ -21,6 +22,65 @@ def test(request):
         'message':'vanakkam Bruh!!'}
     
     return JsonResponse(data)
+
+@csrf_exempt
+def send_otp(request):
+    formData = json.loads(request.body)
+    role = formData['role']
+    staff_id = formData['staff_id']
+    mail_id = formData['mail_id']
+    otp = 0
+    
+    table = PlacementDirector if role=='Director' else PlacementOfficer
+    try:
+        if(table.objects.filter(staff_id=staff_id,mail=mail_id)):
+            
+            user_id = table.objects.get(staff_id=staff_id,mail=mail_id).user_id
+            password = table.objects.get(staff_id=staff_id,mail=mail_id).password
+            
+            otp = sample(range(0, 10), 4)
+            otp = "".join(map(str, otp))
+            secret_key = Fernet.generate_key()
+
+            from_email = '01srikumaran@gmail.com'
+            to_email = mail_id
+            subject = 'OTP for Resetting Credentials'
+            message = f'Your OTP is {otp}'
+            
+            # send_mail(
+            #     subject=subject,
+            #     message=message,
+            #     from_email=from_email,
+            #     recipient_list=[to_email],
+            #     fail_silently=False
+            # )
+            
+            data = {
+                'success':True,
+                'otp' : otp,
+                'user_id' : user_id,
+                'password' :password,
+                # 'key' : str(secret_key)
+            }
+            
+            return JsonResponse(data)
+        else:
+            data = {
+                'success':True,
+                'otp' : '',
+                'user_id' : '',
+                'password' : ''
+            }
+            return JsonResponse(data)
+    
+    except Exception as e:
+        print(f'Error : {e}')
+        data = {
+                'success':False,
+                'message' : "Some Techncial Error Occured!!"
+            }
+        return JsonResponse(data)
+        
 
 @csrf_exempt
 def login(request):
@@ -1216,5 +1276,14 @@ def get_user_stats(request):
         
         return JsonResponse(data)
     
-    
+
+def encrypt_string(message, key):
+    cipher_suite = Fernet(key)
+    encrypted_message = cipher_suite.encrypt(message.encode())
+    return encrypted_message
+
+def decrypt_string(encrypted_message, key):
+    cipher_suite = Fernet(key)
+    decrypted_message = cipher_suite.decrypt(encrypted_message)
+    return decrypted_message.decode()  
         

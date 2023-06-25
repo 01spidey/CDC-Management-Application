@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http'
-import { driveByIdResponse, driveByStatusResponse, filterOptions, getMembersResponse, getReportsResponse, getUserStatsResponse, loadMembersResponse, loginResponse, notificationResponse, openMemberResponse, reportByIdResponse, reportSummaryResponse, serverResponse, user, userByIdResponse } from '../models/model';
+import { driveByIdResponse, driveByStatusResponse, filterOptions, getMembersResponse, getReportsResponse, getUserStatsResponse, loadMembersResponse, loginResponse, notificationResponse, openMemberResponse, reportByIdResponse, reportSummaryResponse, sendOTPResponse, serverResponse, user, userByIdResponse } from '../models/model';
 import { P } from '@angular/cdk/keycodes';
 import { Router } from '@angular/router';
 
@@ -139,6 +139,14 @@ export class AppService {
 
   logout(){
     this.router.navigate([''])
+  }
+
+  sendOTP(data:object){
+    return this.http.post<sendOTPResponse>(`${this.URL}/send_otp`, data)
+  }
+
+  updateCredentials(data:object){
+
   }
   
 

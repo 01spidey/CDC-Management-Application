@@ -142,6 +142,16 @@ CORS_ALLOWED_ORIGINS = [
     'http://localhost:4200',
 ]
 
+# Mail Configurations
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = '01srikumaran@gmail.com'
+EMAIL_HOST_PASSWORD = 'ujvevoocseoityhl'
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = '01srikumaran@gmail.com'
+
+# Media Configurations
 MEDIA_ROOT = 'path/to/media/directory/'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

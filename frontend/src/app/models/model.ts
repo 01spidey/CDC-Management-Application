@@ -114,6 +114,14 @@ export interface getMembersResponse{
 //     member : user
 // }
 
+export interface sendOTPResponse{
+    success:boolean,
+    otp : string,
+    user_id : string,
+    password : string,
+    // key : string
+}
+
 export interface reportSummaryResponse{
     success : boolean,
     report_summary : summaryObject[]

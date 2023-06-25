@@ -7,18 +7,21 @@
 </header>
 
 <section>
-    <span id='back' routerLink="" class="material-symbols-outlined">
+    <span id='back' (click)="goBack()" class="material-symbols-outlined">
       arrow_back_ios
     </span>
     
 
-    <h1>Placement {{role}}</h1>
+    <h1 *ngIf="section==1">Placement {{role}}</h1>
+    <h1 *ngIf="section!=1">Reset Credentials</h1>
+    
     <div class="box">
         <div class="left">
             <img *ngIf="role=='Director'" src="../../assets/director_img.svg" alt="placement_director.img">
             <img *ngIf="role=='Officer'" src="../../assets/officer_img.svg" alt="placement_officer.img">
         </div>
-        <div class="right">
+
+        <div class="right" *ngIf="section==1">
             <!--  -->
             <form [formGroup]="loginForm">
                 <mat-form-field>
@@ -36,12 +39,91 @@
                 
               
                 <br>
-
+                
                 <div class="btns">
                   <button mat-raised-button id="login" (click)="proceedLogin()">Login</button>
                 </div>
               
-              </form>
+            </form>
+
+              <p class="reset" (click)="startReset()">Reset Username/Password</p>
         </div>
+
+        <div class="right" *ngIf="section==2">
+          <form [formGroup]="resetCredentialsForm">
+            <mat-form-field *ngIf="!sent">
+              <mat-label>Staff ID</mat-label>
+              <!-- formControlName="username" -->
+              <input matInput formControlName = "staff_id">
+            </mat-form-field>
+          
+            <br *ngIf="!sent">
+          
+            <mat-form-field *ngIf="!sent">
+              <mat-label>Mail ID</mat-label>
+              <input matInput formControlName = "mail_id">
+            </mat-form-field>
+            
+          
+            <ngx-otp-input *ngIf="sent"
+              [config]="otpInputConfig"  
+              (otpChange)="handleOtpChange($event)"
+              (fill)="handleOtpFill($event)">
+            </ngx-otp-input>
+
+            <br>
+            
+            <div class="btns" *ngIf="section==2">
+              <!-- (click)="triggerOTP()" -->
+              <button mat-raised-button id="resend" *ngIf="sent==true" (click)="triggerOTP('resend')">Resend OTP</button>
+              <button mat-raised-button id="send" (click)="triggerOTP('send')" *ngIf="sent==false">Send OTP</button>
+              <button mat-raised-button id="resend" *ngIf="sent==true" [disabled]="!can_verify" (click) = 'verifyOTP()'>Verify OTP</button>
+            </div>
+
+            <div class="message" *ngIf="sent">
+              <span class="material-symbols-outlined">
+                info
+              </span>
+              <p>{{message}}</p>
+
+            </div>
+
+          </form>
+        </div>
+
+        <div class="right" *ngIf="section==3">
+          <!--  -->
+          <form [formGroup]="loginForm">
+              <mat-form-field>
+                <mat-label>New User Name</mat-label>
+                <!-- formControlName="username" -->
+                <input matInput formControlName = "user_id">
+              </mat-form-field>
+            
+              <br>
+            
+              <mat-form-field>
+                <mat-label>New Password</mat-label>
+                <input matInput formControlName = "password">
+              </mat-form-field>
+              
+            
+              <br>
+              
+              <div class="btns">
+                <button mat-raised-button id="login" (click)="updateCredentials()">Update Credentials</button>
+              </div>
+
+              <div class="message" *ngIf="sent">
+                <span class="material-symbols-outlined">
+                  info
+                </span>
+                <p>{{message}}</p>
+  
+              </div>
+            
+          </form>
+      </div>
     </div>
+
 </section>

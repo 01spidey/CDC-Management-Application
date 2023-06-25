@@ -6,7 +6,6 @@ import {  loginResponse, sendOTPResponse, serverResponse } from '../models/model
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { NgxOtpInputConfig } from 'ngx-otp-input/public-api';
-import { loginGuard } from '../guard/login.guard';
 
 @Component({
   selector: 'app-login',
@@ -37,7 +36,8 @@ export class LoginComponent implements OnInit{
   })
 
   ngOnInit(): void {
-      this.role = sessionStorage.getItem('user_role')!
+    sessionStorage.setItem('cur_page', 'login')
+    this.role = sessionStorage.getItem('user_role')!
   }
 
   constructor(
@@ -119,8 +119,10 @@ export class LoginComponent implements OnInit{
             sessionStorage.setItem('cur_user_data', JSON.stringify(res.user_data))
             
             if(this.role=='Director'){
+              sessionStorage.setItem('cur_page', 'director')
               this.router.navigate(['director'])
             }else{
+              sessionStorage.setItem('cur_page', 'officer')
               this.router.navigate(['officer'])
             }
           }else{
@@ -186,7 +188,7 @@ export class LoginComponent implements OnInit{
   goBack(){
     
     if(this.section==1){
-      sessionStorage.clear()
+      sessionStorage.setItem('cur_page', '')
       this.router.navigate([''])
     }
     else if(this.section==2){ 

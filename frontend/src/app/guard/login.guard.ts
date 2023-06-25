@@ -1,39 +1,25 @@
-import { CanActivateFn, Router } from '@angular/router';
+import { Injectable } from '@angular/core';
+import { CanActivate, Router } from '@angular/router';
 
-export const loginGuard: CanActivateFn = (route, state) => {
-  const router = new Router();
-  if(sessionStorage.getItem('user_role')==null){
-    // trying to access login page from home page
-    router.navigate([''])
-    return false;
-  }
+@Injectable()
+export class LoginGuard implements CanActivate {
+  constructor(private router: Router) {}
 
-  else{
-    // trying to access login page from dashboard
+  canActivate(): boolean {
+    console.log('login guard');
+    const curPage = sessionStorage.getItem('cur_page');
 
-    if(sessionStorage.getItem('user_role')=='Director'){
-      if(sessionStorage.getItem('cur_user_data')==null){
-        // trying to access login page from director login
-        return true;
-      }
-      else{
-        // trying to access login page from director dashboard
-        router.navigate(['director'])
-        return false;
-      }
+    if (curPage === 'home' || curPage==null) {
+      this.router.navigate(['']);
+      return false;
+    } else if (curPage === 'officer') {
+      this.router.navigate(['officer']);
+      return false;
+    } else if (curPage === 'director') {
+      this.router.navigate(['director']);
+      return false;
     }
 
-    else if(sessionStorage.getItem('user_role')=='Officer'){
-      if(sessionStorage.getItem('cur_user_data')==null){
-        // trying to access login page from officer login
-        return true;
-      }
-      else{
-        // trying to access login page from officer dashboard
-        router.navigate(['officer'])
-        return false;
-      }
-    }
-    else return true;
+    return true;
   }
 }

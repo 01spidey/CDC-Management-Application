@@ -26,6 +26,10 @@ import { SummaryComponent } from './summary/summary.component';
 import { NotificationComponent } from './notification/notification.component';
 import { NgxUiLoaderHttpModule, NgxUiLoaderModule } from 'ngx-ui-loader';
 import { NgxOtpInputModule } from 'ngx-otp-input';
+import { LoginGuard } from './guard/login.guard';
+import {HomeGuard} from './guard/home.guard'
+import { OfficerGuard } from './guard/officer.guard';
+import { DirectorGuard } from './guard/director.guard';
 
 @NgModule({
   declarations: [
@@ -61,7 +65,13 @@ import { NgxOtpInputModule } from 'ngx-otp-input';
     NgxOtpInputModule
   ],
   providers: [
-    DatePipe,],
+    DatePipe,
+    LoginGuard,
+    HomeGuard,
+    OfficerGuard,
+    DirectorGuard
+
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

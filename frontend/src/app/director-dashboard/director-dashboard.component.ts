@@ -1,13 +1,14 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { user } from '../models/model';
 import { Router } from '@angular/router';
+import { ImplicitReceiver } from '@angular/compiler';
 
 @Component({
   selector: 'app-director-dashboard',
   templateUrl: './director-dashboard.component.html',
   styleUrls: ['./director-dashboard.component.scss']
 })
-export class DirectorDashboardComponent {
+export class DirectorDashboardComponent implements OnInit{
   
   cur_option = 'summary'
   userData = JSON.parse(sessionStorage.getItem('cur_user_data')!);
@@ -15,8 +16,10 @@ export class DirectorDashboardComponent {
 
   constructor(
     private router: Router,
-  ){
+  ){ }
 
+  ngOnInit(): void {
+    sessionStorage.setItem('cur_page', 'director')
   }
 
   logout(){

@@ -1,5 +1,5 @@
 import { Location } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 @Component({
@@ -7,7 +7,7 @@ import { Router } from '@angular/router';
   templateUrl: './officer-dashboard.component.html',
   styleUrls: ['./officer-dashboard.component.scss']
 })
-export class OfficerDashboardComponent {
+export class OfficerDashboardComponent implements OnInit {
   cur_option = 'drive'
   userData = JSON.parse(sessionStorage.getItem('cur_user_data')!);
 
@@ -16,8 +16,10 @@ export class OfficerDashboardComponent {
   constructor( 
     private router: Router,
     private location : Location
-  ){
+  ){ }
 
+  ngOnInit(): void {
+    sessionStorage.setItem('cur_page', 'officer')
   }
 
   selectMenu(option:string){
@@ -27,6 +29,7 @@ export class OfficerDashboardComponent {
   logout(){
     sessionStorage.removeItem('user_id')
     sessionStorage.removeItem('cur_user_data')
+    sessionStorage.setItem('cur_page', '')
     this.router.navigate(['/login'])
     // this.location.back()
   }

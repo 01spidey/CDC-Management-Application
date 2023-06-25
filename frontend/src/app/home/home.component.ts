@@ -15,17 +15,16 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
     sessionStorage.clear()
-    // sessionStorage.setItem('user_id', 'null')
-    // sessionStorage.setItem('user_role', 'null')
+    sessionStorage.setItem('cur_page', 'home')
   }
   constructor(
     private service:AppService,
     private toastr:ToastrService,
     private router:Router){
-
   }
 
   loginAs(role:string){
+    sessionStorage.setItem('cur_page', '')
     sessionStorage.setItem('user_role',role);
     this.router.navigate(['login'])
   }

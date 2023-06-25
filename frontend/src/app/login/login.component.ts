@@ -23,8 +23,6 @@ export class LoginComponent implements OnInit{
   gen_otp = ''
   message = ''
 
-  staff_id = ''
-  mail_id = ''
   cur_user_id = ''
   cur_user_pass = ''
 
@@ -79,15 +77,26 @@ export class LoginComponent implements OnInit{
   updateCredentials(){
     if(this.loginForm.valid){
       let data = {
-        staff_id : this.staff_id,
-        mail_id : this.mail_id,
-        user_id : this.loginForm.value.user_id,
-        password : this.loginForm.value.password,
+        old_user_id : this.cur_user_id,
+        old_password : this.cur_user_pass,
+        new_user_id : this.loginForm.value.user_id,
+        new_password : this.loginForm.value.password,
+        role : sessionStorage.getItem('user_role')!
       }
 
-      // this.service.updateCredentisla(data).subscribe(
-
-      // )
+      this.service.updateCredentials(data).subscribe(
+        (res:serverResponse)=>{
+          if(res.success){
+            this.toastr.success(res.message)
+            this.goBack()
+          }else{
+            this.toastr.warning(res.message)
+          }
+        },
+        err=>{
+          this.toastr.error('Server Not Reachable!!')
+        }
+      )
 
     }else{
       this.toastr.error('Form Invalid!!')
@@ -138,20 +147,17 @@ export class LoginComponent implements OnInit{
         role: sessionStorage.getItem('user_role')
       }
 
-      this.staff_id = this.resetCredentialsForm.value.staff_id!
-      this.mail_id = this.resetCredentialsForm.value.mail_id!
-
       this.service.sendOTP(data).subscribe(
         (res:sendOTPResponse)=>{
           if(res.success){
             this.sent = true
-            this.toastr.success(res.otp)
             this.message = 'An OTP has been Sent to your mail.'
             this.gen_otp = res.otp
             this.cur_user_id = res.user_id
-            this.cur_user_pass = res.password
-            console.log(res)
+            this.cur_user_pass = res.password 
             
+            this.toastr.success("OTP Sent Successfully!!")
+
           }else{
             this.toastr.warning('Some Technical Error Occured!!')
           }
@@ -178,9 +184,10 @@ export class LoginComponent implements OnInit{
   }
 
   goBack(){
-    sessionStorage.clear()
+    
     if(this.section==1){
-      this.location.back()
+      sessionStorage.clear()
+      this.router.navigate([''])
     }
     else if(this.section==2){ 
       if(!this.sent) this.section = 1

@@ -34,5 +34,6 @@ urlpatterns = [
     path('get_user_stats', views.get_user_stats),
     
     path('send_otp', views.send_otp),
+    path('update_credentials', views.update_credentials),
     
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

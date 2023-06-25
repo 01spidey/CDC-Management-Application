@@ -21,7 +21,7 @@ export class DirectorDashboardComponent {
 
   logout(){
     sessionStorage.setItem('user_id', 'null')
-    this.router.navigate([''])
+    this.router.navigate(['login'])
   }
   
 

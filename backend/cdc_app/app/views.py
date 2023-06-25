@@ -47,13 +47,13 @@ def send_otp(request):
             subject = 'OTP for Resetting Credentials'
             message = f'Your OTP is {otp}'
             
-            # send_mail(
-            #     subject=subject,
-            #     message=message,
-            #     from_email=from_email,
-            #     recipient_list=[to_email],
-            #     fail_silently=False
-            # )
+            send_mail(
+                subject=subject,
+                message=message,
+                from_email=from_email,
+                recipient_list=[to_email],
+                fail_silently=False
+            )
             
             data = {
                 'success':True,
@@ -66,7 +66,7 @@ def send_otp(request):
             return JsonResponse(data)
         else:
             data = {
-                'success':True,
+                'success':False,
                 'otp' : '',
                 'user_id' : '',
                 'password' : ''
@@ -77,10 +77,41 @@ def send_otp(request):
         print(f'Error : {e}')
         data = {
                 'success':False,
-                'message' : "Some Techncial Error Occured!!"
+                'otp' : '',
+                'user_id' : '',
+                'password' : ''
             }
         return JsonResponse(data)
+
+@csrf_exempt
+def update_credentials(request):
+    formData = json.loads(request.body)
+    print(formData)
+    old_user_id = formData['old_user_id']
+    old_pass = formData['old_password']
+    new_user_id = formData['new_user_id']
+    new_pass = formData['new_password']
+    role = formData['role']
+    
+    table = PlacementDirector if role=='Director' else PlacementOfficer
+    
+    try:
+        user = table.objects.filter(user_id=old_user_id,password=old_pass)
+        user.update(user_id=new_user_id,password=new_pass)
+        data = {
+            'success':True,
+            'message' : "Credentials Updated Successfully!!"
+        }
+        return JsonResponse(data) 
         
+    except Exception as e:
+        print(e)
+        data = {
+            'success':False,
+            'message' : "Something went wrong!!"
+        }
+        
+        return JsonResponse(data)      
 
 @csrf_exempt
 def login(request):

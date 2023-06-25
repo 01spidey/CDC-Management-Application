@@ -50,5 +50,6 @@ urlpatterns = [
     path('get_user_stats', include('app.urls')),
     
     path('send_otp', include('app.urls')),
+    path('update_credentials', include('app.urls')),
     
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

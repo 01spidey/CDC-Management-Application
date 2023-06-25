@@ -146,7 +146,7 @@ export class AppService {
   }
 
   updateCredentials(data:object){
-
+    return this.http.post<serverResponse>(`${this.URL}/update_credentials`, data)
   }
   
 

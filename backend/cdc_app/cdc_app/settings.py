@@ -79,21 +79,21 @@ WSGI_APPLICATION = 'cdc_app.wsgi.application'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.postgresql',
-    #     'NAME': 'kpr_cdc_db',
-    #     'USER' : 'kpr_cdc',
-    #     'PASSWORD' : 'rSlODCvW32na3I347x4EoNn4mfzXhizp',
-    #     'HOST' : 'dpg-cib7mmp5rnuk9qfg3k80-a.singapore-postgres.render.com'
-    # }
-    
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'kpr_cdc_db',
         'USER' : 'kpr_cdc',
-        'PASSWORD' : 'kprcdc123',
-        'HOST' : 'kpr-cdc-db.co8tdg7i8awz.ap-south-1.rds.amazonaws.com'
+        'PASSWORD' : 'rSlODCvW32na3I347x4EoNn4mfzXhizp',
+        'HOST' : 'dpg-cib7mmp5rnuk9qfg3k80-a.singapore-postgres.render.com'
     }
+    
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.postgresql',
+    #     'NAME': 'kpr_cdc_db',
+    #     'USER' : 'kpr_cdc',
+    #     'PASSWORD' : 'kprcdc123',
+    #     'HOST' : 'kpr-cdc-db.co8tdg7i8awz.ap-south-1.rds.amazonaws.com'
+    # }
 }
 
 

@@ -955,7 +955,7 @@ def get_notifications(request):
     today = date.today()
     
     if(category=='report_alerts'):
-        reports = Report.objects.filter(Q(placement_officer_id=staff_id, reminder_date__gt=today) | Q(placement_officer_id=staff_id, reminder_date=today))
+        reports = Report.objects.filter(Q(placement_officer_id=staff_id, reminder_date__gt=today) & Q(placement_officer_id=staff_id, reminder_date=today))
         for report in reports:
             report_notifications.append(
                 {

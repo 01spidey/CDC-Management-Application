@@ -233,7 +233,7 @@ export class ReportsComponent implements OnInit{
           mode : this.addReportForm.value.mode,
           visibility : this.vis_toggle,
           reminder_date : formattedReminderDate,
-          staff_id : this.userData.user_id,
+          staff_id : this.userData.staff_id,
           visible_to : this.member_lst,
         }
 
@@ -310,7 +310,7 @@ export class ReportsComponent implements OnInit{
       mode : this.addReportForm.value.mode,
       visibility : this.vis_toggle,
       reminder_date : formattedReminderDate,
-      staff_id : this.userData.user_id,
+      staff_id : this.userData.staff_id,
       visible_to : this.member_lst,
     }
 

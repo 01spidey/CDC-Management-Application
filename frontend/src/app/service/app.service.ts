@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http'
-import { driveByIdResponse, driveByStatusResponse, filterOptions, getCompanyStatsResponse, getMembersResponse, getReportsResponse, getUserStatsResponse, loadMembersResponse, loginResponse, notificationResponse, openMemberResponse, reportByIdResponse, reportSummaryResponse, sendOTPResponse, serverResponse, user, userByIdResponse } from '../models/model';
+import { companyByIdResponse, driveByIdResponse, driveByStatusResponse, filterOptions, getCompaniesResponse, getCompanyStatsResponse, getMembersResponse, getReportsResponse, getUserStatsResponse, loadMembersResponse, loginResponse, notificationResponse, openMemberResponse, reportByIdResponse, reportSummaryResponse, sendOTPResponse, serverResponse, user, userByIdResponse } from '../models/model';
 import { Router } from '@angular/router';
 
 @Injectable({
@@ -151,7 +151,26 @@ export class AppService {
   getCompanyStats(){
     return this.http.get<getCompanyStatsResponse>(`${this.URL}/get_company_stats`)
   }
+
+
+
+  addCompany(data:object){
+    return this.http.post<serverResponse>(`${this.URL}/add_company`, data)
+  }
+
+  deleteCompany(formData:FormData){
+    return this.http.post<serverResponse>(`${this.URL}/delete_company`, formData)
+  }
+
+  getCompanyById(company : number){
+    const params = { company : company }
+    return this.http.get<companyByIdResponse>(`${this.URL}/get_company_by_id`, { params : params })
+  }
   
+  getCompanies(staff_id : string){
+    const params = {staff_id : staff_id}
+    return this.http.get<getCompaniesResponse>(`${this.URL}/get_companies`, {params : params})
+  }
 
   // get_user(user_id: string, role: string) {
   //   let params = new HttpParams()

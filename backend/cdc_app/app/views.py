@@ -3,7 +3,7 @@ from django.conf import settings
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
-from .models import PlacementDirector,PlacementOfficer,Report, Drive
+from .models import PlacementDirector,PlacementOfficer,Report, Drive, Company
 from datetime import datetime, date, timedelta
 from django.core.files.storage import FileSystemStorage
 from django.contrib.sites.shortcuts import get_current_site
@@ -1375,13 +1375,137 @@ def get_company_stats(request):
         
         return JsonResponse(data)
 
-def encrypt_string(message, key):
-    cipher_suite = Fernet(key)
-    encrypted_message = cipher_suite.encrypt(message.encode())
-    return encrypted_message
 
-def decrypt_string(encrypted_message, key):
-    cipher_suite = Fernet(key)
-    decrypted_message = cipher_suite.decrypt(encrypted_message)
-    return decrypted_message.decode()  
+
+@csrf_exempt
+def add_company(request):
+    formdata = json.loads(request.body)
+    company = formdata['company']
+    hr_name = formdata['hr_name']
+    hr_mail = formdata['hr_mail']
+    category = formdata['category']
+    staff_id = formdata['staff_id']
+    website = formdata['website']
+    
+    try:
+        if(Company.objects.filter(company = company).exists()):
+            data = {
+                'success' : False,
+                'message' : 'Company already exists!!'
+            }
+            return JsonResponse(data)
+        else:
+            company_obj = Company(
+                company = company,
+                HR_name = hr_name,
+                HR_mail = hr_mail,
+                placement_officer_id = staff_id,
+                category = category,
+                website = website
+            )            
+            company_obj.save()
+
+            data  = {
+                'success' : True,
+                'message' : 'Company added Successfully!!'
+            }
+            return JsonResponse(data)
+            
+    except Exception as e:
+        print(e)
+        data = {
+            'success' : False,
+            'message' : 'Some Technical Error!!'
+        }
+        return JsonResponse(data)
+
+@csrf_exempt
+def get_company_by_id(request):
+    
+    company = request.GET.get('company')
+    
+    try:
+        company_obj = Company.objects.get(company = company)
+        data = {
+            'success' : True,
+            'company' : company_obj
+        }
+        return JsonResponse(data)
+    
+    except Exception as e:
+        print(e)
+        data = {
+            'success' : False,
+            'company' : {}
+        }
+        return JsonResponse(data)
+
+@csrf_exempt
+def get_companies(request):
+    staff_id = request.GET.get('staff_id')
+    
+    try:
+        companies = Company.objects.filter(placement_officer_id = staff_id)
+        data = {
+            'success' : True,
+            'companies' : list(companies.values())
+        }
+        return JsonResponse(data)
+    
+    except Exception as e:
+        print(e)
+        data = {
+            'success' : False,
+            'companies' : []
+        }
+        return JsonResponse(data)
+
+@csrf_exempt
+def update_company(request):
+    formdata = json.loads(request.body)
+    company = formdata['company']
+    hr_name = formdata['hr_name']
+    hr_mail = formdata['hr_mail']
+    category = formdata['category']
+    website = formdata['website']
+    
+    try:
+        company_obj = Company.objects.get(company = company)
+        company_obj.HR_name = hr_name
+        company_obj.company = company
+        company_obj.HR_mail = hr_mail
+        company_obj.category = category
+        company_obj.website = website
         
+        return JsonResponse({
+            'success' : True,
+            'message' : 'Company Updated Successfully!!'
+        })
+        
+    except Exception as e:
+        print(e)
+        data = {
+            'success' : False,
+            'message' : 'Some Technical Error!!'
+        }
+        return JsonResponse(data)
+    
+@csrf_exempt
+def delete_company(request):
+    company = request.POST.get('company')
+    
+    try:
+        company_obj = Company.objects.get(company = company)
+        company_obj.delete()
+        return JsonResponse({
+            'success' : True,
+            'message' : 'Company Deleted Successfully!!'
+        })
+    
+    except Exception as e:
+        print(e)
+        data = {
+            'success' : False,
+            'message' : 'Some Technical Error!!'
+        }
+        return JsonResponse(data)       

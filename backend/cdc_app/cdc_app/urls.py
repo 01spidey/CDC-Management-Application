@@ -51,6 +51,12 @@ urlpatterns = [
     
     path('send_otp', include('app.urls')),
     path('update_credentials', include('app.urls')),
-    path('get_company_stats', include('app.urls'))
+    path('get_company_stats', include('app.urls')),
+    
+    path('add_company', include('app.urls')),
+    path('get_company_by_id', include('app.urls')),
+    path('update_company', include('app.urls')),
+    path('delete_company', include('app.urls')),
+    path('get_companies', include('app.urls')),
     
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -38,4 +38,10 @@ urlpatterns = [
     path('send_otp', views.send_otp),
     path('update_credentials', views.update_credentials),
     
+    path('add_company', views.add_company),
+    path('get_company_by_id', views.get_company_by_id),
+    path('update_company', views.update_company),
+    path('delete_company', views.delete_company),
+    path('get_companies', views.get_companies),
+    
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

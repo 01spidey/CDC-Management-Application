@@ -110,7 +110,7 @@
         </div>
 
         <div class="member-company-stats" *ngIf="section==1 && user_role==='Officer'">
-            <h3>My Companies</h3>  
+            <h3>Company Statistics</h3>  
             <div class="companies">
                 <div class="company-category">
                     <div class="title-box">
@@ -118,22 +118,26 @@
                         <p class="cat-count">{{core_count}}</p>
                     </div>
                     <div class="list-container">
+                        <p class="nothing" *ngIf="core.length==0">Nothing to Show!!</p>
                         <p class="company-item" *ngFor="let item of core">
                             {{item.company}}
                         </p>
                     </div>
                 </div>
+
                 <div class="company-category">
                     <div class="title-box">
                         <p class="cat-title">IT - Product</p>
                         <p class="cat-count">{{it_product_count}}</p>
                     </div>
                     <div class="list-container">
+                        <p class="nothing" *ngIf="it_product.length==0">Nothing to Show!!</p>
                         <p class="company-item" *ngFor="let item of it_product">
                             {{item.company}}
                         </p>
                     </div>
                 </div>
+
                 <div class="company-category">
                     <div class="title-box">
                         <p class="cat-title">IT - Service</p>
@@ -141,11 +145,13 @@
                     </div>
                     
                     <div class="list-container">
+                        <p class="nothing" *ngIf="it_service.length==0">Nothing to Show!!</p>
                         <p class="company-item" *ngFor="let item of it_service">
                             {{item.company}}
                         </p>
                     </div>
                 </div>
+
                 <div class="company-category">
                     <div class="title-box">
                         <p class="cat-title">Marketing</p>
@@ -153,11 +159,13 @@
                     </div>
 
                     <div class="list-container">
+                        <p class="nothing" *ngIf="marketing.length==0">Nothing to Show!!</p>
                         <p class="company-item" *ngFor="let item of marketing">
                             {{item.company}}
                         </p>
                     </div>
                 </div>
+
                 <div class="company-category">
                     <div class="title-box">
                         <p class="cat-title">Others</p>
@@ -165,6 +173,7 @@
                     </div>
 
                     <div class="list-container">
+                        <p class="nothing" *ngIf="others.length==0">Nothing to Show!!</p>
                         <p class="company-item" *ngFor="let item of others">
                             {{item.company}}
                         </p>

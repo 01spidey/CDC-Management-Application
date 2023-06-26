@@ -1,0 +1,181 @@
+<div class="main">
+
+    <img (click) = "back()" src="../../assets/back.png" *ngIf="section==2" class="back">
+
+    <div class="top">
+        <div class="title" *ngIf="section==1">
+            <h1>My Companies</h1>
+            <hr id="line" style="width: 350px;">
+        </div>
+
+        <div class="title" *ngIf="section==2">
+            <h1>{{action}}</h1>
+            <hr id="line" style="width: 300px;">
+        </div>
+
+        <div *ngIf="section==1 && role=='Officer'" class="add-drive" (click)="changeSection(2, 'Add Company')">
+            <span class="material-symbols-outlined">
+                add_box
+            </span>
+            <p>Add Company</p>
+        </div>
+    </div>
+    
+    <div class="filter-box" *ngIf="section==1">
+        <div class="container">
+            <a>
+                <span matTooltip="Refresh" class="material-symbols-outlined" id="refresh" (click)="applyFilter()">
+                    refresh
+                </span>
+            </a>
+            
+        </div>
+        
+        <!-- <div class="date-filter" *ngIf="period_filter==='Custom'">
+            
+            <mat-form-field>
+                <mat-label>Filter By Date Range</mat-label>
+                
+                <mat-date-range-input [rangePicker]="picker">
+                  <input matStartDate placeholder="Start date" [(ngModel)]="startDate">
+                  <input matEndDate placeholder="End date" [(ngModel)]="endDate">
+                </mat-date-range-input>
+
+                <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-date-range-picker #picker></mat-date-range-picker>
+            </mat-form-field>
+            <button mat-raised-button (click)="applyFilter()">Apply</button>
+        </div>  -->
+    </div>
+
+    <div class="no-data" *ngIf="companies.length==0 && section==1">
+        <img src="../../assets/no-data.svg" alt="no-data.svg">
+        <p>No Data Found...</p>
+    </div>
+
+
+    <div class="grid-container" *ngIf="section==1 && companies.length>0">
+            
+        <div class="drive-info-box" *ngFor="let company of companies">
+        
+            <div class="title-box">
+                <div class="left">
+                    <p class="category">{{company.category}}</p>
+                    <div class="company">
+                        <h1>{{company.company}}</h1>
+                        <a [href]="company.website" target="_blank">
+                            <span class="material-symbols-outlined link">
+                                open_in_new
+                            </span>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="right">
+                    <p>View More</p>
+                    <span class="material-symbols-outlined">
+                        arrow_forward_ios
+                    </span>
+                </div>
+
+            </div>
+            
+            <div class="content">
+                
+                <div class="field">
+                    <span class="material-symbols-outlined">
+                        badge
+                    </span>
+                    <p style="font-family: 'Poppins';font-weight:500;">Followed By : </p>
+                    <p>{{company.placement_officer_id}}</p>
+                </div>
+
+                <div class="field">
+                    <span class="material-symbols-outlined">
+                        account_box
+                    </span>
+                    <p style="font-family: 'Poppins';font-weight:500;">HR Name : </p>
+                    <p>{{company.HR_name}}</p>
+                </div>
+                
+                <div class="field">
+                    <span class="material-symbols-outlined">
+                        mail
+                    </span>
+                    <p style="font-family: 'Poppins';font-weight:500;">HR Mail : </p>
+                    <p>{{company.HR_mail}}</p>
+                </div>
+
+            </div>
+        </div>        
+        
+    </div>
+
+    <div class="add-drive-box" *ngIf="section==2">
+        <!-- [formGroup]="loginForm" (ngSubmit)="proceedLogin()" -->
+        
+        <form [formGroup]="addCompanyForm" *ngIf="section==2">
+            
+            <div class="section">
+                <div class="input">
+                    <p>Company</p>
+                    <mat-form-field class="input">
+                        <mat-label>AutoDesk</mat-label>
+                        <input matInput formControlName = "company">
+                    </mat-form-field>
+                </div>
+    
+                <div class="input">
+                    <p>Category</p>
+                    <mat-form-field>
+                        <mat-label>Category</mat-label>
+                        <mat-select formControlName = "category">
+                            <mat-option value="Core">Core</mat-option>
+                            <mat-option value="IT - Product">IT - Product</mat-option>
+                            <mat-option value="IT - ES">IT - ES</mat-option>
+                            <mat-option value="Sales / Management">Sales / Management</mat-option>
+                            <mat-option value="Others">Others</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            </div>
+             
+            <div class="section">
+                <div class="input">
+                    <p>HR Name</p>
+                    <mat-form-field>
+                        <mat-label>Tom H</mat-label>
+                        <input matInput formControlName = "hr_name">
+                    </mat-form-field> 
+                </div>
+    
+                <div class="input">
+                    <p>HR Mail</p>
+                    <mat-form-field>
+                        <mat-label>TomH@amazon.com*</mat-label>
+                        <input matInput formControlName = "hr_mail">
+                    </mat-form-field> 
+                </div>
+            </div>
+            
+            <div class="section">
+                <div class="input">
+                    <p>Company Website</p>
+                    <mat-form-field>
+                        <mat-label>https://www.autodesk.com/careers</mat-label>
+                        <input type="url" matInput formControlName = "website">
+                    </mat-form-field>
+                </div>
+            </div>
+            
+
+            <div class="btns">
+              <button mat-raised-button id="reset" (click)="addCompanyForm.reset()">Reset</button>
+              <button mat-raised-button id="add" (click)="action==='Add Company'?addCompany() : editCompany()">{{action==='Add Company'?'Add Company' : 'Save Changes'}}</button>
+            </div>
+          
+        </form>
+
+    </div>
+
+</div>

@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./officer-dashboard.component.scss']
 })
 export class OfficerDashboardComponent implements OnInit {
-  cur_option = 'profile'
+  cur_option = 'company'
   userData = JSON.parse(sessionStorage.getItem('cur_user_data')!);
 
   user_id = this.userData.name

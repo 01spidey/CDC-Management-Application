@@ -1,0 +1,471 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+
+.main{
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 5%;
+    position: relative;
+
+    .no-data{
+        // background-color: #152b51;
+        width: 80%;
+        height: 60vh;
+        align-self: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+
+        img{
+            height: 70%;
+        }
+
+        p{
+            font-family: 'Poppins';
+            font-size: 20px;
+        }
+    }
+
+    .title{
+        margin-top: 30px;
+        margin-left: 40px;
+        font-family: 'Poppins';
+        font-size: 1.5rem;
+        letter-spacing: 2px;
+        color: #152b51ff;
+
+        h2{
+            font-size: 1.5rem;
+            background-color: #198754;
+            display: inline-block;
+            padding: 5px 20px;
+            color: white;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+    }
+    
+    #line{
+        height: 3px;
+        background-color: #152b51ff;
+        border-radius: 10px;
+    }
+
+    .add-drive{
+        display: flex;
+        align-items: center;
+        width: fit-content;
+        padding: 7px 15px;
+        border-radius: 5px;
+        margin-right: 50px;
+        color: white;
+        background-color: #35363a;
+        margin-top: 10px;
+        font-weight: 500;
+
+        gap: 10px;
+        align-self: flex-end;
+        transition: 0.3s ease;
+        cursor: pointer;
+
+        p{
+            font-size: 17px;
+            font-family: 'Nunito';
+        }
+
+        &:hover{
+            opacity: 0.85;
+        }
+    }
+
+    .filter-box{
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        flex: 1;
+        margin-top: 30px;
+        margin-left: 40px;
+        margin-right: 40px;
+
+        .container{
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            // background-color: #152b51;
+            // width: 100%;
+            
+            .filter-container{
+                display: flex;
+                align-items: center;
+                justify-content: flex-start;
+                border-radius: 5px;
+                gap: 15px;
+
+                .temp-container{
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: flex-start;
+                    padding: 10px;
+                    gap: 5px;
+                    border: 1px solid #35363a;
+                    border-radius: 5px;
+
+                    p{
+                        font-family: 'Poppins';
+                        font-weight: 500;
+                        font-size: 1rem;
+                    }
+
+                    .status-filter{
+                        display: flex;
+                        gap: 15px;
+                        flex: 1;
+                        
+                        .status{
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            gap: 5px;
+                            padding: 3px 7px;
+                            // height: 20px;
+                            border-radius: 5px;
+                            font-family: 'Nunito';
+                            cursor: pointer;
+                            transition: 0.2s ease;
+
+                            p{
+                                font-family: 'Nunito';
+                            }
+            
+                            &:hover{
+                                opacity: 0.9;
+                            }
+            
+                            &:active{
+                                transform: scale(0.9);
+                                // transition: none;
+                            }
+            
+                            span{
+                                font-size: 1rem;
+                            }
+                        }
+                    }
+                }
+            }
+
+            #refresh{
+                background-color:#198754;
+                color: white;
+                font-size: 1.2rem;
+                padding: 5px;
+                border-radius: 5px;
+                cursor: pointer;
+
+                &:hover{
+                    opacity: 0.85;
+                }
+
+                &:active{
+                    transform: scale(0.9);
+                }
+            }
+
+            
+        }
+        
+        
+        .date-filter{
+            width: fit-content;
+            display: flex;
+            gap: 20px;
+
+            mat-form-field{
+                color: white;
+                display: flex;
+            }
+            button{
+                margin-top: 10px;
+                background-color: #198754ff;
+                color: white;
+            }
+        }
+    }
+
+    .top{
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .back{
+        height: 30px;
+        width: 30px;
+        position: absolute;
+        left: 40px;
+        cursor: pointer;
+    }
+
+    .grid-container {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        height: fit-content;
+        row-gap: 5%;
+        column-gap: 3%;
+        width: 95%;
+        align-self: center;
+        margin-top: 1%;
+        // background-color: #152b51ff;
+
+        .drive-info-box{
+            height: fit-content;
+            border-radius: 20px;
+            box-shadow: 1px 2px 10px 1px rgba(0,0,0,0.4);
+            padding: 20px 20px;
+            background-color: white;
+            // padding-bottom: 60px;
+            
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            transition: 0.3s ease;
+    
+            &:hover{
+                box-shadow: 3px 5px 10px 1px rgba(0,0,0,0.6);
+
+                .content .options-box{
+                    opacity: 1;
+                    pointer-events: all;
+                    cursor: pointer;
+                }
+            }
+
+        
+            .title-box{
+                display: flex;
+                justify-content: space-between;
+                
+                .left{
+                    align-self: center;
+                    flex: 1;
+                    
+                    .category{
+                        font-family: 'Nunito';
+                        color: white;
+                        background-color: #ea4034;
+                        width: fit-content;
+                        padding: 1px 5px;
+                        border-radius: 5px;
+                        font-size: .7rem;
+                    }
+
+                    .company{
+                        border-bottom: 3px solid #152b51ff;
+                        width: fit-content;
+                        padding-right: 20px;
+                        padding-bottom: 3px;
+                        margin-bottom: 5px;
+                        display: flex;
+                        gap: 5px;
+
+                        h1{
+                            color: white;
+                            font-weight: bold;
+                            color: #152b51ff;
+                            padding-top: 5px;
+                            display: inline-block;
+                        }
+
+                        .link{
+                            font-size: 1rem;
+                            color: #868585;
+                            cursor: pointer;
+                            transition: color 0.3s ease;
+                            &:hover{
+                                color:black
+                            }
+                        }
+                    }
+                }
+                .right{
+                    align-self: flex-start;
+                    display: flex;
+                    align-items: center;
+                    gap: 2px;
+                    color: #aaa;
+                    font-size: 0.8rem;
+                    transition: 0.3s ease;
+                    cursor: pointer;
+                    font-weight: 500;
+
+                    &:hover{
+                        color: black;
+                        gap: 5px;
+                    }
+
+                    p{
+                        font-family: 'Nunito';
+                        // margin-top: 3px;
+                    }
+                    span{
+                        font-size: 1rem;   
+                    }
+                }
+                
+            }
+
+            .content{
+                display: flex;
+                flex-direction: column;
+                justify-content: start;
+                gap: 7px;
+                margin-top: 13px;
+                flex: 1;
+                position: relative;
+                width: 100%;
+                white-space: nowrap;
+
+                .field{
+                    display: flex;
+                    gap: 10px;
+                    font-size: .85rem;
+                    gap: 15px;
+                    align-items: center;
+                    width: 80%;
+                    p{
+                        font-family: 'Nunito';
+                    }
+                }
+            }
+
+            button{
+                width: fit-content;
+                border: none;
+                background-color: #2f96b4;
+                color: white;
+                font-family: 'Poppins';
+                gap: 5px;
+                height: 30px;
+                padding: 2px 10px;
+
+                position: absolute;
+                bottom: 10px;
+                left: 20px;
+            }
+        }
+    }
+
+    .add-drive-box{
+        display: flex;
+        flex-direction: column;
+        padding: 30px;
+        width: 80%;
+        align-self: start;
+        margin-left: 40px;
+        margin-top: 2%;
+        border: 1px dashed #152b51ff;
+        border-radius: 10px;
+
+        form{
+            width: 80%;
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+            padding: 10px 50px;
+
+            mat-form-field{
+                width: 100%;
+            }
+
+            p{
+                font-weight: 500;
+            }
+
+            .input{
+                flex:1;
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .section{
+                display: flex;
+                gap: 30px;
+                align-items: center;
+            }
+        }
+
+        .file-sec{
+            display: flex;
+            height: 50px;
+            width: 50%;
+            border-radius: 5px;
+            background-color: #ececec;
+            box-shadow: 1px 1px 3px 1px rgba(0,0,0,0.2);
+
+            .file-name{
+                flex: 1;
+                display: flex;
+                align-items: center;
+                justify-content: start;
+                padding-left: 10px;
+                margin-bottom: 0px;
+                border-radius: 5px 0px 0px 5px;
+                color: #8b8b8bff;
+                font-family: 'Arial';
+                font-weight: 100;
+            }
+            
+            .file-inp{
+                display: flex;
+                position: relative;
+                background-color:#152b51;
+                width: 20%;
+                align-items: center;
+                justify-content: center;
+                border-radius: 0px 5px 5px 0px;
+            }  
+            
+            .file-inp input{
+                position: absolute;
+                z-index: 1;
+                right: 0;
+                left: 0;
+                opacity: 0;
+                cursor: pointer;
+            }
+            
+            .file-inp button{
+                position: absolute;
+                pointer-events:inherit;
+                pointer-events: none;
+            }
+        }
+        
+        
+
+        .btns{
+            display: flex;
+            justify-content: space-between;
+        }
+
+        #add{
+            background-color: #e5383b;
+            color: white;
+            font-weight: bold;
+            padding: 0px 10px;
+            width: 150px;
+        }
+        
+        #reset{
+            border: 1px solid #e5383b;
+            color: #e5383b;
+            font-weight: bold;
+            width: 150px;
+        }
+    }
+}

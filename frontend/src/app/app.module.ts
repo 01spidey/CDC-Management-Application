@@ -30,6 +30,7 @@ import { LoginGuard } from './guard/login.guard';
 import {HomeGuard} from './guard/home.guard'
 import { OfficerGuard } from './guard/officer.guard';
 import { DirectorGuard } from './guard/director.guard';
+import { CompanyComponent } from './company/company.component';
 
 @NgModule({
   declarations: [
@@ -45,7 +46,8 @@ import { DirectorGuard } from './guard/director.guard';
     EditButtonComponent,
     DeleteButtonComponent,
     SummaryComponent,
-    NotificationComponent
+    NotificationComponent,
+    CompanyComponent
   ],
   imports: [
     BrowserModule,

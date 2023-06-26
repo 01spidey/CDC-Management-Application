@@ -170,16 +170,39 @@ export interface getUserStatsResponse{
     }
 }
 
-interface company{
+interface company_name{
     company : string,
 }
+
 export interface getCompanyStatsResponse{
     success : boolean,
     stats : {
-        core : company[],
-        it_product : company[],
-        it_service : company[],
-        marketing : company[],
-        others : company[]
+        core : company_name[],
+        it_product : company_name[],
+        it_service : company_name[],
+        marketing : company_name[],
+        others : company_name[]
     }
+}
+
+
+export interface company{
+    id : number,
+    company : string,
+    HR_name : string,
+    HR_mail : string,
+    website : string,
+    category : string,
+    placement_officer_id : string
+}
+
+export interface companyByIdResponse{
+    success : boolean,
+    company : any
+}
+
+export interface getCompaniesResponse{
+    success : boolean,
+    // companies : company[]
+    companies : company[]
 }

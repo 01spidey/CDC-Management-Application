@@ -17,6 +17,7 @@ class Report(models.Model):
     category = models.CharField(max_length=50, null=True)
     visibility = models.CharField(max_length=50, null=False, default='public')
     visible_to = ArrayField(models.CharField(max_length=100), blank=True, null=True)
+    completed = models.BooleanField(default=False)
     
     class Meta:
         ordering = ['-date']
@@ -51,9 +52,21 @@ class Drive(models.Model):
     description = models.TextField(null=False)
     category = models.CharField(max_length=50, null=True)
     file = models.FileField(upload_to='file_uploads/', null=True)  # Adjust the upload destination as per your requirements
+    departments = ArrayField(models.CharField(max_length=100), blank=True, null=True)
     
     class Meta:
         ordering = ['-date']
+
+class Company(models.Model):
+    company = models.CharField(max_length=50, null=False)
+    HR_name = models.CharField(max_length=50, null=False)
+    HR_mail = models.EmailField(null=False)
+    placement_officer_id = models.CharField(max_length=50, null=False)
+    category = models.CharField(max_length=50, null=True)
+    website = models.URLField(null=True)
+
+
+
     
     
 

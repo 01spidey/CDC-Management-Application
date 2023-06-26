@@ -13,11 +13,18 @@
             <p>Placement Drive</p>
         </div>
 
-        <div class="nav" (click)="selectMenu('reports')" [ngClass] = "{active: cur_option =='reports'}">
+        <!-- <div class="nav" (click)="selectMenu('reports')" [ngClass] = "{active: cur_option =='reports'}">
             <span class="material-symbols-outlined">
                 summarize
             </span>
             <p>Reports</p>
+        </div> -->
+
+        <div class="nav" (click)="selectMenu('company')" [ngClass] = "{active: cur_option =='company'}">
+            <span class="material-symbols-outlined">
+                work
+            </span>
+            <p>My Companies</p>
         </div>
 
         <div class="nav" (click)="selectMenu('notification')" [ngClass] ="{active: cur_option =='notification'}">
@@ -45,6 +52,7 @@
     <div class="main">
         <app-drive *ngIf="cur_option=='drive'"></app-drive>
         <app-reports *ngIf="cur_option=='reports'"></app-reports>
+        <app-company *ngIf="cur_option=='company'"></app-company>
         <app-profile *ngIf="cur_option=='profile'"></app-profile>
         <app-notification *ngIf="cur_option=='notification'"></app-notification>
     </div>

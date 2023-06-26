@@ -48,6 +48,7 @@ class Drive(models.Model):
     HR_mail = models.EmailField(null=False)
     drive_mode = models.CharField(max_length=50, null=False)
     description = models.TextField(null=False)
+    category = models.CharField(max_length=50, null=True)
     file = models.FileField(upload_to='file_uploads/', null=True)  # Adjust the upload destination as per your requirements
     
     class Meta:

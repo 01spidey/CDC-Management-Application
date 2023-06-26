@@ -9,7 +9,6 @@ import { Router } from '@angular/router';
 export class AppService {
 
   URL = "http://127.0.0.1:8000";
-  
 
   constructor(
     private http:HttpClient,

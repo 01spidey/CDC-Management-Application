@@ -14,7 +14,7 @@ import { filter } from 'rxjs';
 })
 export class SummaryComponent implements OnInit {
 
-  section = 2
+  section = 1
   period_filter  = 'Today'
   role = sessionStorage.getItem('user_role')!
   userData = JSON.parse(sessionStorage.getItem('cur_user_data')!);

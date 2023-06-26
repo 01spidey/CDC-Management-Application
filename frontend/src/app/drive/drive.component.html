@@ -131,7 +131,7 @@
 
             <div class="title-box">
                 <div class="left">
-                    <p class="category">Non-IT</p>
+                    <p class="category">{{drive.category}}</p>
                     <div class="company">
                         <h1>{{drive.company}}</h1>
                         <a [href]="drive.website" target="_blank">
@@ -184,7 +184,7 @@
                     <p>{{drive.mode}}</p>
                 </div>
 
-                <div class="dept-grid">
+                <!-- <div class="dept-grid">
                     <p class="dept">cse</p>
                     <p class="dept">eee</p>
                     <p class="dept">ece</p>
@@ -193,7 +193,7 @@
                     <p class="dept">chem</p>
                     <p class="dept">civil</p>
                     <p class="dept">ad</p>
-                </div>
+                </div> -->
 
                 <div class="options-box">
                     <span class="material-symbols-outlined" id="edit" matTooltip="edit" (click)='getDriveById(drive.id)'>
@@ -276,14 +276,30 @@
                 </div>
             </div>
              
+            <div class="section">
 
-            <div class="input">
-                <p>Company Website</p>
-                <mat-form-field>
-                    <mat-label>https://www.autodesk.com/careers</mat-label>
-                    <input type="url" matInput formControlName = "website">
-                </mat-form-field>
+                <div class="input">
+                    <p>Company Website</p>
+                    <mat-form-field>
+                        <mat-label>https://www.autodesk.com/careers</mat-label>
+                        <input type="url" matInput formControlName = "website">
+                    </mat-form-field>
+                </div>
+
+                <div class="input">
+                    <p>Category</p>
+                    <mat-form-field>
+                        <mat-label>Category</mat-label>
+                        <mat-select formControlName = "category">
+                            <mat-option value="core">Core</mat-option>
+                            <mat-option value="IT - Product">IT - Product</mat-option>
+                            <mat-option value="IT - ES">IT - ES</mat-option>
+                            <mat-option value="Others">Others</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
             </div>
+            
             
 
             <div class="section">

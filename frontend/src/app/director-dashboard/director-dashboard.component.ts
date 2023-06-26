@@ -23,7 +23,9 @@ export class DirectorDashboardComponent implements OnInit{
   }
 
   logout(){
-    sessionStorage.setItem('user_id', 'null')
+    sessionStorage.removeItem('user_id')
+    sessionStorage.removeItem('cur_user_data')
+    sessionStorage.setItem('cur_page', '')
     this.router.navigate(['login'])
   }
   

@@ -117,6 +117,8 @@ export class LoginComponent implements OnInit{
             this.toastr.success(res.message)
             sessionStorage.setItem('user_id', this.loginForm.value.user_id!)
             sessionStorage.setItem('cur_user_data', JSON.stringify(res.user_data))
+            console.log(res.user_data)
+
             
             if(this.role=='Director'){
               sessionStorage.setItem('cur_page', 'director')

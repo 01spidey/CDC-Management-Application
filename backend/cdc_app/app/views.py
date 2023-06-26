@@ -254,7 +254,8 @@ def get_drive_by_status(request):
                     'HR_name' : drive.HR_name,
                     'HR_mail' : drive.HR_mail,
                     'description' : drive.description,
-                    'file' : file_absolute_url
+                    'file' : file_absolute_url,
+                    'category' : drive.category
                 }
             )
             
@@ -335,7 +336,8 @@ def get_drive_by_dateRange(request):
                     'HR_mail' : drive.HR_mail,
                     'description' : drive.description,
                     'file' : file_absolute_url,
-                    'completed' : True if status == 'Completed' else drive.date < today 
+                    'completed' : True if status == 'Completed' else drive.date < today,
+                    'category' : drive.category
                 }
             )
             
@@ -363,14 +365,21 @@ def add_drive(request):
     hr_name = request.POST['hr_name']
     hr_mail = request.POST['hr_mail']
     description = request.POST['description']
-    eligible_lst = request.FILES['eligible_lst']
     staff_id = request.POST['staff_id']
     mode = request.POST['mode']
+    category = request.POST['category']
     
+    eligible_lst = None
+    try:
+        eligible_lst = request.FILES['eligible_lst']
+    except Exception as e:
+        eligible_lst = None
+        
     date_str = request.POST['date']
     date_obj = datetime.strptime(date_str, '%d-%m-%Y').date()
     
     try:
+        print(eligible_lst)
         drive = Drive(
             job_role = job_role,
             date = date_obj,
@@ -381,7 +390,8 @@ def add_drive(request):
             HR_mail = hr_mail,
             drive_mode = mode,
             description = description,
-            file  = eligible_lst
+            file  = eligible_lst,
+            category = category
         )
         
         data = {
@@ -403,6 +413,13 @@ def add_drive(request):
         }
     
         return JsonResponse(data)
+    # print(eligible_lst)
+    # data = {
+    #         'success':True,
+    #         'message' : 'Technical Error !!'
+    #     }
+    
+    # return JsonResponse(data)
     
 @csrf_exempt
 def delete_drive(request):
@@ -452,7 +469,8 @@ def get_drive_by_id(request):
                     'HR_mail' : drive.HR_mail,
                     'description' : drive.description,
                     'file' : (drive.file.name).split('/')[-1],
-                    'completed' : True
+                    'completed' : True,
+                    'category' : drive.category
                 }
         data = {
             'success':True,
@@ -948,14 +966,14 @@ def get_notifications(request):
     category = request.GET.get('category')
     staff_id = request.GET.get('staff_id')
     
-    # print(category, staff_id)
+    print(category, staff_id)
     report_notifications = []
     drive_notifications = []
     
     today = date.today()
     
     if(category=='report_alerts'):
-        reports = Report.objects.filter(Q(placement_officer_id=staff_id, reminder_date__gt=today) & Q(placement_officer_id=staff_id, reminder_date=today))
+        reports = Report.objects.filter(Q(placement_officer_id=staff_id, reminder_date__gt=today) | Q(placement_officer_id=staff_id, reminder_date=today))
         for report in reports:
             report_notifications.append(
                 {

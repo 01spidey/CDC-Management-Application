@@ -45,7 +45,8 @@ export interface drive{
     HR_mail : string,
     description : string,
     file : File|string,
-    completed : boolean
+    completed : boolean,
+    category : string
 }
 
 export interface driveByStatusResponse{

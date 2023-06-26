@@ -35,6 +35,7 @@ export class DriveComponent implements OnInit {
     job_role:this.builder.control('',Validators.required),
     date:this.builder.control('',Validators.required),
     website:this.builder.control('',Validators.required),
+    category : this.builder.control('',Validators.required),
     hr_name:this.builder.control('',Validators.required),
     hr_mail:this.builder.control('',Validators.compose([
       Validators.required,
@@ -42,7 +43,7 @@ export class DriveComponent implements OnInit {
     ])),
     description:this.builder.control('',Validators.required),
     file : this.builder.control(''),
-    mode : this.builder.control('',Validators.required)
+    mode : this.builder.control('',Validators.required),
   });
 
   constructor(
@@ -136,6 +137,7 @@ export class DriveComponent implements OnInit {
       formData.append('eligible_lst',this.selectedFile!)
       formData.append('staff_id',this.userData.staff_id)
       formData.append('mode',this.addDriveForm.value.mode!)
+      formData.append('category',this.addDriveForm.value.category!)
       
       console.log(formattedDate)
 
@@ -143,7 +145,7 @@ export class DriveComponent implements OnInit {
         (res:serverResponse)=>{
           if(res.success){
             this.toastr.success(res.message)
-            this.addDriveForm.reset()
+            // this.addDriveForm.reset()
           }
           else{
             this.toastr.error(res.message)
@@ -202,6 +204,7 @@ export class DriveComponent implements OnInit {
     formData.append('eligible_lst',this.selectedFile!)
     formData.append('staff_id',this.userData.staff_id)
     formData.append('mode',this.addDriveForm.value.mode!)
+    formData.append('category',this.addDriveForm.value.category!)
 
     formData.append('drive_id',this.edit_drive_id.toString())
 

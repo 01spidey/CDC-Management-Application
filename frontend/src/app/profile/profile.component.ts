@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AppService } from '../service/app.service';
-import { getUserStatsResponse, loadMembersResponse, serverResponse, user, userByIdResponse } from '../models/model';
+import { getCompanyStatsResponse, getUserStatsResponse, loadMembersResponse, serverResponse, user, userByIdResponse } from '../models/model';
 import { ToastrService } from 'ngx-toastr';
 import { FormBuilder, Validators } from '@angular/forms';
 
@@ -36,6 +36,18 @@ export class ProfileComponent implements OnInit {
   team_lst : user[] = []
   admin_lst:user[] = []
 
+  it_product : any[] = []
+  it_service: any[] = []
+  core: any[] = []
+  marketing : any[] = []
+  others:any[] = []
+
+  it_product_count = 0
+  it_service_count = 0
+  core_count = 0
+  marketing_count = 0
+  others_count = 0
+
   constructor(
     private service : AppService,
     private toastr : ToastrService,
@@ -50,6 +62,7 @@ export class ProfileComponent implements OnInit {
     }
     if(this.user_role=='Officer'){
       this.getUserStats()
+      this.getCompanyStats()
     }
   }
 
@@ -229,6 +242,34 @@ export class ProfileComponent implements OnInit {
         }else{
           this.toastr.warning('Some Technical Error!!')
         }
+      },
+      err=>{
+        this.toastr.error('Server Not Reachable!!')
+      }
+    )
+  }
+
+  getCompanyStats(){
+    this.service.getCompanyStats().subscribe(
+      (res:getCompanyStatsResponse)=>{
+        if(res.success){
+
+          
+
+          this.core = res.stats.core
+          this.it_product = res.stats.it_product
+          this.it_service = res.stats.it_service
+          this.marketing = res.stats.marketing
+          this.others = res.stats.others
+          console.log(this.it_service)
+
+          this.core_count = res.stats.core.length
+          this.it_product_count = res.stats.it_product.length
+          this.it_service_count = res.stats.it_service.length
+          this.marketing_count = res.stats.marketing.length
+          this.others_count = res.stats.others.length
+
+        }else this.toastr.warning('Some Technical Error!!')
       },
       err=>{
         this.toastr.error('Server Not Reachable!!')

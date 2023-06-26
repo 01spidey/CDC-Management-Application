@@ -86,7 +86,7 @@ def send_otp(request):
 @csrf_exempt
 def update_credentials(request):
     formData = json.loads(request.body)
-    print(formData)
+    # print(formData)
     old_user_id = formData['old_user_id']
     old_pass = formData['old_password']
     new_user_id = formData['new_user_id']
@@ -131,7 +131,7 @@ def login(request):
         'staff_id' : 'null'
     }
     
-    print(f'{user_id}\n{password}\n{role}')
+    # print(f'{user_id}\n{password}\n{role}')
     
     if(role=='Director'):
         if PlacementDirector.objects.filter(user_id=user_id, password = password):
@@ -290,7 +290,7 @@ def get_drive_by_dateRange(request):
     yesterday = today - timedelta(days=1)                   
     
     try:
-        print(f'{status}\n{start_date}\n{end_date}') 
+        # print(f'{status}\n{start_date}\n{end_date}') 
         
         drives = None
         
@@ -379,7 +379,7 @@ def add_drive(request):
     date_obj = datetime.strptime(date_str, '%d-%m-%Y').date()
     
     try:
-        print(eligible_lst)
+        # print(eligible_lst)
         drive = Drive(
             job_role = job_role,
             date = date_obj,
@@ -446,7 +446,7 @@ def delete_drive(request):
 def get_drive_by_id(request):
     
     drive_id = request.GET.get('drive_id')
-    print(drive_id)
+    # print(drive_id)
     
     drive_obj = {}
     
@@ -505,7 +505,7 @@ def update_drive(request):
     hr_name = request.POST['hr_name']
     hr_mail = request.POST['hr_mail']
     description = request.POST['description']
-    staff_id = request.POST['staff_id']
+    category = request.POST['category']
     mode = request.POST['mode']
     drive_id = int(request.POST['drive_id'])
     date_str = request.POST['date']
@@ -513,8 +513,9 @@ def update_drive(request):
     
     try:    
         eligible_lst = request.FILES['eligible_lst']
+        print(f'Update_drive : {category}')
         
-        print(company+"\n"+eligible_lst)
+        # print(company+"\n"+eligible_lst)
         
         updated_data = {
             'job_role' : job_role,
@@ -525,7 +526,8 @@ def update_drive(request):
             'HR_mail' : hr_mail,
             'drive_mode' : mode,
             'description' : description,
-            'file' : eligible_lst
+            'file' : eligible_lst,
+            'category' : category
         }
         
         Drive.objects.filter(pk=drive_id).update(**updated_data)
@@ -548,6 +550,7 @@ def update_drive(request):
             'HR_mail' : hr_mail,
             'drive_mode' : mode,
             'description' : description,
+            'category' : category
         }
     
         Drive.objects.filter(pk=drive_id).update(**updated_data)
@@ -562,7 +565,7 @@ def update_drive(request):
 def add_report(request):
     
     formData = json.loads(request.body)
-    print(formData)
+    # print(formData)
     # {'company': 'vsv', 'date': '2023-06-17T18:30:00.000Z', 'hr_name': 'sdvsdv', 'hr_mail': 'abc@gmail.com', 'message': 'svsdvs', 'mode': 'sdvsv', 'visibility': 'Public', 'reminder': False, 'reminder_date': ''}
     
     
@@ -577,6 +580,7 @@ def add_report(request):
         visibility = formData['visibility']
         staff_id = formData['staff_id']
         visible_to = formData['visible_to']
+        category = formData['category']
         
         date_obj = datetime.strptime(report_date, '%d-%m-%Y').date()
         reminder_date_obj = None if reminder_date=='' else datetime.strptime(reminder_date, '%d-%m-%Y').date()
@@ -593,7 +597,8 @@ def add_report(request):
             message = message,
             reminder_date = reminder_date_obj,
             visibility = visibility,
-            visible_to = visible_to
+            visible_to = visible_to,
+            category = category
         )
         report.save()
         
@@ -641,7 +646,7 @@ def delete_report(request):
 def update_report(request):
     
     formData = json.loads(request.body)
-    print(formData)
+    # print(formData)
     date_obj = datetime.strptime(formData['date'], '%d-%m-%Y').date()
     reminder_date_obj = None if formData['reminder_date']=='' else datetime.strptime(formData['reminder_date'], '%d-%m-%Y').date()
     
@@ -657,9 +662,10 @@ def update_report(request):
             'reminder_date' : reminder_date_obj,
             'visibility' : formData['visibility'],
             'visible_to' : formData['visible_to'],
+            'category' : formData['category']
         }
         
-        print(updated_data)
+        # print(updated_data)
         
         Report.objects.filter(pk=formData['pk']).update(**updated_data)
         
@@ -840,6 +846,7 @@ def get_report_by_id(request):
         reminder_date = report.reminder_date
         visibility = report.visibility
         visible_to = report.visible_to
+        category = report.category
         
         print(f'{date}\n{reminder_date}\n{visibility}\n{visible_to}')
         
@@ -855,7 +862,8 @@ def get_report_by_id(request):
                 'message' : message,
                 'reminder_date' : reminder_date,
                 'visibility' : visibility,
-                'visible_to' : visible_to
+                'visible_to' : visible_to,
+                'category' : category
                 
             }
         }
@@ -1325,6 +1333,47 @@ def get_user_stats(request):
         
         return JsonResponse(data)
     
+def get_company_stats(request):
+    
+    core, it_product, it_service, marketing, others = [], [], [], [], []
+    reports = Report.objects.all()
+
+    try:
+        core = reports.filter(category='Core').values('company').distinct()
+        it_product = reports.filter(category='IT - Product').values('company').distinct()
+        it_service = reports.filter(category='IT - ES').values('company').distinct()
+        marketing = reports.filter(category='Sales / Management').values('company').distinct()
+        others = reports.filter(category='Others').values('company').distinct()
+    
+        print(it_service)
+        
+        data = {
+            'success' : True,
+            'stats' : {
+                'core' : list(core),
+                'it_product' : list(it_product),
+                'it_service' : list(it_service),
+                'marketing' : list(marketing),
+                'others' : list(others)
+            }
+        }
+        
+        return JsonResponse(data)
+    
+    except Exception as e:
+        print(e)
+        data = {
+            'success' : False,
+            'stats' : {
+                'core' : [],
+                'it_product' : [],
+                'it_service' : [],
+                'marketing' : [],
+                'others' : [] 
+            }
+        }
+        
+        return JsonResponse(data)
 
 def encrypt_string(message, key):
     cipher_suite = Fernet(key)

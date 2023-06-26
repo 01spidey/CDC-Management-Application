@@ -12,7 +12,7 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class DriveComponent implements OnInit {
 
-  section = 1  
+  section = 1 
   role = sessionStorage.getItem('user_role')!
   userData = JSON.parse(sessionStorage.getItem('cur_user_data')!);
   cur_user_id:string = this.userData.user_id
@@ -179,6 +179,7 @@ export class DriveComponent implements OnInit {
             'hr_mail':res.drive.HR_mail,
             'description':res.drive.description,
             'mode':res.drive.mode,
+            'category' : res.drive.category
             // 'file':res.drive.file.toString()
           })
 

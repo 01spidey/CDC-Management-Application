@@ -32,6 +32,8 @@ urlpatterns = [
     path('update_member', views.update_member),
     path('delete_member', views.delete_member),
     path('get_user_stats', views.get_user_stats),
+    path('get_company_stats', views.get_company_stats),
+
     
     path('send_otp', views.send_otp),
     path('update_credentials', views.update_credentials),

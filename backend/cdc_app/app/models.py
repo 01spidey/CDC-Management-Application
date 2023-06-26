@@ -14,6 +14,7 @@ class Report(models.Model):
     contact_mode = models.CharField(max_length=50, null=False)
     message = models.TextField(null=False)
     reminder_date = models.DateField(null=True, default=None)
+    category = models.CharField(max_length=50, null=True)
     visibility = models.CharField(max_length=50, null=False, default='public')
     visible_to = ArrayField(models.CharField(max_length=100), blank=True, null=True)
     

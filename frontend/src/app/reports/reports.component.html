@@ -273,14 +273,39 @@
                     </mat-form-field> 
                 </div>
             </div>
-            
-            <div class="input">
-                <p>Message</p>
-                <mat-form-field>
-                    <mat-label>Write Your Message Here</mat-label>
-                    <textarea matInput formControlName="message"></textarea>
-                </mat-form-field> 
+
+            <div class="section">
+                <div class="input">
+                    <p>Category</p>
+                    <mat-form-field>
+                        <mat-label>Category</mat-label>
+                        <mat-select formControlName = "category">
+                            <mat-option value="Core">Core</mat-option>
+                            <mat-option value="IT - Product">IT - Product</mat-option>
+                            <mat-option value="IT - ES">IT - ES</mat-option>
+                            <mat-option value="Sales / Management">Sales / Management</mat-option>
+                            <mat-option value="Others">Others</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="input"></div>
             </div>
+            
+
+            <div class="section">
+                <div class="input">
+                    <p>Message</p>
+                    <mat-form-field>
+                        <mat-label>Write Your Message Here</mat-label>
+                        <textarea matInput formControlName="message"></textarea>
+                    </mat-form-field> 
+                </div>
+
+                
+            </div>
+            
+            
+
 
             <div class="input" *ngIf="vis_toggle==='Private'">
                 <p>Visible To</p>

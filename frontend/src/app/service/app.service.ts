@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http'
-import { driveByIdResponse, driveByStatusResponse, filterOptions, getMembersResponse, getReportsResponse, getUserStatsResponse, loadMembersResponse, loginResponse, notificationResponse, openMemberResponse, reportByIdResponse, reportSummaryResponse, sendOTPResponse, serverResponse, user, userByIdResponse } from '../models/model';
+import { driveByIdResponse, driveByStatusResponse, filterOptions, getCompanyStatsResponse, getMembersResponse, getReportsResponse, getUserStatsResponse, loadMembersResponse, loginResponse, notificationResponse, openMemberResponse, reportByIdResponse, reportSummaryResponse, sendOTPResponse, serverResponse, user, userByIdResponse } from '../models/model';
 import { Router } from '@angular/router';
 
 @Injectable({
@@ -146,6 +146,10 @@ export class AppService {
 
   updateCredentials(data:object){
     return this.http.post<serverResponse>(`${this.URL}/update_credentials`, data)
+  }
+
+  getCompanyStats(){
+    return this.http.get<getCompanyStatsResponse>(`${this.URL}/get_company_stats`)
   }
   
 

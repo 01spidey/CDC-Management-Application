@@ -71,7 +71,8 @@ export interface reportByIdResponse{
         message: string,
         reminder_date: string,
         visibility: string,
-        visible_to : string[]
+        visible_to : string[],
+        category : string
     }
 }
 
@@ -166,5 +167,19 @@ export interface getUserStatsResponse{
         drives_today : number,
         drives_week : number,
         drives_month : number
+    }
+}
+
+interface company{
+    company : string,
+}
+export interface getCompanyStatsResponse{
+    success : boolean,
+    stats : {
+        core : company[],
+        it_product : company[],
+        it_service : company[],
+        marketing : company[],
+        others : company[]
     }
 }

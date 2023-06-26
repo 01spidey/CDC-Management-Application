@@ -171,6 +171,8 @@ export class LoginComponent implements OnInit{
   }
 
   verifyOTP(){
+    console.log(this.gen_otp, this.user_otp)
+    
     if(this.gen_otp==this.user_otp){
       this.section = 3
       this.message = 'Enter Your New Credentials.'

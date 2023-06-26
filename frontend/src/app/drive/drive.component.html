@@ -89,7 +89,7 @@
     </div>
     
 
-    <div class="no-data" *ngIf="drive_lst.length==0">
+    <div class="no-data" *ngIf="drive_lst.length==0 && section===1">
         <img src="../../assets/no-data.svg" alt="no-data.svg">
         <p>No Data Found...</p>
     </div>
@@ -291,9 +291,10 @@
                     <mat-form-field>
                         <mat-label>Category</mat-label>
                         <mat-select formControlName = "category">
-                            <mat-option value="core">Core</mat-option>
+                            <mat-option value="Core">Core</mat-option>
                             <mat-option value="IT - Product">IT - Product</mat-option>
                             <mat-option value="IT - ES">IT - ES</mat-option>
+                            <mat-option value="Sales / Management">Sales / Management</mat-option>
                             <mat-option value="Others">Others</mat-option>
                         </mat-select>
                     </mat-form-field>

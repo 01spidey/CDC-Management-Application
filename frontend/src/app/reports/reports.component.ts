@@ -134,6 +134,7 @@ export class ReportsComponent implements OnInit{
     ])),
     message:this.builder.control('',Validators.required),
     mode : this.builder.control('',Validators.required),
+    category : this.builder.control('',Validators.required),
   });
 
   
@@ -235,6 +236,7 @@ export class ReportsComponent implements OnInit{
           reminder_date : formattedReminderDate,
           staff_id : this.userData.staff_id,
           visible_to : this.member_lst,
+          category : this.addReportForm.value.category
         }
 
         console.log(data)
@@ -277,6 +279,7 @@ export class ReportsComponent implements OnInit{
             'hr_mail' : report.HR_mail,
             'mode' : report.contact_mode,
             'message' : report.message,
+            'category' : report.category
           })
           this.vis_toggle = report.visibility
           this.reminder_date = report.reminder_date
@@ -312,6 +315,7 @@ export class ReportsComponent implements OnInit{
       reminder_date : formattedReminderDate,
       staff_id : this.userData.staff_id,
       visible_to : this.member_lst,
+      category : this.addReportForm.value.category
     }
 
     this.service.updateReport(data).subscribe(

@@ -7,16 +7,10 @@ from django.contrib.postgres.fields import ArrayField
 
 class Report(models.Model):
     date = models.DateField(default=now, null=False)
-    placement_officer_id = models.CharField(max_length=50, null=True)
     company = models.CharField(max_length=50, null=False)
-    HR_name = models.CharField(max_length=50, null=False)
-    HR_mail = models.EmailField(null=False)
-    contact_mode = models.CharField(max_length=50, null=False)
+    placement_officer_id = models.CharField(max_length=50, null=True)
     message = models.TextField(null=False)
     reminder_date = models.DateField(null=True, default=None)
-    category = models.CharField(max_length=50, null=True)
-    visibility = models.CharField(max_length=50, null=False, default='public')
-    visible_to = ArrayField(models.CharField(max_length=100), blank=True, null=True)
     completed = models.BooleanField(default=False)
     
     class Meta:
@@ -64,6 +58,7 @@ class Company(models.Model):
     placement_officer_id = models.CharField(max_length=50, null=False)
     category = models.CharField(max_length=50, null=True)
     website = models.URLField(null=True)
+    last_reminder_date = models.DateField(null=True, default=None)
 
 
 

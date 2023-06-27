@@ -19,19 +19,7 @@ export interface user{
     staff_id : string
 }
 
-export interface Report {
-    position : number
-    pk : number,
-    date: string,
-    staff_id: string,
-    company: string,
-    HR_name: string,
-    HR_mail: string,
-    contact_mode: string,
-    message: string,
-    reminder_date: string,
-    visibility: string
-}
+
 
 export interface drive{
     id : number,
@@ -205,4 +193,21 @@ export interface getCompaniesResponse{
     success : boolean,
     // companies : company[]
     companies : company[]
+}
+
+export interface Report {
+    pk : number,
+    position : number,
+    date : string,
+    company : string,
+    status  : boolean,
+    message : string,
+    reminder_date : string,
+    hr_name : string,
+    hr_mail : string,
+}
+
+export interface getReportsByCompanyResponse{
+    success : boolean,
+    reports : Report[]
 }

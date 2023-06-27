@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http'
-import { companyByIdResponse, driveByIdResponse, driveByStatusResponse, filterOptions, getCompaniesResponse, getCompanyStatsResponse, getMembersResponse, getReportsResponse, getUserStatsResponse, loadMembersResponse, loginResponse, notificationResponse, openMemberResponse, reportByIdResponse, reportSummaryResponse, sendOTPResponse, serverResponse, user, userByIdResponse } from '../models/model';
+import { companyByIdResponse, driveByIdResponse, driveByStatusResponse, filterOptions, getCompaniesResponse, getCompanyStatsResponse, getMembersResponse, getReportsByCompanyResponse, getReportsResponse, getUserStatsResponse, loadMembersResponse, loginResponse, notificationResponse, openMemberResponse, reportByIdResponse, reportSummaryResponse, sendOTPResponse, serverResponse, user, userByIdResponse } from '../models/model';
 import { Router } from '@angular/router';
 
 @Injectable({
@@ -104,14 +104,7 @@ export class AppService {
     return this.http.post<getReportsResponse>(`${this.URL}/get_reports`, data)
   }
 
-  getReports(data:any){
-    // const params = {
-    //   start_date : data.start_date,
-    //   end_date : data.en,
-    //   period : data['period'],
-    // }
-    return this.http.get<getReportsResponse>(`${this.URL}/get_reports`, {params : data})
-  }
+  
 
   getAllMembers(){
     return this.http.get<getMembersResponse>(`${this.URL}/get_members`)
@@ -154,6 +147,8 @@ export class AppService {
 
 
 
+
+
   addCompany(data:object){
     return this.http.post<serverResponse>(`${this.URL}/add_company`, data)
   }
@@ -167,10 +162,24 @@ export class AppService {
     return this.http.get<companyByIdResponse>(`${this.URL}/get_company_by_id`, { params : params })
   }
   
-  getCompanies(staff_id : string){
-    const params = {staff_id : staff_id}
+  getCompanies(staff_id : string, filter : string){
+    const params = {
+      staff_id : staff_id,
+      filter : filter
+    }
     return this.http.get<getCompaniesResponse>(`${this.URL}/get_companies`, {params : params})
   }
+
+  getReports(data:any){
+    return this.http.get<getReportsResponse>(`${this.URL}/get_reports`, {params : data})
+  }
+
+
+  getReportsByCompany(data:any){
+    return this.http.get<getReportsByCompanyResponse>(`${this.URL}/get_reports_by_company`, {params : data})
+  }
+
+
 
   // get_user(user_id: string, role: string) {
   //   let params = new HttpParams()

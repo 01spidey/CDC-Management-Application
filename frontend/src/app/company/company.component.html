@@ -1,6 +1,6 @@
 <div class="main">
 
-    <img (click) = "back()" src="../../assets/back.png" *ngIf="section==2" class="back">
+    <img (click) = "back()" src="../../assets/back.png" *ngIf="section==2 || section==3" class="back">
 
     <div class="top">
         <div class="title" *ngIf="section==1">
@@ -13,16 +13,48 @@
             <hr id="line" style="width: 300px;">
         </div>
 
+        <div class="title" *ngIf="section==3">
+            <h1>{{action}}</h1>
+            <hr id="line" style="width: 380px;">
+        </div>
+
         <div *ngIf="section==1 && role=='Officer'" class="add-drive" (click)="changeSection(2, 'Add Company')">
             <span class="material-symbols-outlined">
                 add_box
             </span>
             <p>Add Company</p>
         </div>
+
     </div>
     
     <div class="filter-box" *ngIf="section==1">
-        <div class="container">
+        <div class="container" *ngIf="section==1">
+            <div class="filter-container">
+                <div class="temp-container">
+                    <p>Category</p>
+                    <div class="status-filter">
+                        
+                        <a style="text-decoration: none;">
+                            <div class="status" [ngClass]="{'active-chip-blue' : company_filter=='Active', 'not-active-chip':company_filter!='Active'}" (click)="changeFilter('company', 'Active')">
+                                <span class="material-symbols-outlined">
+                                    done
+                                </span>
+                                <p>Active</p>
+                            </div>
+                        </a>
+
+                        <a style="text-decoration: none;">
+                            <div class="status" [ngClass]="{'active-chip-blue' : company_filter=='All', 'not-active-chip':company_filter!='All'}" (click)="changeFilter('company', 'All')">
+                                <span class="material-symbols-outlined">
+                                    done
+                                </span>
+                                <p>All</p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
             <a>
                 <span matTooltip="Refresh" class="material-symbols-outlined" id="refresh" (click)="applyFilter()">
                     refresh
@@ -30,22 +62,6 @@
             </a>
             
         </div>
-        
-        <!-- <div class="date-filter" *ngIf="period_filter==='Custom'">
-            
-            <mat-form-field>
-                <mat-label>Filter By Date Range</mat-label>
-                
-                <mat-date-range-input [rangePicker]="picker">
-                  <input matStartDate placeholder="Start date" [(ngModel)]="startDate">
-                  <input matEndDate placeholder="End date" [(ngModel)]="endDate">
-                </mat-date-range-input>
-
-                <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-                <mat-date-range-picker #picker></mat-date-range-picker>
-            </mat-form-field>
-            <button mat-raised-button (click)="applyFilter()">Apply</button>
-        </div>  -->
     </div>
 
     <div class="no-data" *ngIf="companies.length==0 && section==1">
@@ -54,15 +70,14 @@
     </div>
 
 
-    <div class="grid-container" *ngIf="section==1 && companies.length>0">
-            
-        <div class="drive-info-box" *ngFor="let company of companies">
-        
+    <div class="grid-container-active" *ngIf="section==1 && companies.length>0" [ngStyle]="company_filter==='Active'?{'grid-template-columns': '1fr 1fr 1fr'} : {'grid-template-columns': '1fr 1fr 1fr 1fr'}">
+        <div class="drive-info-box"  *ngFor="let company of companies">
+    
             <div class="title-box">
                 <div class="left">
                     <p class="category">{{company.category}}</p>
                     <div class="company">
-                        <h1>{{company.company}}</h1>
+                        <h1 [ngStyle]="company_filter==='Active'?{'font-size': '1.3rem'} : {'font-size': '1rem'}">{{company.company}}</h1>
                         <a [href]="company.website" target="_blank">
                             <span class="material-symbols-outlined link">
                                 open_in_new
@@ -71,7 +86,7 @@
                     </div>
                 </div>
 
-                <div class="right">
+                <div class="right" (click)="openCompany(company)">
                     <p>View More</p>
                     <span class="material-symbols-outlined">
                         arrow_forward_ios
@@ -80,7 +95,7 @@
 
             </div>
             
-            <div class="content">
+            <div class="content" *ngIf="company_filter==='Active'">
                 
                 <div class="field">
                     <span class="material-symbols-outlined">
@@ -107,8 +122,118 @@
                 </div>
 
             </div>
-        </div>        
-        
+        </div>  
+    </div>
+
+    <div class="company-box" *ngIf="section==3">
+        <div class="company-info-box">
+            <div class="left">
+                <div class="company">
+                    <h1>{{cur_company.company}}</h1>
+                    <a [href]="cur_company.website" target="_blank">
+                        <span class="material-symbols-outlined link">
+                            open_in_new
+                        </span>
+                    </a>
+                </div>
+                <p class="category">{{cur_company.category}}</p>
+            </div>
+            <div class="content" *ngIf="company_filter==='Active'">
+                
+                <div class="field">
+                    <span class="material-symbols-outlined">
+                        badge
+                    </span>
+                    <p style="font-family: 'Poppins';font-weight:500;">Followed By : </p>
+                    <p>{{cur_company.placement_officer_id}}</p>
+                </div>
+
+                <div class="field">
+                    <span class="material-symbols-outlined">
+                        account_box
+                    </span>
+                    <p style="font-family: 'Poppins';font-weight:500;">HR Name : </p>
+                    <p>{{cur_company.HR_name}}</p>
+                </div>
+                
+                <div class="field">
+                    <span class="material-symbols-outlined">
+                        mail
+                    </span>
+                    <p style="font-family: 'Poppins';font-weight:500;">HR Mail : </p>
+                    <p>{{cur_company.HR_mail}}</p>
+                </div>
+
+            </div>
+        </div>
+
+
+        <div class="company-reports" *ngIf="section==3">
+            <div class="report-box">
+                <h2>My Reports</h2>
+              
+                
+
+                <div class="filter-box" >
+                    <div class="date-filter" *ngIf="section==3">
+                        
+                        <mat-form-field>
+                            <mat-label>Filter By Date Range</mat-label>
+                            
+                            <mat-date-range-input [rangePicker]="picker">
+                            <input matStartDate placeholder="Start date" [(ngModel)]="startDate">
+                            <input matEndDate placeholder="End date" [(ngModel)]="endDate">
+                            </mat-date-range-input>
+            
+                            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                            <mat-date-range-picker #picker></mat-date-range-picker>
+                        </mat-form-field>
+                        <button mat-raised-button (click)="getReportsByCompany()" style="background-color: #35363a;">Apply</button>
+                    </div>
+
+                    <!-- <div class="add-report">
+                        <span class="material-symbols-outlined">
+                            add_box
+                        </span>
+                        <p>Add Report</p>
+                    </div> -->
+                    
+                </div>
+            </div>
+            <div class="reports-table">
+                <table>
+                    <tr>
+                        <th>S.No</th>
+                        <th>Date</th>
+                        <th colspan="2">Message</th>
+                        <th>Reminder</th>
+                        <th>Status</th>
+                        <th>Edit</th>
+                        <th>Delete</th>
+                    </tr>
+
+                    <tr *ngFor="let item of report_lst">
+                        <td style="width: 30px;">{{item.position}}</td>
+                        <td>{{item.date}}</td>
+                        <td colspan="2">{{item.message}}</td>
+                        <td>{{item.reminder_date}}</td>
+                        <td>
+                            <p class="status prevent-select" [ngStyle]="item.status?{'background-color' : '#198754'} : {'background-color' : '#ea4034', 'cursor' : 'pointer'}">{{item.status?'Completed' : 'Update'}}</p>
+                        </td>
+                        <td style="width: 30px;">
+                            <span class="material-symbols-outlined prevent-select" (click)="editReport(item)">
+                                edit
+                            </span>
+                        </td>
+                        <td style="width: 30px;">
+                            <span class="material-symbols-outlined prevent-select" (click)="deleteReport(item)">
+                                delete
+                            </span>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
     </div>
 
     <div class="add-drive-box" *ngIf="section==2">
@@ -164,6 +289,31 @@
                     <mat-form-field>
                         <mat-label>https://www.autodesk.com/careers</mat-label>
                         <input type="url" matInput formControlName = "website">
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="input" style="margin-top:18px">
+                    <p>Message</p>
+                    <mat-form-field>
+                        <mat-label>Write your message here...</mat-label>
+                        <input matInput formControlName = "message">
+                    </mat-form-field>
+                </div>
+                
+                <div class="input">
+                    <div class="reminder-toggle">
+                      <p>Reminder</p>
+                      <mat-slide-toggle [(ngModel)]="reminder" [ngModelOptions]="{standalone: true}" name="reminderToggle"></mat-slide-toggle>
+                    </div>
+                    <mat-form-field>
+                      <mat-label>Choose a date</mat-label>
+                      <input matInput [matDatepicker]="picker_2" [disabled]='!reminder' 
+                      [(ngModel)]="reminder_date" [ngModelOptions]="{standalone: true}">
+                  
+                      <mat-datepicker-toggle matIconSuffix [for]="picker_2"></mat-datepicker-toggle>
+                      <mat-datepicker #picker_2></mat-datepicker>
                     </mat-form-field>
                 </div>
             </div>

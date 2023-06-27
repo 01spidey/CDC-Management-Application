@@ -1378,6 +1378,52 @@ def get_company_stats(request):
 
 
 @csrf_exempt
+def get_reports_by_company(request):
+    company = request.GET.get('company')
+    start_date = request.GET.get('start_date')
+    end_date = request.GET.get('end_date')
+    staff_id = request.GET.get('staff_id')
+    
+    print(f'company : {company}\nstart_date : {start_date}\nend_date : {end_date}\nstaff_id : {staff_id}')
+    try:
+        reports = Report.objects.filter(company = company, placement_officer_id = staff_id, date__range = [start_date, end_date])
+        company = Company.objects.get(company = company)
+        reports_lst = []
+        a = 1
+        for report in reports:
+            reports_lst.append(
+                {
+                    'pk' : report.pk,
+                    'position' : a,
+                    'date' : convert_date_format(report.date),
+                    'company'  : report.company,
+                    'status' : report.completed,
+                    'message' : report.message,
+                    'reminder_date' : convert_date_format(report.reminder_date),
+                    'hr_name' : company.HR_name,
+                    'hr_mail' : company.HR_mail,
+                    
+                }
+            )
+            a+=1
+        
+        data = {
+            'success' : True,
+            'reports' : reports_lst
+        }
+        
+        return JsonResponse(data)
+    
+    except  Exception as e:
+        print(e)
+        data = {
+            'success' : False,
+            'reports' : []
+        }
+        
+        return JsonResponse(data)
+
+@csrf_exempt
 def add_company(request):
     formdata = json.loads(request.body)
     company = formdata['company']
@@ -1387,6 +1433,13 @@ def add_company(request):
     staff_id = formdata['staff_id']
     website = formdata['website']
     
+    message = formdata['message']
+    reminder_date = formdata['reminder_date']
+    today = date.today()
+    reminder_date_obj = None if reminder_date=='' else datetime.strptime(reminder_date, '%d-%m-%Y').date()
+
+    print(f'company : {company}\nhr_name : {hr_name}\nhr_mail : {hr_mail}\ncategory : {category}\nstaff_id : {staff_id}\nwebsite : {website}\nmessage : {message}\nreminder_date : {reminder_date}\ntoday : {today}')
+    
     try:
         if(Company.objects.filter(company = company).exists()):
             data = {
@@ -1395,15 +1448,26 @@ def add_company(request):
             }
             return JsonResponse(data)
         else:
+            report_obj = Report(
+                date = today,
+                company = company,
+                placement_officer_id = staff_id,
+                message = message,
+                reminder_date = reminder_date_obj,
+                completed = False
+            )
+            
             company_obj = Company(
                 company = company,
                 HR_name = hr_name,
                 HR_mail = hr_mail,
                 placement_officer_id = staff_id,
                 category = category,
-                website = website
+                website = website,
+                last_reminder_date = reminder_date_obj
             )            
             company_obj.save()
+            report_obj.save()
 
             data  = {
                 'success' : True,
@@ -1443,9 +1507,18 @@ def get_company_by_id(request):
 @csrf_exempt
 def get_companies(request):
     staff_id = request.GET.get('staff_id')
+    filter = request.GET.get('filter')
     
     try:
-        companies = Company.objects.filter(placement_officer_id = staff_id)
+        today = datetime.now().date()
+        thirty_days_ago = today - timedelta(days=30)
+        thirty_days_later = today + timedelta(days=30) 
+        
+        if filter=='Active':
+            companies = Company.objects.filter(placement_officer_id = staff_id, last_reminder_date__range = [thirty_days_ago, thirty_days_later])
+        else:
+            companies = Company.objects.filter(placement_officer_id = staff_id)
+        
         data = {
             'success' : True,
             'companies' : list(companies.values())

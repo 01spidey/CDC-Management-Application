@@ -9,6 +9,7 @@
     flex-direction: column;
     padding-bottom: 5%;
     position: relative;
+    // justify-content: center;
 
     .no-data{
         // background-color: #152b51;
@@ -94,6 +95,8 @@
         position: absolute;
         left: 40px;
         cursor: pointer;
+        align-self: unset;
+        justify-self: unset;
     }
 
     .grid-container-active {
@@ -359,8 +362,10 @@
                         transition: 0.2s ease;
                         cursor: pointer;
                         &:hover{
-                            transform: scale(1.1);
                             color: black;
+                        }
+                        &:active{
+                            transform: scale(0.9);
                         }
                     }
                     .status{
@@ -368,12 +373,12 @@
                         color: white;
                         padding: 3px;
                         border-radius: 10px;
-                        transition: 0.3s ease;
+                        transition: transform 0.2s ease;
                         &:hover{
-                            opacity: 0.85;
+                            opacity: 0.9;
                         }
                         &:active{
-                            transform: scale(0.9);
+                            transform: scale(0.95);
                         }
                     }
                     
@@ -383,7 +388,7 @@
                         color: white;
                     }
                     th, td{
-                        padding: 10px;
+                        padding: 5px 10px;
                     }
                     td{
                         text-align: center;
@@ -391,6 +396,7 @@
                         font-family: 'Nunito';
                         width: 150px;
                         border: 1px solid #8b8b8bff;
+                        font-size: 1rem;
                     }
                 }
                 
@@ -405,13 +411,13 @@
         gap: 20px;
         flex: 1;
         margin-top: 30px;
-        margin-left: 40px;
-        margin-right: 40px;
+        width: 95%;
 
         .container{
             display: flex;
             align-items: center;
             justify-content: space-between;
+            margin-left: 40px;
             
             .filter-container{
                 display: flex;
@@ -603,6 +609,93 @@
         }
     }
 
+    .popup-container{
+        position: absolute;
+        top : 0;
+        bottom : 0;
+        left : 50px;
+        right: 50px;
+        bottom : 0;
+        // background-color: #198754;
+        z-index: 100;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        pointer-events: none;
+
+        .popup-box{
+            z-index: 150;
+            // background-color: #35363a;
+            background-color: white;
+            box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.4);
+            height: fit-content;
+            width: fit-content;
+            border-radius: 5px;
+            padding-bottom: 15px;
+            display: flex;
+            flex-direction: column;
+            transition: 0.5s ease-in;
+
+            .card-title{
+                font-family: 'Poppins';
+                h2{
+                    color: white;
+                    background-color: #35363a;
+                    padding: 5px 20px;
+                    font-weight: 500;
+                    font-size: 1.2rem;
+                    border-radius: 5px 5px 0px 0px;
+                }
+            }
+
+            .card-body{
+                display: flex;
+                flex-direction: column;
+                gap: 20px;
+                padding: 5px 10px;
+                flex: 1;
+                justify-content: space-between;
+                align-items: flex-start;
+                pointer-events: all;
+
+                .section{
+                    display: flex;
+                    flex-direction: column;
+                    gap: 10px;
+                    width: 100%;
+
+                    .input{
+                        display: flex;
+                        flex-direction: column;
+                        gap: 7px;
+                        .reminder-toggle{
+                            display: flex;
+                            gap: 10px;
+                        }
+                        p{
+                            font-weight: 500;
+                        }
+                    }
+                    .btns{
+                        display: flex;
+                        justify-content: space-between;
+                        width: 80%;
+                        align-self: center;
+                        button{
+                            padding: 7px 15px;
+                            border: none;
+                            // border-radius: 10px;
+                            cursor: pointer;
+                            font-weight: 500;
+                            color: white;
+                            font-family: 'Nunito';
+                            
+                        }
+                    }
+                }
+            }
+        }
+    }
     
     .not-active-chip{
         border: 1px solid rgb(104, 102, 102);

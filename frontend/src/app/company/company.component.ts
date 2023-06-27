@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AppService } from '../service/app.service';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
 import { company, getCompaniesResponse, getReportsByCompanyResponse, Report } from '../models/model';
@@ -11,11 +11,11 @@ import { company, getCompaniesResponse, getReportsByCompanyResponse, Report } fr
   styleUrls: ['./company.component.scss']
 })
 export class CompanyComponent implements OnInit{
-  section = 1
+  section = 3
   companies : company[] = []
   userData = JSON.parse(sessionStorage.getItem('cur_user_data')!)
   role = sessionStorage.getItem('user_role')!
-  action = 'Add Company'
+  action = 'Company Details'
   staff_id = this.userData.staff_id
 
   company_filter = 'Active'
@@ -35,11 +35,14 @@ export class CompanyComponent implements OnInit{
   threeMonthsAgo = new Date(this.today.getFullYear(), this.today.getMonth() - 3, this.today.getDate());
   pkey = 0
 
+  popup = false
   reminder = false
   // rem_toggle = false
   reminder_date = ''
 
   report_lst : Report[] = []
+  popup_message = new FormControl('',Validators.required)
+  popup_date = new FormControl('',Validators.required)
 
   addCompanyForm = this.builder.group({
     company:this.builder.control('',Validators.required),
@@ -175,6 +178,31 @@ export class CompanyComponent implements OnInit{
   }
   deleteReport(report : Report){
 
+  }
+
+  addReport(){
+
+  }
+
+  openPopup(as : string, report : Report){
+    this.popup = true
+    let today = new Date()
+    // this.popup_date.patchValue(this.patchDate(`${today.getDay()}-${today.getMonth()+1}-${today.ye}}`))
+    // this.patchDate(report.date)
+    this.popup_message.patchValue(report.message)
+    console.log(report)
+  }
+
+  patchDate(dateString: string) : string{
+    const parts = dateString.split('-');
+    const day = parts[0];
+    let month:string = parts[1] ;
+    month = month.length==1?`0${month}`:month
+    const year = +parts[2];
+    const formattedDate = `${year}-${month}-${day}`; // Convert back to 'dd-mm-yyyy' format
+    console.log(formattedDate)
+    return formattedDate;
+    // 2023-07-01
   }
 
   back(){

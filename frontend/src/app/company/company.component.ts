@@ -12,7 +12,7 @@ import { popup_data } from '../popup/popup.component';
   styleUrls: ['./company.component.scss']
 })
 export class CompanyComponent implements OnInit{
-  section = 3
+  section = 1
   companies : company[] = []
   userData = JSON.parse(sessionStorage.getItem('cur_user_data')!)
   role = sessionStorage.getItem('user_role')!
@@ -85,6 +85,7 @@ export class CompanyComponent implements OnInit{
   handleValue(value: boolean) {
     this.popup = !value
     console.log(value)
+    this.getReportsByCompany()
   }
 
   changeSection(section: number, action:string){

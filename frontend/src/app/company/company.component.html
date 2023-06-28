@@ -218,7 +218,7 @@
                         <td colspan="2">{{item.message}}</td>
                         <td>{{item.reminder_date}}</td>
                         <td>
-                            <p class="status prevent-select" [ngStyle]="item.status?{'background-color' : '#198754'} : {'background-color' : '#ea4034', 'cursor' : 'pointer'}" (click)="openPopup('add', item)">{{item.status?'Completed' : 'Update'}}</p>
+                            <p class="status prevent-select"  [ngClass]="{'active-status': !item.status, 'not-active-status' : item.status}" (click)="openPopup('add', item)">{{item.status?'Completed' : 'Update'}}</p>
                         </td>
                         <td style="width: 30px;">
                             <span class="material-symbols-outlined prevent-select" (click)="openPopup('edit', item)">
@@ -226,7 +226,7 @@
                             </span>
                         </td>
                         <td style="width: 30px;">
-                            <span class="material-symbols-outlined prevent-select" (click)="deleteReport(item)">
+                            <span class="material-symbols-outlined prevent-select" (click)="deleteReport(item)" *ngIf="item.status">
                                 delete
                             </span>
                         </td>
@@ -328,7 +328,7 @@
 
     </div>
 
-    <div class="popup-container" *ngIf="section==3">
+    <div class="popup-container" *ngIf="section==3 && popup">
         <app-popup (popup_closed)="handleValue($event)" [data] = 'popup_data' *ngIf="popup"></app-popup>
     </div>
     

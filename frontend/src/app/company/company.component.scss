@@ -373,13 +373,6 @@
                         color: white;
                         padding: 3px;
                         border-radius: 10px;
-                        transition: transform 0.2s ease;
-                        &:hover{
-                            opacity: 0.9;
-                        }
-                        &:active{
-                            transform: scale(0.95);
-                        }
                     }
                     
                     th{
@@ -713,6 +706,22 @@
         -webkit-user-select: none; /* Safari */
         -ms-user-select: none; /* IE 10 and IE 11 */
         user-select: none; /* Standard syntax */
-      }
+    }
+
+    .active-status{
+        background-color : #ea4034;
+        transition: transform 0.2s ease;
+        cursor: pointer;
+        &:hover{
+            opacity: 0.9;
+        }
+        &:active{
+            transform: scale(0.95);
+        }
+    }
+    .not-active-status{
+        background-color : #198754; 
+        pointer-events: none;  
+    }
 }
 

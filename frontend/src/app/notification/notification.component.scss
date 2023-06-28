@@ -253,7 +253,7 @@
             .notification{
                 width: 80%;
                 border-radius: 10px;
-                padding: 20px;
+                padding: 10px;
                 height: fit-content;
                 background-color: white;
                 flex-shrink: 0;
@@ -284,7 +284,7 @@
                     flex-direction: column;
                     align-items: flex-start;
                     justify-content: flex-start;
-                    gap: 10px;
+                    gap: 5px;
 
                     .noti-title{
                         font-size: 1.1rem;
@@ -297,7 +297,7 @@
                     }
                     .noti-sub{
                         font-family: 'Nunito';
-                        font-size: .85rem;
+                        font-size: .75rem;
                         font-weight: 500;
                     }
                 }

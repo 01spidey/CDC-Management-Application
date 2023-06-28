@@ -981,7 +981,7 @@ def get_notifications(request):
     today = date.today()
     
     if(category=='report_alerts'):
-        reports = Report.objects.filter(Q(placement_officer_id=staff_id, reminder_date__gt=today) | Q(placement_officer_id=staff_id, reminder_date=today))
+        reports = Report.objects.filter(Q(placement_officer_id=staff_id, reminder_date__gt=today) | Q(placement_officer_id=staff_id, reminder_date=today)).order_by('reminder_date')
         for report in reports:
             report_notifications.append(
                 {
@@ -1002,7 +1002,7 @@ def get_notifications(request):
         return JsonResponse(data)
         
     else:
-        drives = Drive.objects.filter(Q(date__gt=today) | Q(date=today))
+        drives = Drive.objects.filter(Q(date__gt=today) | Q(date=today)).order_by('date')
         for drive in drives:
             drive_notifications.append(
               {
@@ -1385,9 +1385,9 @@ def get_reports_by_company(request):
     end_date = request.GET.get('end_date')
     staff_id = request.GET.get('staff_id')
     
-    print(f'company : {company}\nstart_date : {start_date}\nend_date : {end_date}\nstaff_id : {staff_id}')
+    # print(f'company : {company}\nstart_date : {start_date}\nend_date : {end_date}\nstaff_id : {staff_id}')
     try:
-        reports = Report.objects.filter(company = company, placement_officer_id = staff_id, date__range = [start_date, end_date])
+        reports = Report.objects.filter(company = company, placement_officer_id = staff_id, date__range = [start_date, end_date]).order_by('-date')
         company = Company.objects.get(company = company)
         reports_lst = []
         a = 1
@@ -1588,19 +1588,70 @@ def delete_company(request):
 def add_and_update_company_report(request):
     
     formdata = json.loads(request.body)
-    print(formdata)
+    # print(formdata)
+    pk = formdata['pk']
+    company = formdata['company']
+    staff_id = formdata['staff_id']
+    message = formdata['message']
+    reminder_date = formdata['reminder_date']
+    report_date = formdata['date']
+    reminder_date_obj = None if reminder_date=='' else datetime.strptime(reminder_date, '%Y-%m-%d').date()
     
-    if(formdata['action'])=='add':
+    try:
+        if(formdata['action'])=='add':
+            today = date.today()    
+            report_obj = Report(
+                date = today,
+                company = company,
+                placement_officer_id = staff_id,
+                message = message,
+                reminder_date = reminder_date,
+                completed = False
+            )
+            
+            prev_report_obj = Report.objects.get(pk = pk)
+            prev_report_obj.completed = True
+            prev_report_obj.save()          
+            
+            company_obj = Company.objects.get(company = company)
+            
+            print(company_obj.last_reminder_date, reminder_date_obj)
+            
+            if(company_obj.last_reminder_date < reminder_date_obj):
+                company_obj.last_reminder_date = reminder_date_obj
+                company_obj.save()
+                print('reminder date changed') 
+            else:
+                print('reminder date not changed')
+            
+            report_obj.save()
+            
+            data = {
+                'success' : True,
+                'message' : 'Follow-Up Added Successfully!!'
+            }     
+            return JsonResponse(data)
+        
+        else:
+            report_obj = Report.objects.get(pk = pk)
+            report_obj.message = message
+            report_obj.date = datetime.strptime(report_date, '%Y-%m-%d').date()
+            report_obj.reminder_date = reminder_date_obj
+            
+            report_obj.save()
+            
+            data = {
+                'success' : True,
+                'message' : 'Report Updated Successfully!!'
+            }     
+            return JsonResponse(data)
+        
+    except Exception as e:
+        print(e)
         data = {
-            'success' : True,
-            'message' : 'Follow-Up Added Successfully!!'
-        }     
-        return JsonResponse(data)
-    else:
-        data = {
-            'success' : True,
-            'message' : 'Report Updated Successfully!!'
-        }     
+            'success' : False,
+            'message' : 'Some Technical Error!!'
+        }
         return JsonResponse(data)
     
     

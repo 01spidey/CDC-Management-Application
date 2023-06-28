@@ -623,78 +623,78 @@
         justify-content: center;
         pointer-events: none;
 
-        .popup-box{
-            z-index: 150;
-            // background-color: #35363a;
-            background-color: white;
-            box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.4);
-            height: fit-content;
-            width: fit-content;
-            border-radius: 5px;
-            padding-bottom: 15px;
-            display: flex;
-            flex-direction: column;
-            transition: 0.5s ease-in;
+        // .popup-box{
+        //     z-index: 150;
+        //     // background-color: #35363a;
+        //     background-color: white;
+        //     box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.4);
+        //     height: fit-content;
+        //     width: fit-content;
+        //     border-radius: 5px;
+        //     padding-bottom: 15px;
+        //     display: flex;
+        //     flex-direction: column;
+        //     transition: 0.5s ease-in;
 
-            .card-title{
-                font-family: 'Poppins';
-                h2{
-                    color: white;
-                    background-color: #35363a;
-                    padding: 5px 20px;
-                    font-weight: 500;
-                    font-size: 1.2rem;
-                    border-radius: 5px 5px 0px 0px;
-                }
-            }
+        //     .card-title{
+        //         font-family: 'Poppins';
+        //         h2{
+        //             color: white;
+        //             background-color: #35363a;
+        //             padding: 5px 20px;
+        //             font-weight: 500;
+        //             font-size: 1.2rem;
+        //             border-radius: 5px 5px 0px 0px;
+        //         }
+        //     }
 
-            .card-body{
-                display: flex;
-                flex-direction: column;
-                gap: 20px;
-                padding: 5px 10px;
-                flex: 1;
-                justify-content: space-between;
-                align-items: flex-start;
-                pointer-events: all;
+        //     .card-body{
+        //         display: flex;
+        //         flex-direction: column;
+        //         gap: 20px;
+        //         padding: 5px 10px;
+        //         flex: 1;
+        //         justify-content: space-between;
+        //         align-items: flex-start;
+        //         pointer-events: all;
 
-                .section{
-                    display: flex;
-                    flex-direction: column;
-                    gap: 10px;
-                    width: 100%;
+        //         .section{
+        //             display: flex;
+        //             flex-direction: column;
+        //             gap: 10px;
+        //             width: 100%;
 
-                    .input{
-                        display: flex;
-                        flex-direction: column;
-                        gap: 7px;
-                        .reminder-toggle{
-                            display: flex;
-                            gap: 10px;
-                        }
-                        p{
-                            font-weight: 500;
-                        }
-                    }
-                    .btns{
-                        display: flex;
-                        justify-content: space-between;
-                        width: 80%;
-                        align-self: center;
-                        button{
-                            padding: 7px 15px;
-                            border: none;
-                            // border-radius: 10px;
-                            cursor: pointer;
-                            font-weight: 500;
-                            color: white;
-                            font-family: 'Nunito';
+        //             .input{
+        //                 display: flex;
+        //                 flex-direction: column;
+        //                 gap: 7px;
+        //                 .reminder-toggle{
+        //                     display: flex;
+        //                     gap: 10px;
+        //                 }
+        //                 p{
+        //                     font-weight: 500;
+        //                 }
+        //             }
+        //             .btns{
+        //                 display: flex;
+        //                 justify-content: space-between;
+        //                 width: 80%;
+        //                 align-self: center;
+        //                 button{
+        //                     padding: 7px 15px;
+        //                     border: none;
+        //                     // border-radius: 10px;
+        //                     cursor: pointer;
+        //                     font-weight: 500;
+        //                     color: white;
+        //                     font-family: 'Nunito';
                             
-                        }
-                    }
-                }
-            }
-        }
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
     }
     
     .not-active-chip{

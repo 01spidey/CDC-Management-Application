@@ -31,6 +31,7 @@ import {HomeGuard} from './guard/home.guard'
 import { OfficerGuard } from './guard/officer.guard';
 import { DirectorGuard } from './guard/director.guard';
 import { CompanyComponent } from './company/company.component';
+import { PopupComponent } from './popup/popup.component';
 
 @NgModule({
   declarations: [
@@ -47,7 +48,8 @@ import { CompanyComponent } from './company/company.component';
     DeleteButtonComponent,
     SummaryComponent,
     NotificationComponent,
-    CompanyComponent
+    CompanyComponent,
+    PopupComponent
   ],
   imports: [
     BrowserModule,

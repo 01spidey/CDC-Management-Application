@@ -48,5 +48,7 @@ urlpatterns = [
     path('get_companies', views.get_companies),
     
     path('get_reports_by_company', views.get_reports_by_company),
-    
+    path('add_and_update_company_report', views.add_and_update_company_report),
+    path('delete_company_report', views.delete_company_report),
+        
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

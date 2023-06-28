@@ -125,7 +125,7 @@
         </div>  
     </div>
 
-    <div class="company-box" *ngIf="section==3">
+    <div class="company-box" *ngIf="section==3"> 
         <div class="company-info-box">
             <div class="left">
                 <div class="company">
@@ -218,10 +218,10 @@
                         <td colspan="2">{{item.message}}</td>
                         <td>{{item.reminder_date}}</td>
                         <td>
-                            <p class="status prevent-select" [ngStyle]="item.status?{'background-color' : '#198754'} : {'background-color' : '#ea4034', 'cursor' : 'pointer'}" (click)="openPopup('update', item)">{{item.status?'Completed' : 'Update'}}</p>
+                            <p class="status prevent-select" [ngStyle]="item.status?{'background-color' : '#198754'} : {'background-color' : '#ea4034', 'cursor' : 'pointer'}" (click)="openPopup('add', item)">{{item.status?'Completed' : 'Update'}}</p>
                         </td>
                         <td style="width: 30px;">
-                            <span class="material-symbols-outlined prevent-select" (click)="editReport(item)">
+                            <span class="material-symbols-outlined prevent-select" (click)="openPopup('edit', item)">
                                 edit
                             </span>
                         </td>
@@ -329,56 +329,7 @@
     </div>
 
     <div class="popup-container" *ngIf="section==3">
-        <div class="popup-box" *ngIf="popup">
-            <div class="card-title">
-                <h2>Add Follow-Up</h2>
-            </div>
-            <div class="card-body">
-                <div class="section">
-                    <div class="input" style="margin-top:18px">
-                        <p>Message</p>
-                        <mat-form-field>
-                            <mat-label>Write your message here...</mat-label>
-                            <input matInput [formControl] = 'popup_message'>
-                        </mat-form-field>
-                    </div>
-                    <div class="temp" style="display: flex;gap : 20px">
-                        <div class="input" style="flex: 1;">
-                            <p>Date</p>
-                            <mat-form-field>
-                                <mat-label>Choose a date</mat-label>
-                                <input matInput [matDatepicker]="picker_1" [formControl] = 'popup_date'>
-                                <mat-datepicker-toggle matIconSuffix [for]="picker_1"></mat-datepicker-toggle>
-                                <mat-datepicker #picker_1></mat-datepicker>
-                              </mat-form-field>
-                        </div> 
-                        
-                        <div class="input" style="flex: 1;">
-                            <div class="reminder-toggle">
-                              <p>Reminder</p>
-                              <mat-slide-toggle [(ngModel)]="reminder" [ngModelOptions]="{standalone: true}" name="reminderToggle"></mat-slide-toggle>
-                            </div>
-                            <mat-form-field>
-                              <mat-label>Choose a date</mat-label>
-                              <input matInput [matDatepicker]="picker_2" [disabled]='!reminder' 
-                              [(ngModel)]="reminder_date" [ngModelOptions]="{standalone: true}">
-                          
-                              <mat-datepicker-toggle matIconSuffix [for]="picker_2"></mat-datepicker-toggle>
-                              <mat-datepicker #picker_2></mat-datepicker>
-                            </mat-form-field>
-                        </div>
-
-                        
-                    </div>
-                    
-
-                    <div class="btns">
-                        <button mat-raised-button style="background-color: #1a6486;" (click)="addReport()">Update</button>
-                        <button  mat-raised-button style="background-color: red;" (click)="popup=false">Cancel</button>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <app-popup (popup_closed)="handleValue($event)" [data] = 'popup_data' *ngIf="popup"></app-popup>
     </div>
     
 

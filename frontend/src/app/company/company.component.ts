@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { AppService } from '../service/app.service';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
 import { company, getCompaniesResponse, getReportsByCompanyResponse, Report } from '../models/model';
+import { popup_data } from '../popup/popup.component';
 
 @Component({
   selector: 'app-company',
@@ -17,6 +18,9 @@ export class CompanyComponent implements OnInit{
   role = sessionStorage.getItem('user_role')!
   action = 'Company Details'
   staff_id = this.userData.staff_id
+  
+  popup_data!:popup_data;
+
 
   company_filter = 'Active'
   cur_company : company = {
@@ -43,6 +47,8 @@ export class CompanyComponent implements OnInit{
   report_lst : Report[] = []
   popup_message = new FormControl('',Validators.required)
   popup_date = new FormControl('',Validators.required)
+
+
 
   addCompanyForm = this.builder.group({
     company:this.builder.control('',Validators.required),
@@ -74,6 +80,11 @@ export class CompanyComponent implements OnInit{
 
   applyFilter(){
 
+  }
+
+  handleValue(value: boolean) {
+    this.popup = !value
+    console.log(value)
   }
 
   changeSection(section: number, action:string){
@@ -163,7 +174,7 @@ export class CompanyComponent implements OnInit{
 
     this.service.getReportsByCompany(data).subscribe(
       (res:getReportsByCompanyResponse)=>{
-        console.log(res)
+        // console.log(res)
         if(res.success) this.report_lst = res.reports
         else this.toastr.warning('Something went wrong')
       },
@@ -185,25 +196,17 @@ export class CompanyComponent implements OnInit{
   }
 
   openPopup(as : string, report : Report){
+
+    this.popup_data = {
+      open_as : as,
+      report : report
+    }
     this.popup = true
-    let today = new Date()
-    // this.popup_date.patchValue(this.patchDate(`${today.getDay()}-${today.getMonth()+1}-${today.ye}}`))
-    // this.patchDate(report.date)
-    this.popup_message.patchValue(report.message)
-    console.log(report)
+
+    // console.log(report)
   }
 
-  patchDate(dateString: string) : string{
-    const parts = dateString.split('-');
-    const day = parts[0];
-    let month:string = parts[1] ;
-    month = month.length==1?`0${month}`:month
-    const year = +parts[2];
-    const formattedDate = `${year}-${month}-${day}`; // Convert back to 'dd-mm-yyyy' format
-    console.log(formattedDate)
-    return formattedDate;
-    // 2023-07-01
-  }
+  
 
   back(){
     this.section = 1

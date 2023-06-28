@@ -62,5 +62,7 @@ urlpatterns = [
     path('delete_company', include('app.urls')),
     path('get_companies', include('app.urls')),
     path('get_reports_by_company', include('app.urls')),
+    path('add_and_update_company_report', include('app.urls')),
+    path('delete_company_report', include('app.urls'))
     
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

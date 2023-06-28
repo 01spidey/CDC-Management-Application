@@ -1376,6 +1376,7 @@ def get_company_stats(request):
         return JsonResponse(data)
 
 
+# -------------------------------------------------------------------------------
 
 @csrf_exempt
 def get_reports_by_company(request):
@@ -1581,4 +1582,35 @@ def delete_company(request):
             'success' : False,
             'message' : 'Some Technical Error!!'
         }
-        return JsonResponse(data)       
+        return JsonResponse(data)  
+    
+@csrf_exempt
+def add_and_update_company_report(request):
+    
+    formdata = json.loads(request.body)
+    print(formdata)
+    
+    if(formdata['action'])=='add':
+        data = {
+            'success' : True,
+            'message' : 'Follow-Up Added Successfully!!'
+        }     
+        return JsonResponse(data)
+    else:
+        data = {
+            'success' : True,
+            'message' : 'Report Updated Successfully!!'
+        }     
+        return JsonResponse(data)
+    
+    
+
+@csrf_exempt
+def delete_company_report(request):
+    
+    data ={
+        'success' : True,
+        'message' : 'Report Deleted Successfully!!'
+    }
+    return JsonResponse(data)
+    

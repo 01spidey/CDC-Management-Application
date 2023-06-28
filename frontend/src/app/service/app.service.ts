@@ -147,7 +147,7 @@ export class AppService {
 
 
 
-
+  // ------------------------------------------------------------------------------------
 
   addCompany(data:object){
     return this.http.post<serverResponse>(`${this.URL}/add_company`, data)
@@ -177,6 +177,15 @@ export class AppService {
 
   getReportsByCompany(data:any){
     return this.http.get<getReportsByCompanyResponse>(`${this.URL}/get_reports_by_company`, {params : data})
+  }
+
+  addAndUpdateCompanyReport(data:object){
+    return this.http.post<serverResponse>(`${this.URL}/add_and_update_company_report`, data)
+  }
+
+
+  deleteCompanyReport(data:object){
+    return this.http.post<serverResponse>(`${this.URL}/delete_company_report`, data)
   }
 
 

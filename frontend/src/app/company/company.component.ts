@@ -25,12 +25,13 @@ export class CompanyComponent implements OnInit{
   company_filter = 'Active'
   cur_company : company = {
     id : 0,
-    company : 'AutoDesk',
-    HR_name : 'tom h',
-    HR_mail : 'tomh@gmail.com',
-    website : 'www.autodesk.com',
-    category : 'IT - Product',
-    placement_officer_id : '19KPR001'
+    company : '',
+    HR_name : '',
+    HR_mail : '',
+    HR_contact : '',
+    website : '',
+    category : '',
+    placement_officer_id : ''
   }
 
   startDate = ''
@@ -70,6 +71,8 @@ export class CompanyComponent implements OnInit{
   ) { }
 
   ngOnInit(): void {
+    this.section = sessionStorage.getItem('cur_company_section')?Number(sessionStorage.getItem('cur_company_section')):1
+    this.cur_company = JSON.parse(sessionStorage.getItem('cur_company')!)
     if(this.section==1) this.getCompanies(this.company_filter) 
     if(this.section==3) {
       this.startDate = this.datePipe.transform(this.threeMonthsAgo, 'yyyy-MM-dd')!;
@@ -89,6 +92,7 @@ export class CompanyComponent implements OnInit{
   }
 
   changeSection(section: number, action:string){
+    sessionStorage.setItem('cur_company_section', section.toString())
     this.section = section
     this.action = action
   }
@@ -142,17 +146,25 @@ export class CompanyComponent implements OnInit{
     )
   }
 
+
+
   editCompany(){
+
+  }
+
+  deleteCompany(){
 
   }
 
   openCompany(company : company){
     this.toastr.info(company.company)
     this.section = 3
+    sessionStorage.setItem('cur_company_section', this.section.toString())
     this.action = 'Company Details'
     this.cur_company = company
     this.startDate = this.datePipe.transform(this.threeMonthsAgo, 'yyyy-MM-dd')!;
     this.endDate = this.datePipe.transform(this.today, 'yyyy-MM-dd')!;
+    sessionStorage.setItem('cur_company',JSON.stringify(company))
     this.getReportsByCompany()
   }
 
@@ -210,7 +222,15 @@ export class CompanyComponent implements OnInit{
   
 
   back(){
-    this.section = 1
-    this.getCompanies(this.company_filter)
+    if(this.section==2 && this.action === 'Edit Company'){ 
+      this.section = 3
+      this.action = 'Company Details'
+      this.getReportsByCompany()
+    }
+    
+    else{
+      this.section = 1
+      this.getCompanies(this.company_filter)
+    }
   }
 }

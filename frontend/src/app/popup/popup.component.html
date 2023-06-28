@@ -20,7 +20,7 @@
                         <p>Date</p>
                         <mat-form-field>
                             <mat-label>Choose a date</mat-label>
-                            <input matInput [matDatepicker]="picker_1" [(ngModel)]="date" [ngModelOptions]="{standalone: true}" [disabled]="data!.open_as==='add'">
+                            <input matInput [matDatepicker]="picker_1" [(ngModel)]="date" [ngModelOptions]="{standalone: true}" [disabled]='true'>
                             <!-- [formControl] = 'popup_date' -->
                             <mat-datepicker-toggle matIconSuffix [for]="picker_1"></mat-datepicker-toggle>
                             <mat-datepicker #picker_1></mat-datepicker>

@@ -12,9 +12,12 @@ class Report(models.Model):
     message = models.TextField(null=False)
     reminder_date = models.DateField(null=True, default=None)
     completed = models.BooleanField(default=False)
+    timestamp = models.DateTimeField(auto_now_add=True, null=True)
+
+    # time = models.CharField(max_length=50, null=True)
     
     class Meta:
-        ordering = ['-date']
+        ordering = ['-timestamp']
 
 class PlacementOfficer(models.Model):
     user_id = models.CharField(max_length=50, null=False, primary_key=True)
@@ -55,10 +58,18 @@ class Company(models.Model):
     company = models.CharField(max_length=50, null=False)
     HR_name = models.CharField(max_length=50, null=False)
     HR_mail = models.EmailField(null=False)
+    
+    HR_contact = models.CharField(max_length=50, null=True)
+    lock_hr_mail = models.BooleanField(default=False)
+    lock_hr_contact = models.BooleanField(default=False)
+    
     placement_officer_id = models.CharField(max_length=50, null=False)
     category = models.CharField(max_length=50, null=True)
     website = models.URLField(null=True)
     last_reminder_date = models.DateField(null=True, default=None)
+    
+    initiated_at = models.DateField(default=now, null=False)
+    
 
 
 

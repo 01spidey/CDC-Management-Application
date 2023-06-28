@@ -179,6 +179,7 @@ export interface company{
     company : string,
     HR_name : string,
     HR_mail : string,
+    HR_contact : string,
     website : string,
     category : string,
     placement_officer_id : string

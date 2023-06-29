@@ -11,6 +11,9 @@ from django.db.models import Q
 from django.core.mail import send_mail
 from random import sample
 from cryptography.fernet import Fernet
+from django.utils import timezone
+import pytz
+
 
 # from models import PlacementDirector
 
@@ -618,29 +621,7 @@ def add_report(request):
         
         return JsonResponse(data)
     
-@csrf_exempt
-def delete_report(request):
-    
-    report_id = request.POST.get('pk')
-    # print(formData)
-    try:
-        report = Report.objects.get(pk = report_id)
-        report.delete()
-        data = {
-            'success':True,
-            'message' : 'Report deleted Successfully!!'
-        }
-        return JsonResponse(data)
-    
-    except Exception as e:
-        print(e)
-    
-        data = {
-            'success':False,
-            'message' : 'Some Technical Error!!'
-        }
-        
-        return JsonResponse(data)
+
 
 @csrf_exempt
 def update_report(request):
@@ -909,7 +890,7 @@ def get_report_summary_by_id(staff_id, filter, start_date, end_date):
         'staff_id': staff_id, # staff id of the placement officer
         'name': name, # name of the placement officer
         'total_reports': len(report_data), # total number of reports
-        'companies': list(companies), # list of companies contacted by the placement officer
+        'companies': list(set(companies)) # list of companies contacted by the placement officer
     }
     
     return response_data
@@ -981,7 +962,7 @@ def get_notifications(request):
     today = date.today()
     
     if(category=='report_alerts'):
-        reports = Report.objects.filter(Q(placement_officer_id=staff_id, reminder_date__gt=today) | Q(placement_officer_id=staff_id, reminder_date=today)).order_by('reminder_date')
+        reports = Report.objects.filter(Q(placement_officer_id=staff_id, completed = False)).order_by('reminder_date')
         for report in reports:
             report_notifications.append(
                 {
@@ -1336,14 +1317,15 @@ def get_user_stats(request):
 def get_company_stats(request):
     
     core, it_product, it_service, marketing, others = [], [], [], [], []
-    reports = Report.objects.all()
+    # reports = Report.objects.all()
+    companies = Company.objects.all()
 
     try:
-        core = reports.filter(category='Core').values('company').distinct()
-        it_product = reports.filter(category='IT - Product').values('company').distinct()
-        it_service = reports.filter(category='IT - ES').values('company').distinct()
-        marketing = reports.filter(category='Sales / Management').values('company').distinct()
-        others = reports.filter(category='Others').values('company').distinct()
+        core = companies.filter(category='Core').values('company').distinct()
+        it_product = companies.filter(category='IT - Product').values('company').distinct()
+        it_service = companies.filter(category='IT - ES').values('company').distinct()
+        marketing = companies.filter(category='Sales / Management').values('company').distinct()
+        others = companies.filter(category='Others').values('company').distinct()
     
         print(it_service)
         
@@ -1385,13 +1367,14 @@ def get_reports_by_company(request):
     end_date = request.GET.get('end_date')
     staff_id = request.GET.get('staff_id')
     
-    # print(f'company : {company}\nstart_date : {start_date}\nend_date : {end_date}\nstaff_id : {staff_id}')
+    print(f'company : {company}\nstart_date : {start_date}\nend_date : {end_date}\nstaff_id : {staff_id}')
     try:
         reports = Report.objects.filter(company = company, placement_officer_id = staff_id, date__range = [start_date, end_date]).order_by('-date')
         company = Company.objects.get(company = company)
         reports_lst = []
         a = 1
         for report in reports:
+            # print()
             reports_lst.append(
                 {
                     'pk' : report.pk,
@@ -1403,7 +1386,7 @@ def get_reports_by_company(request):
                     'reminder_date' : convert_date_format(report.reminder_date),
                     'hr_name' : company.HR_name,
                     'hr_mail' : company.HR_mail,
-                    
+                    'time' : UTCtoIST(str(report.timestamp))
                 }
             )
             a+=1
@@ -1424,6 +1407,14 @@ def get_reports_by_company(request):
         
         return JsonResponse(data)
 
+def UTCtoIST(utc_time_string):
+    utc_time = datetime.strptime(utc_time_string, '%Y-%m-%d %H:%M:%S.%f%z')
+
+    ist_timezone = pytz.timezone('Asia/Kolkata')
+    ist_time = utc_time.astimezone(ist_timezone)
+    formatted_time = ist_time.strftime('%I:%M %p')
+    return formatted_time
+
 @csrf_exempt
 def add_company(request):
     formdata = json.loads(request.body)
@@ -1433,6 +1424,9 @@ def add_company(request):
     category = formdata['category']
     staff_id = formdata['staff_id']
     website = formdata['website']
+    hr_contact = formdata['hr_contact']
+    lock_hr_mail = formdata['lock_hr_mail']
+    lock_hr_contact = formdata['lock_hr_contact']
     
     message = formdata['message']
     reminder_date = formdata['reminder_date']
@@ -1465,8 +1459,14 @@ def add_company(request):
                 placement_officer_id = staff_id,
                 category = category,
                 website = website,
-                last_reminder_date = reminder_date_obj
+                last_reminder_date = reminder_date_obj,
+                HR_contact = hr_contact,
+                lock_hr_mail = lock_hr_mail,
+                lock_hr_contact = lock_hr_contact
             )            
+            
+            print(lock_hr_contact, lock_hr_mail)
+            
             company_obj.save()
             report_obj.save()
 
@@ -1537,19 +1537,33 @@ def get_companies(request):
 @csrf_exempt
 def update_company(request):
     formdata = json.loads(request.body)
-    company = formdata['company']
+    pk = formdata['pk']
+    new_company = formdata['company']
     hr_name = formdata['hr_name']
     hr_mail = formdata['hr_mail']
+    hr_contact = formdata['hr_contact']
     category = formdata['category']
     website = formdata['website']
+    lock_hr_mail = formdata['lock_hr_mail']
+    lock_hr_contact = formdata['lock_hr_contact']
+    
     
     try:
-        company_obj = Company.objects.get(company = company)
+        print(formdata)
+        company_obj = Company.objects.get(pk = pk)
+        company_name = company_obj.company
+        # print(company_name)
+        reports = Report.objects.filter(company = company_name).update(company = new_company)
+        # print(reports)
         company_obj.HR_name = hr_name
-        company_obj.company = company
+        company_obj.company = new_company
         company_obj.HR_mail = hr_mail
         company_obj.category = category
         company_obj.website = website
+        company_obj.HR_contact = hr_contact
+        company_obj.lock_hr_mail = lock_hr_mail
+        company_obj.lock_hr_contact = lock_hr_contact
+        company_obj.save()
         
         return JsonResponse({
             'success' : True,
@@ -1637,6 +1651,7 @@ def add_and_update_company_report(request):
             report_obj.message = message
             report_obj.date = datetime.strptime(report_date, '%Y-%m-%d').date()
             report_obj.reminder_date = reminder_date_obj
+            # report_obj.timestamp = timezone.now()
             
             report_obj.save()
             
@@ -1654,14 +1669,28 @@ def add_and_update_company_report(request):
         }
         return JsonResponse(data)
     
-    
 
 @csrf_exempt
 def delete_company_report(request):
+    data = json.loads(request.body)
+    report_id = data['pk']
+    # print(formData)
+    try:
+        report = Report.objects.get(pk = report_id)
+        report.delete()
+        data = {
+            'success':True,
+            'message' : 'Report deleted Successfully!!'
+        }
+        return JsonResponse(data)
     
-    data ={
-        'success' : True,
-        'message' : 'Report Deleted Successfully!!'
-    }
-    return JsonResponse(data)
+    except Exception as e:
+        print(e)
+    
+        data = {
+            'success':False,
+            'message' : 'Some Technical Error!!'
+        }
+        
+        return JsonResponse(data)
     

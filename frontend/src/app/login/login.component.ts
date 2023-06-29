@@ -36,6 +36,11 @@ export class LoginComponent implements OnInit{
   })
 
   ngOnInit(): void {
+    sessionStorage.removeItem('user_id')
+    sessionStorage.removeItem('cur_company_section')
+    sessionStorage.removeItem('cur_company')
+    sessionStorage.removeItem('cur_user_data')
+    sessionStorage.removeItem('cur_action')    
     sessionStorage.setItem('cur_page', 'login')
     this.role = sessionStorage.getItem('user_role')!
   }

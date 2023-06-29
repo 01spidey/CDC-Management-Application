@@ -182,7 +182,11 @@ export interface company{
     HR_contact : string,
     website : string,
     category : string,
-    placement_officer_id : string
+    placement_officer_id : string,
+    initiated_at : string,
+    last_reminder_date : string,
+    lock_hr_contact : boolean,
+    lock_hr_mail : boolean
 }
 
 export interface companyByIdResponse{
@@ -206,6 +210,7 @@ export interface Report {
     reminder_date : string,
     hr_name : string,
     hr_mail : string,
+    time : string,
 }
 
 export interface getReportsByCompanyResponse{

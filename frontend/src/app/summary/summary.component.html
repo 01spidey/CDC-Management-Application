@@ -109,10 +109,10 @@
                 <td>
                     <p class="count">{{summary.total_reports}}</p>
                 </td>
-                <td style="flex:3;">
+                <td style="flex:3;overflow-x:scroll">
                     <div class="company-chips-box">
                         <div class="company-chip" *ngFor="let company of summary.companies">
-                            <p>{{company}}</p>
+                            <p style="white-space: nowrap;">{{company}}</p>
                         </div>
                     </div>
                 </td>

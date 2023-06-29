@@ -105,7 +105,6 @@ export class SummaryComponent implements OnInit {
       this.service.getReportSummary(data).subscribe(
         (res:reportSummaryResponse)=>{
           if(res.success){
-            console.log(res.report_summary)
             this.report_summary = res.report_summary
             this.tot_reports = 0
             this.tot_companies = 0

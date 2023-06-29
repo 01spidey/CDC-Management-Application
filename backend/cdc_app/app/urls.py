@@ -18,7 +18,6 @@ urlpatterns = [
     path('update_drive', views.update_drive),   
    
     path('add_report', views.add_report),
-    path('delete_report', views.delete_report),
     path('update_report', views.update_report),
     path('get_reports', views.get_reports),
     path('get_members', views.get_members),

@@ -35,7 +35,6 @@ urlpatterns = [
     path('update_drive', include('app.urls')),
     
     path('add_report', include('app.urls')),
-    path('delete_report', include('app.urls')),
     path('update_report', include('app.urls')),
     path('get_reports', include('app.urls')),
     

@@ -5,18 +5,19 @@
         <img (click) = "back()" src="../../assets/back.png" *ngIf="section==2 || section==3" class="back">
         <div class="title" *ngIf="section==1">
             <h1>My Companies</h1>
-            <hr id="line" style="width: 350px;">
+            <hr id="line" style="width: 320px;">
         </div>
 
         <div class="title" *ngIf="section==2">
             <h1>{{action}}</h1>
-            <hr id="line" style="width: 300px;">
+            <hr id="line" style="width: 320px;">
         </div>
 
         <div class="title" *ngIf="section==3">
-            <h1>{{action}}</h1>
+            <h1>Company Details</h1>
             <hr id="line" style="width: 380px;">
         </div>
+
 
         <div *ngIf="section==1 && role=='Officer'" class="add-drive" (click)="changeSection(2, 'Add Company')">
             <span class="material-symbols-outlined">
@@ -56,7 +57,7 @@
             </div>
             
             <a>
-                <span matTooltip="Refresh" class="material-symbols-outlined" id="refresh" (click)="applyFilter()">
+                <span matTooltip="Refresh" class="material-symbols-outlined" id="refresh" (click)="getCompanies(company_filter)">
                     refresh
                 </span>
             </a>
@@ -99,10 +100,10 @@
                 
                 <div class="field">
                     <span class="material-symbols-outlined">
-                        badge
+                        today
                     </span>
-                    <p style="font-family: 'Poppins';font-weight:500;">Followed By : </p>
-                    <p>{{company.placement_officer_id}}</p>
+                    <p style="font-family: 'Poppins';font-weight:500;">Initiated At :  </p>
+                    <p>{{company.initiated_at}}</p>
                 </div>
 
                 <div class="field">
@@ -126,7 +127,7 @@
                         phone
                     </span>
                     <p style="font-family: 'Poppins';font-weight:500;">HR Contact : </p>
-                    <p>{{company.HR_contact}}</p>
+                    <p>{{company.HR_contact!==null?company.HR_contact : 'Not Available'}}</p>
                 </div>
 
             </div>
@@ -151,10 +152,10 @@
                 
                 <div class="field">
                     <span class="material-symbols-outlined">
-                        badge
+                        today
                     </span>
-                    <p style="font-family: 'Poppins';font-weight:500;">Followed By : </p>
-                    <p>{{cur_company.placement_officer_id}}</p>
+                    <p style="font-family: 'Poppins';font-weight:500;">Initiated At : </p>
+                    <p>{{cur_company.initiated_at}}</p>
                 </div>
 
                 <div class="field">
@@ -177,8 +178,8 @@
                     <span class="material-symbols-outlined">
                         phone
                     </span>
-                    <p style="font-family: 'Poppins';font-weight:500;">HR Mail : </p>
-                    <p>{{cur_company.HR_contact}}</p>
+                    <p style="font-family: 'Poppins';font-weight:500;">HR Contact : </p>
+                    <p>{{cur_company.HR_contact!==null?cur_company.HR_contact : 'Not Available'}}</p>
                 </div>
 
                 <div class="options">
@@ -236,7 +237,13 @@
 
                     <tr *ngFor="let item of report_lst">
                         <td style="width: 30px;">{{item.position}}</td>
-                        <td>{{item.date}}</td>
+                        <td>
+                            <div class="temp">
+                                <p>{{item.date}}</p>
+                                <p style="font-style: italic;font-size : .85rem">[{{item.time}}]</p>
+                            </div>
+                            
+                        </td>
                         <td colspan="2">{{item.message}}</td>
                         <td>{{item.reminder_date}}</td>
                         <td>
@@ -248,7 +255,7 @@
                             </span>
                         </td>
                         <td style="width: 30px;" [ngStyle]="!item.status?{'opacity' : '0.8', 'pointer-events' : 'none'} : {}">
-                            <span class="material-symbols-outlined prevent-select" (click)="deleteReport(item)">
+                            <span class="material-symbols-outlined prevent-select" (click)="openDeletePopup(item.pk)">
                                 delete
                             </span>
                         </td>
@@ -296,16 +303,32 @@
                     </mat-form-field> 
                 </div>
     
-                <div class="input">
-                    <p>HR Mail</p>
+                <div class="input" [ngStyle]="lock_hr_mail?{'background-color' : '#35363a', 'color' : 'white'} : {}">
+                    <div class="toggle-container">
+                        <p>HR Mail</p>
+                        <mat-slide-toggle [(ngModel)]="lock_hr_mail" [ngModelOptions]="{standalone: true}" name="reminderToggle"></mat-slide-toggle>
+                    </div>
                     <mat-form-field>
-                        <mat-label>TomH@amazon.com*</mat-label>
+                        <mat-label>TomH@autodesk.com*</mat-label>
                         <input matInput formControlName = "hr_mail">
                     </mat-form-field> 
                 </div>
             </div>
             
             <div class="section">
+                <div class="input" [ngStyle]="lock_hr_contact?{'background-color' : '#35363a', 'color' : 'white'} : {}">
+                    <div class="toggle-container">
+                        <p>HR Contact</p>
+                        <mat-slide-toggle [(ngModel)]="lock_hr_contact" [ngModelOptions]="{standalone: true}" name="reminderToggle"></mat-slide-toggle>
+                    </div>
+                    
+                    <mat-form-field>
+                        <mat-label>xxxxxxxxxx</mat-label>
+                        <span matPrefix>+91 &nbsp;</span>
+                        <input type="number" matInput formControlName = "hr_contact">
+                    </mat-form-field> 
+                </div>
+
                 <div class="input">
                     <p>Company Website</p>
                     <mat-form-field>
@@ -315,7 +338,7 @@
                 </div>
             </div>
 
-            <div class="section">
+            <div class="section" *ngIf="action==='Add Company'">
                 <div class="input" style="margin-top:18px">
                     <p>Message</p>
                     <mat-form-field>
@@ -325,7 +348,7 @@
                 </div>
                 
                 <div class="input">
-                    <div class="reminder-toggle">
+                    <div class="toggle-container">
                       <p>Reminder</p>
                       <mat-slide-toggle [(ngModel)]="reminder" [ngModelOptions]="{standalone: true}" name="reminderToggle"></mat-slide-toggle>
                     </div>
@@ -343,15 +366,22 @@
 
             <div class="btns">
               <button mat-raised-button id="reset" (click)="addCompanyForm.reset()">Reset</button>
-              <button mat-raised-button id="add" (click)="action==='Add Company'?addCompany() : editCompany()">{{action==='Add Company'?'Add Company' : 'Save Changes'}}</button>
+              <button mat-raised-button id="add" (click)="action==='Add Company'?addCompany() : updateCompany()">{{action==='Add Company'?'Add Company' : 'Save Changes'}}</button>
             </div>
           
         </form>
 
     </div>
 
-    <div class="popup-container" *ngIf="section==3 && popup">
+    <div class="popup-container" *ngIf="section==3 && (popup||delete_popup)">
         <app-popup (popup_closed)="handleValue($event)" [data] = 'popup_data' *ngIf="popup"></app-popup>
+        <div class="delete-popup" *ngIf="delete_popup">
+            <p>Are You sure You want to delete the Report?</p>
+            <div class="btns">
+                <button mat-raised-button style="background-color: #35363a;" (click)="delete_popup=false">Cancel</button>
+                <button mat-raised-button style="background-color: red;" (click)="deleteReport(delete_report_pk)">Delete</button>
+            </div>
+        </div>
     </div>
     
 

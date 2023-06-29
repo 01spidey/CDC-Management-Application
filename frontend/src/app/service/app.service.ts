@@ -183,6 +183,11 @@ export class AppService {
     return this.http.post<serverResponse>(`${this.URL}/add_and_update_company_report`, data)
   }
 
+  
+
+  updateCompany(data:any){
+    return this.http.post<serverResponse>(`${this.URL}/update_company`, data)
+  }
 
   deleteCompanyReport(data:object){
     return this.http.post<serverResponse>(`${this.URL}/delete_company_report`, data)

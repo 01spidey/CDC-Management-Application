@@ -134,6 +134,7 @@ export interface driveNotification{
 }
 
 export interface reportNotification{
+    pk : number,
     company : string,
     date : string,
     last_message : string,

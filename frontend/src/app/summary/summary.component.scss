@@ -235,6 +235,7 @@
             background-color:#686a723f;
             // color: white;
             margin-left: 3px;
+            
             .count{
                 background-color: #198754;
                 color:white;
@@ -251,6 +252,16 @@
                 }
             }
         }
+
+        td::-webkit-scrollbar{
+            background-color: #aaa;
+            height: 7px;
+        }
+        td::-webkit-scrollbar-thumb{
+            background-color: black;
+            border-radius: 10px;
+        }
+
         th{
             background-color: #1a6486;
             color: white;
@@ -271,7 +282,6 @@
 
             .card-1, .card-2, .card-3{
                 flex: 1;
-                background-color:#35363a77;
                 padding: 15px 20px;
                 border-radius: 10px;
                 // box-shadow: 1px 2px 10px 1px rgba(0, 0, 0, 0.449);
@@ -292,13 +302,21 @@
                     justify-content: space-between;
                     // background-color: #152b51ff;
                     .val{
-                        align-self: center;
-                        justify-self: center;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
                         flex: 1;
-                        text-align: center;
-                        font-size: 5rem;
+                        font-size: 3.5rem;
                         font-family: 'Poppins';
-                        color: white;
+                        // background-color: white;
+                        h1{
+                            background-color: white;
+                            width: fit-content;
+                            height: fit-content;
+                            padding: 0px 20px;
+                            border-radius: 5px;
+                            font-size: 3.5rem;
+                        }
                     }
                     img{
                         flex: 1;
@@ -313,10 +331,10 @@
                     font-size: 1.5rem;
                     font-weight: 500;
                     padding-right: 20px;
-                    border-bottom: 3px solid #1a6486;
+                    border-bottom: 3px solid white;
                     font-weight: bold;
                     // color: white;    
-                    color: #35363a;
+                    color: white;
                 }
                 
                 
@@ -327,12 +345,19 @@
             display: flex;
             gap: 5px;
             align-items: center;
-            justify-content: flex-start;
+            // justify-content: flex-start;
+            margin-left: 50px;
             .company-chip{
                 background-color: #ea4034;
                 color: white;
                 padding: 5px 10px;
                 border-radius: 5px;
+                transition: 0.3s ease;
+                cursor: pointer;
+
+                &:active{
+                    transform: scale(0.9);
+                }
             }
         }
 
@@ -410,4 +435,9 @@
     border: 1px solid #35363a;
     color: white;
     background-color: #35363a;
+}
+.prevent-select {
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none; /* IE 10 and IE 11 */
+    user-select: none; /* Standard syntax */
 }

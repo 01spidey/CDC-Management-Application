@@ -39,15 +39,10 @@ class PlacementDirector(models.Model):
 
 class Drive(models.Model):
     job_role = models.CharField(max_length=50, null=True)
-    placement_officer_id = models.CharField(max_length=50, null=True)
     date = models.DateField(default=now, null=False)
     company = models.CharField(max_length=50, null=False)
-    website = models.URLField(null=False)
-    HR_name = models.CharField(max_length=50, null=False)
-    HR_mail = models.EmailField(null=False)
     drive_mode = models.CharField(max_length=50, null=False)
     description = models.TextField(null=False)
-    category = models.CharField(max_length=50, null=True)
     file = models.FileField(upload_to='file_uploads/', null=True)  # Adjust the upload destination as per your requirements
     departments = ArrayField(models.CharField(max_length=100), blank=True, null=True)
     

@@ -51,9 +51,7 @@ export class DriveComponent implements OnInit {
     private builder : FormBuilder,
     private datePipe : DatePipe,
     private toastr:ToastrService
-  ) { 
-
-  }
+  ) {  }
 
   ngOnInit(): void {
       this.drive_lst = [ ]

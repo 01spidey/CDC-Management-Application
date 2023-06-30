@@ -244,6 +244,7 @@ def get_drive_by_status(request):
             file_url = f"{settings.MEDIA_URL}{drive.file}"
             file_absolute_url = f"http://{domain}{file_url}"
             drive_date = datetime.strptime(str(drive.date), '%Y-%m-%d').strftime('%d-%m-%Y')
+            company_obj = Company.objects.get(company=drive.company)
 
             drive_lst.append(
                 {
@@ -252,13 +253,16 @@ def get_drive_by_status(request):
                     'job_role': drive.job_role,
                     'mode': drive.drive_mode,
                     'date': drive_date,
-                    'placement_officer_id': drive.placement_officer_id,
-                    'website' : drive.website,
-                    'HR_name' : drive.HR_name,
-                    'HR_mail' : drive.HR_mail,
+                    'placement_officer_id': company_obj.placement_officer_id,
+                    'website' : company_obj.website,
+                    'HR_name' : company_obj.HR_name,
+                    'HR_mail' : company_obj.HR_mail,
+                    'HR_contact' : company_obj.HR_contact,
                     'description' : drive.description,
                     'file' : file_absolute_url,
-                    'category' : drive.category
+                    'category' : company_obj.category,
+                    'lock_hr_mail' : company_obj.lock_hr_mail,
+                    'lock_hr_contact' : company_obj.lock_hr_contact,
                 }
             )
             
@@ -319,13 +323,19 @@ def get_drive_by_dateRange(request):
             drives = Drive.objects.filter(date__range=[start_date, end_date], date__lt=today)
         
         for drive in drives:
-            print(drive.file.url)
+            # print(drive.file.url)
             current_site = get_current_site(request)
             domain = current_site.domain
             file_url = f"{settings.MEDIA_URL}{drive.file}"
+            
+            if(file_url=='/media/None' or file_url=='/media/'):
+                file_url = '/media/file_uploads/empty.csv'
+            
             file_absolute_url = f"http://{domain}{file_url}"
             drive_date = datetime.strptime(str(drive.date), '%Y-%m-%d').strftime('%d-%m-%Y')
-
+            company_obj = Company.objects.get(company=drive.company)
+            
+            print(file_url)
             drive_lst.append(
                 {
                     'id' : drive.pk,
@@ -333,14 +343,16 @@ def get_drive_by_dateRange(request):
                     'job_role': drive.job_role,
                     'mode': drive.drive_mode,
                     'date': drive_date,
-                    'placement_officer_id': drive.placement_officer_id,
-                    'website' : drive.website,
-                    'HR_name' : drive.HR_name,
-                    'HR_mail' : drive.HR_mail,
+                    'placement_officer_id': company_obj.placement_officer_id,
+                    'website' : company_obj.website,
+                    'HR_name' : company_obj.HR_name,
+                    'HR_mail' : company_obj.HR_mail,
                     'description' : drive.description,
                     'file' : file_absolute_url,
                     'completed' : True if status == 'Completed' else drive.date < today,
-                    'category' : drive.category
+                    'category' : company_obj.category,
+                    'lock_hr_mail' : company_obj.lock_hr_mail,
+                    'lock_hr_contact' : company_obj.lock_hr_contact,
                 }
             )
             
@@ -359,71 +371,7 @@ def get_drive_by_dateRange(request):
                 'drive_lst':drive_lst
             }
         )
-                                              
-@csrf_exempt
-def add_drive(request):
-    company = request.POST['company']
-    job_role = request.POST['job_role']
-    website = request.POST['website']
-    hr_name = request.POST['hr_name']
-    hr_mail = request.POST['hr_mail']
-    description = request.POST['description']
-    staff_id = request.POST['staff_id']
-    mode = request.POST['mode']
-    category = request.POST['category']
-    
-    eligible_lst = None
-    try:
-        eligible_lst = request.FILES['eligible_lst']
-    except Exception as e:
-        eligible_lst = None
-        
-    date_str = request.POST['date']
-    date_obj = datetime.strptime(date_str, '%d-%m-%Y').date()
-    
-    try:
-        # print(eligible_lst)
-        drive = Drive(
-            job_role = job_role,
-            date = date_obj,
-            placement_officer_id = staff_id,
-            company = company,
-            website = website,
-            HR_name = hr_name,
-            HR_mail = hr_mail,
-            drive_mode = mode,
-            description = description,
-            file  = eligible_lst,
-            category = category
-        )
-        
-        data = {
-            'success':True,
-            'message' : f'{company} drive added Successfully!!'
-        }
-        
-        drive.save()
-        
-        return JsonResponse(data)
-        
-    except Exception as e:
-        
-        print(e)
-        
-        data = {
-            'success':False,
-            'message' : 'Technical Error !!'
-        }
-    
-        return JsonResponse(data)
-    # print(eligible_lst)
-    # data = {
-    #         'success':True,
-    #         'message' : 'Technical Error !!'
-    #     }
-    
-    # return JsonResponse(data)
-    
+                                               
 @csrf_exempt
 def delete_drive(request):
     drive_id = request.POST.get('drive_id')
@@ -466,14 +414,9 @@ def get_drive_by_id(request):
                     'job_role': drive.job_role,
                     'mode': drive.drive_mode,
                     'date': drive.date,
-                    'placement_officer_id': drive.placement_officer_id,
-                    'website' : drive.website,
-                    'HR_name' : drive.HR_name,
-                    'HR_mail' : drive.HR_mail,
                     'description' : drive.description,
                     'file' : (drive.file.name).split('/')[-1],
                     'completed' : True,
-                    'category' : drive.category
                 }
         data = {
             'success':True,
@@ -489,17 +432,8 @@ def get_drive_by_id(request):
         }
     
         return JsonResponse(data)
-    
-    
-    
-    
-    data = {
-            'success':True,
-            'drive' : drive_obj
-        }
-    
-    return JsonResponse(data)
-    
+
+ 
 @csrf_exempt
 def update_drive(request):
     company = request.POST['company']
@@ -966,6 +900,7 @@ def get_notifications(request):
         for report in reports:
             report_notifications.append(
                 {
+                    'pk' : report.pk,
                     'company' : report.company,
                     'date' : convert_date_format(report.reminder_date),
                     'last_message' : report.message,
@@ -1553,7 +1488,8 @@ def update_company(request):
         company_obj = Company.objects.get(pk = pk)
         company_name = company_obj.company
         # print(company_name)
-        reports = Report.objects.filter(company = company_name).update(company = new_company)
+        Report.objects.filter(company = company_name).update(company = new_company)
+        Drive.objects.filter(company = company_name).update(company = new_company)
         # print(reports)
         company_obj.HR_name = hr_name
         company_obj.company = new_company
@@ -1651,7 +1587,7 @@ def add_and_update_company_report(request):
             report_obj.message = message
             report_obj.date = datetime.strptime(report_date, '%Y-%m-%d').date()
             report_obj.reminder_date = reminder_date_obj
-            # report_obj.timestamp = timezone.now()
+            report_obj.timestamp = timezone.now()
             
             report_obj.save()
             
@@ -1669,7 +1605,6 @@ def add_and_update_company_report(request):
         }
         return JsonResponse(data)
     
-
 @csrf_exempt
 def delete_company_report(request):
     data = json.loads(request.body)
@@ -1693,4 +1628,65 @@ def delete_company_report(request):
         }
         
         return JsonResponse(data)
+
+@csrf_exempt
+def add_company_drive(request):
+    formdata = request.POST
     
+    company = formdata['company']
+    date_str = formdata['date']
+    job_role = formdata['job_role']
+    description = formdata['description']
+    mode = formdata['mode']
+     
+    eligible_depts = formdata['eligible_depts']    
+    date_obj = datetime.strptime(date_str, '%d-%m-%Y').date()
+    
+    try:
+        eligible_lst = request.FILES['eligible_lst']
+    except:
+        eligible_lst = None
+    
+    departments = eligible_depts.split(',')
+    
+    print(f'company : {company}\ndate : {date_obj}\njob_role : {job_role}\ndescription : {description}\nmode : {mode}\neligible_lst : {eligible_lst}\neligible_depts : {departments}')
+    
+    # data = {
+    #     'success':True,
+    #     'message' : f'{company} drive added Successfully!!'
+    # }
+         
+    # return JsonResponse(data)
+   
+    try:
+        # company_obj = Company.objects.get(company = company)
+        
+        drive = Drive(
+            job_role = job_role,
+            date = date_obj,
+            company = company,
+            drive_mode = mode,
+            description = description,
+            file  = eligible_lst,
+            departments = departments
+        )
+        
+        drive.save()
+        
+        data = {
+            'success':True,
+            'message' : f'{company} drive added Successfully!!'
+        }
+        
+        return JsonResponse(data)
+        
+    except Exception as e:
+        
+        print(e)
+        
+        data = {
+            'success':False,
+            'message' : 'Some Technical Error !!'
+        }
+    
+        return JsonResponse(data)

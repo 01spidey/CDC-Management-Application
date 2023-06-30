@@ -26,6 +26,13 @@
             <p>Add Company</p>
         </div>
 
+        <div *ngIf="section==3 && role=='Officer'" class="add-drive" (click)=openDrivePopup() style="background-color:#ea4034">
+            <span class="material-symbols-outlined">
+                add_box
+            </span>
+            <p>Fix Drive</p>
+        </div>
+
     </div>
     
     <div class="filter-box" *ngIf="section==1">
@@ -373,7 +380,7 @@
 
     </div>
 
-    <div class="popup-container" *ngIf="section==3 && (popup||delete_popup)">
+    <div class="popup-container" *ngIf="section==3 && (popup||delete_popup||drive_popup)">
         <app-popup (popup_closed)="handleValue($event)" [data] = 'popup_data' *ngIf="popup"></app-popup>
         <div class="delete-popup" *ngIf="delete_popup">
             <p>Are You sure You want to delete the Report?</p>
@@ -382,6 +389,7 @@
                 <button mat-raised-button style="background-color: red;" (click)="deleteReport(delete_report_pk)">Delete</button>
             </div>
         </div>
+        <app-drive-popup (popup_closed)="handleDrivePopup($event)" [data] = 'drive_popup_data' *ngIf="drive_popup"></app-drive-popup>
     </div>
     
 

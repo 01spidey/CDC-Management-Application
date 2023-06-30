@@ -32,6 +32,7 @@ import { OfficerGuard } from './guard/officer.guard';
 import { DirectorGuard } from './guard/director.guard';
 import { CompanyComponent } from './company/company.component';
 import { PopupComponent } from './popup/popup.component';
+import { DrivePopupComponent } from './drive-popup/drive-popup.component';
 
 @NgModule({
   declarations: [
@@ -49,7 +50,8 @@ import { PopupComponent } from './popup/popup.component';
     SummaryComponent,
     NotificationComponent,
     CompanyComponent,
-    PopupComponent
+    PopupComponent,
+    DrivePopupComponent
   ],
   imports: [
     BrowserModule,

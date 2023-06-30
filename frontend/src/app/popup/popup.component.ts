@@ -7,7 +7,7 @@ import { AppService } from '../service/app.service';
 
 export interface popup_data{
   open_as : string,
-  report : Report
+  report : any
 }
 
 @Component({
@@ -35,18 +35,19 @@ export class PopupComponent implements OnInit {
 
   ngOnInit(): void {
     console.log(this.data)
+    this.date = this.datePipe.transform(new Date(), 'yyyy-MM-dd')!;
     if(this.data.open_as==='edit'){
       this.reportForm.patchValue({
         message : this.data.report.message,
       })
-      this.date = this.patchDate(this.data.report.date)
+      // this.date = this.patchDate(this.data.report.date)
 
       if(this.data.report.reminder_date==='') this.reminder = false
       else{
         this.reminder = true
         this.reminder_date = this.patchDate(this.data.report.reminder_date)
       }
-    }else this.date = this.datePipe.transform(new Date(), 'yyyy-MM-dd')!;     
+    }     
   }
 
   reportForm:FormGroup = this.builder.group({
@@ -87,7 +88,7 @@ export class PopupComponent implements OnInit {
   }
 
   closePopup(){
-    this.popup_closed.emit(true)
+    this.popup_closed.emit(false)
   }
 
   patchDate(dateString: string) : string{
@@ -102,6 +103,8 @@ export class PopupComponent implements OnInit {
     return formattedDate;
     // 2023-07-01
   }
+
+  
 
 
 

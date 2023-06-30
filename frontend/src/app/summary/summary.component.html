@@ -70,31 +70,39 @@
     <div class="main-container">
         
         <div class="stats-box" *ngIf="section==1">
-            <div class="card-1">
+            <div class="card-1" style="background-color: #2a9d8f;">
                 <div class="card-title">Total Reports</div>
                 <div class="card-content">
                     <img class="img" src="../../assets/reports.svg" style="height: 110px;">
-                    <h1 class="val">{{tot_reports}}</h1>
+                    <div class="val">
+                        <h1>{{tot_reports}}</h1>
+                    </div>
+                    
                 </div>
                 
             </div>
-            <div class="card-2">
+            <div class="card-2" style="background-color: #e76f51;">
                 <div class="card-title">Active Staffs</div>
                 <div class="card-content">
                     <img class="img" src="../../assets/officers.svg" style="width: 50px;">
-                    <h1 class="val">{{active_staffs}}</h1>
+                    <div class="val">
+                        <h1>{{active_staffs}}</h1>
+                    </div>
+                    
                 </div>
             </div>
-            <div class="card-3">
+            <div class="card-3" style="background-color: #ef476f;">
                 <div class="card-title">Total Companies</div>
                 <div class="card-content">
                     <img class="img" src="../../assets/companies.svg" style="height: 90px;">
-                    <h1 class="val">{{tot_companies}}</h1>
+                    <div class="val">
+                        <h1>{{tot_companies}}</h1>
+                    </div>
                 </div>
             </div>
         </div>
         
-        <table *ngIf="section==1">
+        <table *ngIf="section==1" class="prevent-select">
             <tr>
                 <th>S.No</th>
                 <th>Staff ID</th>

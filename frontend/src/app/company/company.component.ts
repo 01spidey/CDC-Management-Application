@@ -5,6 +5,7 @@ import { DatePipe } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
 import { company, getCompaniesResponse, getReportsByCompanyResponse, Report, serverResponse } from '../models/model';
 import { popup_data } from '../popup/popup.component';
+import { drive_popup_data } from '../drive-popup/drive-popup.component';
 
 @Component({
   selector: 'app-company',
@@ -20,6 +21,8 @@ export class CompanyComponent implements OnInit{
   staff_id = this.userData.staff_id
   
   popup_data!:popup_data;
+  drive_popup_data!:drive_popup_data;
+  
 
 
   company_filter = 'Active'
@@ -39,6 +42,7 @@ export class CompanyComponent implements OnInit{
   lock_hr_contact = false
   delete_popup = false
   delete_report_pk = 0
+  drive_popup = false
 
   report_lst : Report[] = []
   popup_message = new FormControl('',Validators.required)
@@ -51,7 +55,7 @@ export class CompanyComponent implements OnInit{
     website:this.builder.control('',Validators.compose([
       Validators.required,
       Validators.pattern(
-        /^(https?:\/\/)?(www\.)?([a-z0-9\-]+)\.([a-z]{2,})(\.[a-z]{2,})?$/i
+        /^(https?:\/\/)?(www\.)?([a-z0-9\-]+)\.([a-z]{2,})(\.[a-z]{2,})?(\/[a-z]*)*$/i
       ),
     ])),
     category : this.builder.control('',Validators.required),
@@ -91,9 +95,13 @@ export class CompanyComponent implements OnInit{
   }
 
   handleValue(value: boolean) {
-    this.popup = !value
+    this.popup = value
     console.log(value)
     this.getReportsByCompany()
+  }
+
+  handleDrivePopup(value: boolean) {
+    this.drive_popup = value
   }
 
   changeSection(section: number, action:string){
@@ -281,6 +289,14 @@ export class CompanyComponent implements OnInit{
     this.popup = true
 
     // console.log(report)
+  }
+
+  openDrivePopup(){
+    this.drive_popup_data = {
+      open_as : 'add',
+      drive : null
+    }
+    this.drive_popup = true
   }
 
   trimTime(timestamp:string) : string{

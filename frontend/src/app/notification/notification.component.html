@@ -12,18 +12,18 @@
         </a>
     </div>
 
-    <div class="title-box">
+    <div class="title-box prevent-select">
         <p *ngIf="user_role==='Officer'">Report Notifications</p>
         <p>Drive Notifications</p>
     </div>
 
-    <div class="main-container">
+    <div class="main-container prevent-select">
         <div class="notification-container" *ngIf="user_role==='Officer'" >
             <div class="no-data" *ngIf="report_notifications.length==0">
                 <img src="../../assets/no-data.svg" >
                 <p >No Notifications...</p>
             </div>
-            <div class="notification" *ngFor="let item of report_notifications">
+            <div class="notification" *ngFor="let item of report_notifications" (click) = 'openPopup(item)'>
                 <div class="left">
                     <p class="noti-title">{{item.company}}</p>
                     
@@ -97,6 +97,11 @@
                 
             </div>
         </div>
+        
+    </div>
+
+    <div class="popup-container" *ngIf="popup">
+        <app-popup (popup_closed)="handleValue($event)" [data] = 'popup_data'></app-popup>
         
     </div>
 

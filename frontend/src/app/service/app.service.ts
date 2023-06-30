@@ -183,16 +183,17 @@ export class AppService {
     return this.http.post<serverResponse>(`${this.URL}/add_and_update_company_report`, data)
   }
 
-  
-
   updateCompany(data:any){
     return this.http.post<serverResponse>(`${this.URL}/update_company`, data)
   }
 
-  deleteCompanyReport(data:object){
+  deleteCompanyReport(data:any){
     return this.http.post<serverResponse>(`${this.URL}/delete_company_report`, data)
   }
 
+  addCompanyDrive(data:FormData){
+    return this.http.post<serverResponse>(`${this.URL}/add_company_drive`, data)
+  }
 
 
   // get_user(user_id: string, role: string) {

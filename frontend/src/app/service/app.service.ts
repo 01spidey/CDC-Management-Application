@@ -64,50 +64,8 @@ export class AppService {
     return this.http.post<driveByStatusResponse>(`${this.URL}/get_drive_by_dateRange`, formData);
   }
 
-  add_drive(formData:FormData){
-    console.log(formData.get('eligible_lst'))
-    return this.http.post<serverResponse>(`${this.URL}/add_drive`, formData)
-  }
-
   delete_drive(formData:FormData){
     return this.http.post<serverResponse>(`${this.URL}/delete_drive`, formData)
-  }
-
-  getDriveById(drive_id : number){
-    const params = { drive_id : drive_id }
-    return this.http.get<driveByIdResponse>(`${this.URL}/get_drive_by_id`, { params : params })
-  }
-
-  edit_drive(formData:FormData){
-    console.log(formData.get('eligible_lst'))
-    return this.http.post<serverResponse>(`${this.URL}/update_drive`, formData)
-  }
-
-  addReport(data:object){
-      return this.http.post<serverResponse>(`${this.URL}/add_report`, data)
-  }
-
-  updateReport(data:object){
-    return this.http.post<serverResponse>(`${this.URL}/update_report`, data)
-  }
-
-  getReportById(report_id : number){
-    const params = { report_id : report_id }
-    return this.http.get<reportByIdResponse>(`${this.URL}/get_report_by_id`, { params : params })
-  }
-
-  deleteReport(formdata : FormData){
-    return this.http.post<serverResponse>(`${this.URL}/delete_report`, formdata)
-  }
-
-  applyFilter(data:filterOptions){
-    return this.http.post<getReportsResponse>(`${this.URL}/get_reports`, data)
-  }
-
-  
-
-  getAllMembers(){
-    return this.http.get<getMembersResponse>(`${this.URL}/get_members`)
   }
 
   getReportSummary(data:object){
@@ -141,8 +99,11 @@ export class AppService {
     return this.http.post<serverResponse>(`${this.URL}/update_credentials`, data)
   }
 
-  getCompanyStats(){
-    return this.http.get<getCompanyStatsResponse>(`${this.URL}/get_company_stats`)
+  getCompanyStats(staff_id : string){
+    const params = {
+      staff_id : staff_id
+    }
+    return this.http.get<getCompanyStatsResponse>(`${this.URL}/get_company_stats`, {params : params})
   }
 
 
@@ -191,17 +152,9 @@ export class AppService {
     return this.http.post<serverResponse>(`${this.URL}/delete_company_report`, data)
   }
 
-  addCompanyDrive(data:FormData){
-    return this.http.post<serverResponse>(`${this.URL}/add_company_drive`, data)
+  addCompanyDrive(data:FormData, action:string){
+    return this.http.post<serverResponse>(`${this.URL}/add_and_update_company_drive`, data)
   }
-
-
-  // get_user(user_id: string, role: string) {
-  //   let params = new HttpParams()
-  //     .set('user_id', user_id)
-  //     .set('role', role);
-  //   return this.http.get<loginResponse>(`${this.URL}/get_user_data`, { params: params });
-  // }
 
 
 }

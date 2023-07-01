@@ -71,7 +71,6 @@ export class ProfileComponent implements OnInit {
     this.service.load_members(role).subscribe(
       (res:loadMembersResponse)=>{
         if(res.success){
-          console.log(res.team_lst)
           if(role==='member') this.team_lst = res.team_lst
           else this.admin_lst = res.team_lst
         }else{
@@ -238,7 +237,6 @@ export class ProfileComponent implements OnInit {
           this.drives_today = res.stats.drives_today
           this.drives_week = res.stats.drives_week
           this.drives_month = res.stats.drives_month
-          this.toastr.success('Stats Updated!!')
         }else{
           this.toastr.warning('Some Technical Error!!')
         }
@@ -250,18 +248,15 @@ export class ProfileComponent implements OnInit {
   }
 
   getCompanyStats(){
-    this.service.getCompanyStats().subscribe(
+    
+    this.service.getCompanyStats(this.userData.staff_id).subscribe(
       (res:getCompanyStatsResponse)=>{
         if(res.success){
-
-          
-
           this.core = res.stats.core
           this.it_product = res.stats.it_product
           this.it_service = res.stats.it_service
           this.marketing = res.stats.marketing
           this.others = res.stats.others
-          console.log(this.it_service)
 
           this.core_count = res.stats.core.length
           this.it_product_count = res.stats.it_product.length

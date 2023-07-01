@@ -14,14 +14,11 @@ import { OfficerDashboardComponent } from './officer-dashboard/officer-dashboard
 import { DriveComponent } from './drive/drive.component';
 import { ProfileComponent } from './profile/profile.component';
 import { AddMemberComponent } from './add-member/add-member.component';
-import { ReportsComponent } from './reports/reports.component';
 import { CommonModule, DatePipe } from '@angular/common';
 
 import { MatTooltipModule } from '@angular/material/tooltip';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import { AgGridModule } from 'ag-grid-angular';
-import { EditButtonComponent } from './buttonRenders/edit-button/edit-button.component';
-import { DeleteButtonComponent } from './buttonRenders/delete-button/delete-button.component';
 import { SummaryComponent } from './summary/summary.component';
 import { NotificationComponent } from './notification/notification.component';
 import { NgxUiLoaderHttpModule, NgxUiLoaderModule } from 'ngx-ui-loader';
@@ -44,9 +41,6 @@ import { DrivePopupComponent } from './drive-popup/drive-popup.component';
     DriveComponent,
     ProfileComponent,
     AddMemberComponent,
-    ReportsComponent,
-    EditButtonComponent,
-    DeleteButtonComponent,
     SummaryComponent,
     NotificationComponent,
     CompanyComponent,

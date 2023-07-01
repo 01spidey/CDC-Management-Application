@@ -11,10 +11,10 @@ import { OfficerGuard } from './guard/officer.guard';
 
 
 const routes: Routes = [
-  {path : '', component:HomeComponent,canActivate : [HomeGuard] }, //
-  {path : 'login', component : LoginComponent, canActivate : [LoginGuard]}, //
-  {path:'director', component:DirectorDashboardComponent,canActivate : [DirectorGuard] }, //canActivate : [dashboardGuard]
-  {path:'officer', component:OfficerDashboardComponent, canActivate : [OfficerGuard]} //canActivate : [dashboardGuard]
+  {path : '', component:HomeComponent,canActivate : [HomeGuard] },
+  {path : 'login', component : LoginComponent, canActivate : [LoginGuard]},
+  {path:'director', component:DirectorDashboardComponent,canActivate : [DirectorGuard] },
+  {path:'officer', component:OfficerDashboardComponent, canActivate : [OfficerGuard]}
 ];
 
 @NgModule({

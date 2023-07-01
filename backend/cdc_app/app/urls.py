@@ -14,14 +14,7 @@ urlpatterns = [
     path('get_drive_by_dateRange', views.get_drive_by_dateRange),
     path('delete_drive', views.delete_drive),
     path('get_drive_by_id', views.get_drive_by_id),
-    path('update_drive', views.update_drive),   
-   
-    path('add_report', views.add_report),
-    path('update_report', views.update_report),
-    path('get_reports', views.get_reports),
-    path('get_members', views.get_members),
-    path('get_report_by_id', views.get_report_by_id),
-    
+       
     path('get_report_summary', views.get_report_summary),
     
     path('get_notifications', views.get_notifications),
@@ -49,6 +42,6 @@ urlpatterns = [
     path('add_and_update_company_report', views.add_and_update_company_report),
     path('delete_company_report', views.delete_company_report),
     
-    path('add_company_drive', views.add_company_drive),
+    path('add_and_update_company_drive', views.add_and_update_company_drive),
         
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

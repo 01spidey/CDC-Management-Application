@@ -263,6 +263,7 @@ def get_drive_by_status(request):
                     'category' : company_obj.category,
                     'lock_hr_mail' : company_obj.lock_hr_mail,
                     'lock_hr_contact' : company_obj.lock_hr_contact,
+                    'departments' : drive.departments,
                 }
             )
             
@@ -335,7 +336,7 @@ def get_drive_by_dateRange(request):
             drive_date = datetime.strptime(str(drive.date), '%Y-%m-%d').strftime('%d-%m-%Y')
             company_obj = Company.objects.get(company=drive.company)
             
-            print(file_url)
+            # print(file_url)
             drive_lst.append(
                 {
                     'id' : drive.pk,
@@ -347,12 +348,14 @@ def get_drive_by_dateRange(request):
                     'website' : company_obj.website,
                     'HR_name' : company_obj.HR_name,
                     'HR_mail' : company_obj.HR_mail,
+                    'HR_contact' : company_obj.HR_contact,
                     'description' : drive.description,
                     'file' : file_absolute_url,
                     'completed' : True if status == 'Completed' else drive.date < today,
                     'category' : company_obj.category,
                     'lock_hr_mail' : company_obj.lock_hr_mail,
                     'lock_hr_contact' : company_obj.lock_hr_contact,
+                    'departments' : drive.departments,
                 }
             )
             
@@ -372,27 +375,6 @@ def get_drive_by_dateRange(request):
             }
         )
                                                
-@csrf_exempt
-def delete_drive(request):
-    drive_id = request.POST.get('drive_id')
-    print(drive_id)
-    
-    try:
-        drive = Drive.objects.get(pk=drive_id)
-        drive.delete()
-        data = {
-            'success':True,
-            'message' : f'Drive added Successfully!!'
-        }
-        return JsonResponse(data)
-    
-    except Exception as e:
-        data = {
-            'success':False,
-            'message' : f'Some Technical Error !!'
-        }
-        return JsonResponse(data)
-
 @csrf_exempt
 def get_drive_by_id(request):
     
@@ -417,6 +399,7 @@ def get_drive_by_id(request):
                     'description' : drive.description,
                     'file' : (drive.file.name).split('/')[-1],
                     'completed' : True,
+                    'departments' : drive.departments,
                 }
         data = {
             'success':True,
@@ -433,378 +416,6 @@ def get_drive_by_id(request):
     
         return JsonResponse(data)
 
- 
-@csrf_exempt
-def update_drive(request):
-    company = request.POST['company']
-    job_role = request.POST['job_role']
-    website = request.POST['website']
-    hr_name = request.POST['hr_name']
-    hr_mail = request.POST['hr_mail']
-    description = request.POST['description']
-    category = request.POST['category']
-    mode = request.POST['mode']
-    drive_id = int(request.POST['drive_id'])
-    date_str = request.POST['date']
-    date_obj = datetime.strptime(date_str, '%d-%m-%Y').date()
-    
-    try:    
-        eligible_lst = request.FILES['eligible_lst']
-        print(f'Update_drive : {category}')
-        
-        # print(company+"\n"+eligible_lst)
-        
-        updated_data = {
-            'job_role' : job_role,
-            'date' : date_obj,
-            'company' : company,
-            'website' : website,
-            'HR_name'  : hr_name,
-            'HR_mail' : hr_mail,
-            'drive_mode' : mode,
-            'description' : description,
-            'file' : eligible_lst,
-            'category' : category
-        }
-        
-        Drive.objects.filter(pk=drive_id).update(**updated_data)
-        
-        data = {
-                'success':True,
-                'message' : f'Drive updated Successfully!!'
-            }
-        
-        return JsonResponse(data)
-
-    except Exception as e:
-        # print(request.POST.get('eligible_lst'))
-        updated_data = {
-            'job_role' : job_role,
-            'date' : date_obj,
-            'company' : company,
-            'website' : website,
-            'HR_name'  : hr_name,
-            'HR_mail' : hr_mail,
-            'drive_mode' : mode,
-            'description' : description,
-            'category' : category
-        }
-    
-        Drive.objects.filter(pk=drive_id).update(**updated_data)
-        data = {
-            'success':True,
-            'message' : f'Drive updated Successfully!!'
-        }
-    
-        return JsonResponse(data)
-        
-@csrf_exempt
-def add_report(request):
-    
-    formData = json.loads(request.body)
-    # print(formData)
-    # {'company': 'vsv', 'date': '2023-06-17T18:30:00.000Z', 'hr_name': 'sdvsdv', 'hr_mail': 'abc@gmail.com', 'message': 'svsdvs', 'mode': 'sdvsv', 'visibility': 'Public', 'reminder': False, 'reminder_date': ''}
-    
-    
-    try:
-        company = formData['company']
-        report_date = formData['date']
-        hr_name = formData['hr_name']
-        hr_mail = formData['hr_mail']
-        mode = formData['mode']
-        message = formData['message']
-        reminder_date = formData['reminder_date']
-        visibility = formData['visibility']
-        staff_id = formData['staff_id']
-        visible_to = formData['visible_to']
-        category = formData['category']
-        
-        date_obj = datetime.strptime(report_date, '%d-%m-%Y').date()
-        reminder_date_obj = None if reminder_date=='' else datetime.strptime(reminder_date, '%d-%m-%Y').date()
-        
-        # print(f'{company}\n{report_date}\n{hr_name}\n{hr_mail}\n{mode}\n{message}\n{reminder_date}\n{visibility}\n{visible_to}')
-        
-        report = Report(
-            date = date_obj,
-            placement_officer_id = staff_id,
-            company = company,
-            HR_name = hr_name,
-            HR_mail = hr_mail,
-            contact_mode = mode,
-            message = message,
-            reminder_date = reminder_date_obj,
-            visibility = visibility,
-            visible_to = visible_to,
-            category = category
-        )
-        report.save()
-        
-        data = {
-            'success':True,
-            'message' : 'Report added Successfully!!'
-        }
-        
-        return JsonResponse(data)
-    
-    except Exception as e:
-        print(e)
-        data = {
-            'success':False,
-            'message' : 'Some Technical Error!!'
-        }
-        
-        return JsonResponse(data)
-    
-
-
-@csrf_exempt
-def update_report(request):
-    
-    formData = json.loads(request.body)
-    # print(formData)
-    date_obj = datetime.strptime(formData['date'], '%d-%m-%Y').date()
-    reminder_date_obj = None if formData['reminder_date']=='' else datetime.strptime(formData['reminder_date'], '%d-%m-%Y').date()
-    
-    try:
-        updated_data = {
-            'date' : date_obj,
-            'placement_officer_id': formData['staff_id'],
-            'company' : formData['company'],
-            'HR_name': formData['hr_name'],
-            'HR_mail' : formData['hr_mail'],
-            'contact_mode' : formData['mode'],
-            'message' : formData['message'],
-            'reminder_date' : reminder_date_obj,
-            'visibility' : formData['visibility'],
-            'visible_to' : formData['visible_to'],
-            'category' : formData['category']
-        }
-        
-        # print(updated_data)
-        
-        Report.objects.filter(pk=formData['pk']).update(**updated_data)
-        
-    #     pk : this.pkey,
-    #   company:this.addReportForm.value.company,
-    #   date:formattedDate,
-    #   hr_name:this.addReportForm.value.hr_name,
-    #   hr_mail:this.addReportForm.value.hr_mail,
-    #   message:this.addReportForm.value.message,
-    #   mode : this.addReportForm.value.mode,
-    #   visibility : this.vis_toggle,
-    #   reminder_date : formattedReminderDate,
-    #   staff_id : this.userData.user_id,
-    #   visi
-        
-        data = {
-                'success':True,
-                'message' : f'Report updated Successfully!!'
-            }
-        
-        return JsonResponse(data)
-    
-    except Exception as e:
-        print(e)
-        data = {
-            'success':False,
-            'message' : 'Some Technical Error!!'
-        }
-        
-        return JsonResponse(data)
-  
-@csrf_exempt
-def get_reports(request):
-    
-    reports = []
-    try:
-        if(request.method == 'POST'):
-            filter_options = json.loads(request.body)
-            category = filter_options['category']
-            period = filter_options['period']
-            startDate = filter_options['startDate']
-            endDate = filter_options['endDate']
-            visibility = filter_options['visibility']
-            staff_id = filter_options['staff_id']
-
-            report_lst = Report.objects.all()
-            
-            print(category, period, startDate, endDate, visibility, staff_id)
-            
-
-            if category == 'All':
-                if period == 'Today':
-                    print(date.today())
-                    # Filter for today's reports with visibility for all
-                    report_lst = report_lst.filter(
-                        Q(date=date.today(), visible_to__contains=[staff_id]) | 
-                        Q(date=date.today(), visibility='Public') |
-                        Q(date=date.today(), placement_officer_id=staff_id)
-                    )
-                    
-                    print(report_lst)
-                else:
-                    print(startDate, endDate)
-                    # Filter based on start date and end date with visibility for all
-                    report_lst = report_lst.filter(
-                        Q(date__range=[startDate, endDate], visible_to__contains=[staff_id]) |
-                        Q(date__range=[startDate, endDate], visibility='Public') |
-                        Q(date__range=[startDate, endDate], placement_officer_id=staff_id)
-                    )
-
-            elif category == 'My':
-                if period == 'Today':
-                    if visibility == 'All':
-                        # Filter for today's reports with visibility as public and for the specific staff_id
-                        print(staff_id)
-                        report_lst = report_lst.filter(date=date.today(), placement_officer_id=staff_id)
-                    elif visibility == 'Private':
-                        # Filter for today's reports with visibility as private and for the specific staff_id
-                        report_lst = report_lst.filter(date=date.today(), visibility='Private', placement_officer_id=staff_id)
-                else:
-                    if visibility == 'All':
-                        # Filter based on start date, end date, visibility as public, and for the specific staff_id
-                        report_lst = report_lst.filter(date__range=[startDate, endDate],placement_officer_id=staff_id)
-                    elif visibility == 'Private':
-                        # Filter based on start date, end date, visibility as private, and for the specific staff_id
-                        report_lst = report_lst.filter(date__range=[startDate, endDate], visibility='Private', placement_officer_id=staff_id)
-            
-            # reports_temp = list(report_lst)
-            # print(reports_temp)
-            a=1
-            for report in report_lst:
-                reports.append({
-                    'position' : a,
-                    'pk' : report.pk,
-                    'date': report.date,
-                    'staff_id': report.placement_officer_id,
-                    'company': report.company,
-                    'HR_name': report.HR_name,
-                    'HR_mail': report.HR_mail,
-                    'contact_mode': report.contact_mode,
-                    'message': report.message,
-                    'reminder_date': report.reminder_date,
-                    'visibility': report.visibility
-                })
-                a+=1
-            
-            # report_lst = report_lst.values('pk', 'date', 'placement_officer_id', 'company', 'HR_name', 'HR_mail', 'contact_mode', 'message', 'reminder_date', 'visibility')
-
-            data = {
-                'success' : True,
-                'reports' : reports
-            }   
-            
-            return JsonResponse(data)
-    
-        elif(request.method == 'GET'):
-            start_date = request.GET.get('start_date')
-            end_date = request.GET.get('end_date')
-            filter = request.GET.get('filter')
-            report_lst = Report.objects.all()
-            
-            print(start_date, end_date, filter)
-            
-            if(filter=='Today'):
-                report_lst = report_lst.filter(date=date.today())
-            else:
-                report_lst = report_lst.filter(date__range=[start_date, end_date])
-                
-
-            a=1
-            for report in report_lst:
-                reports.append({
-                    'position' : a,
-                    'pk' : report.pk,
-                    'date': report.date,
-                    'staff_id': report.placement_officer_id,
-                    'company': report.company,
-                    'HR_name': report.HR_name,
-                    'HR_mail': report.HR_mail,
-                    'contact_mode': report.contact_mode,
-                    'message': report.message,
-                    'reminder_date': report.reminder_date,
-                    'visibility': report.visibility
-                })
-                a+=1
-            
-            data = {
-                    'success' : True,
-                    'reports' : reports
-                }
-            
-            return JsonResponse(data)
-    
-    except Exception as e:
-        print(e)
-        data ={
-            'success' : False,
-            'reports' : reports,
-        }
-        
-        return JsonResponse(data)
-
-@csrf_exempt
-def get_report_by_id(request):
-    report_id = request.GET.get('report_id')
-    report_obj = {}
-    
-    try:
-        report = Report.objects.get(pk = report_id)
-        
-        date = report.date
-        staff_id = report.placement_officer_id
-        company = report.company
-        HR_name = report.HR_name
-        HR_mail = report.HR_mail
-        contact_mode = report.contact_mode
-        message = report.message
-        reminder_date = report.reminder_date
-        visibility = report.visibility
-        visible_to = report.visible_to
-        category = report.category
-        
-        print(f'{date}\n{reminder_date}\n{visibility}\n{visible_to}')
-        
-        data = {
-            'success' : True,
-            'report' : {
-                'date' : date,
-                'staff_id' : staff_id,
-                'company' : company,
-                'HR_name' : HR_name,
-                'HR_mail' : HR_mail,
-                'contact_mode' : contact_mode,
-                'message' : message,
-                'reminder_date' : reminder_date,
-                'visibility' : visibility,
-                'visible_to' : visible_to,
-                'category' : category
-                
-            }
-        }
-        
-        return JsonResponse(data)
-        
-        
-    except Exception as e:
-        print(e)
-        data = {
-            'success' : False,
-            'report' : {}
-        }
-        
-        return JsonResponse(data)
-
-@csrf_exempt
-def get_members(request):
-    staff_ids = PlacementOfficer.objects.values_list('staff_id', flat=True).distinct()
-
-    data = {
-        'success': True,
-        'members': list(staff_ids)
-    }
-    
-    return JsonResponse(data)
 
 def get_report_summary_by_id(staff_id, filter, start_date, end_date):
     # staff_id = request.GET.get('staff_id', 'default_staff_id')
@@ -1208,23 +819,27 @@ def get_user_stats(request):
     
     staff_id = request.GET.get('staff_id')
     today = date.today()
-    
+    print(staff_id)
     try:
-        
-        reports = Report.objects.filter(date = today, placement_officer_id = staff_id)
-        drives = Drive.objects.filter(date = today, placement_officer_id = staff_id)
-        reports_today = len(reports)
-        drives_today = len(drives)
-        
-        reports = Report.objects.filter(date__range = [today - timedelta(days=7), today], placement_officer_id = staff_id)
-        drives = Drive.objects.filter(date__range = [today - timedelta(days=7), today], placement_officer_id = staff_id)
-        reports_week = len(reports)
-        drives_week = len(drives)
-        
-        reports = Report.objects.filter(date__range = [today - timedelta(days=30), today], placement_officer_id = staff_id)
-        drives = Drive.objects.filter(date__range = [today - timedelta(days=30), today], placement_officer_id = staff_id)
-        reports_month = len(reports)
-        drives_month = len(drives)
+        if(Company.objects.filter(placement_officer_id = staff_id)):
+            company = Company.objects.get(placement_officer_id = staff_id).company
+            user_reports = Report.objects.filter(company = company)
+            user_drives = Drive.objects.filter(company = company)
+            
+            reports = user_reports.filter(date = today)
+            drives = user_drives.filter(date = today)
+            reports_today = len(reports)
+            drives_today = len(drives)
+            
+            reports = user_reports.filter(date__range = [today - timedelta(days=7), today])
+            drives = user_drives.filter(date__range = [today - timedelta(days=7), today])
+            reports_week = len(reports)
+            drives_week = len(drives)
+            
+            reports = user_reports.filter(date__range = [today - timedelta(days=30), today])
+            drives = user_drives.filter(date__range = [today - timedelta(days=30), today])
+            reports_month = len(reports)
+            drives_month = len(drives)
         
         data = {
             'success':True,
@@ -1250,10 +865,11 @@ def get_user_stats(request):
         return JsonResponse(data)
     
 def get_company_stats(request):
+    staff_id = request.GET.get('staff_id')
     
     core, it_product, it_service, marketing, others = [], [], [], [], []
-    # reports = Report.objects.all()
-    companies = Company.objects.all()
+    
+    companies = Company.objects.filter(placement_officer_id = staff_id)
 
     try:
         core = companies.filter(category='Core').values('company').distinct()
@@ -1318,7 +934,7 @@ def get_reports_by_company(request):
                     'company'  : report.company,
                     'status' : report.completed,
                     'message' : report.message,
-                    'reminder_date' : convert_date_format(report.reminder_date),
+                    'reminder_date' : None if report.reminder_date is None else convert_date_format(report.reminder_date),
                     'hr_name' : company.HR_name,
                     'hr_mail' : company.HR_mail,
                     'time' : UTCtoIST(str(report.timestamp))
@@ -1384,7 +1000,7 @@ def add_company(request):
                 placement_officer_id = staff_id,
                 message = message,
                 reminder_date = reminder_date_obj,
-                completed = False
+                completed = True if reminder_date_obj is None else False
             )
             
             company_obj = Company(
@@ -1400,8 +1016,7 @@ def add_company(request):
                 lock_hr_contact = lock_hr_contact
             )            
             
-            print(lock_hr_contact, lock_hr_mail)
-            
+            print(f'Reminder Date : {reminder_date_obj}') 
             company_obj.save()
             report_obj.save()
 
@@ -1555,8 +1170,8 @@ def add_and_update_company_report(request):
                 company = company,
                 placement_officer_id = staff_id,
                 message = message,
-                reminder_date = reminder_date,
-                completed = False
+                reminder_date = reminder_date_obj,
+                completed = True if reminder_date_obj is None else False
             )
             
             prev_report_obj = Report.objects.get(pk = pk)
@@ -1588,6 +1203,7 @@ def add_and_update_company_report(request):
             report_obj.date = datetime.strptime(report_date, '%Y-%m-%d').date()
             report_obj.reminder_date = reminder_date_obj
             report_obj.timestamp = timezone.now()
+            report_obj.completed = True if reminder_date_obj is None else False
             
             report_obj.save()
             
@@ -1630,17 +1246,18 @@ def delete_company_report(request):
         return JsonResponse(data)
 
 @csrf_exempt
-def add_company_drive(request):
+def add_and_update_company_drive(request):
     formdata = request.POST
     
+    pk = formdata['pk']
     company = formdata['company']
-    date_str = formdata['date']
+    date_str = formdata['date'] 
     job_role = formdata['job_role']
     description = formdata['description']
     mode = formdata['mode']
      
     eligible_depts = formdata['eligible_depts']    
-    date_obj = datetime.strptime(date_str, '%d-%m-%Y').date()
+    date_obj = datetime.strptime(date_str, '%Y-%m-%d').date()
     
     try:
         eligible_lst = request.FILES['eligible_lst']
@@ -1650,35 +1267,49 @@ def add_company_drive(request):
     departments = eligible_depts.split(',')
     
     print(f'company : {company}\ndate : {date_obj}\njob_role : {job_role}\ndescription : {description}\nmode : {mode}\neligible_lst : {eligible_lst}\neligible_depts : {departments}')
-    
-    # data = {
-    #     'success':True,
-    #     'message' : f'{company} drive added Successfully!!'
-    # }
-         
-    # return JsonResponse(data)
+
    
-    try:
-        # company_obj = Company.objects.get(company = company)
+    try:     
+        if(pk==''):   
+            drive = Drive(
+                job_role = job_role,
+                date = date_obj,
+                company = company,
+                drive_mode = mode,
+                description = description,
+                file  = eligible_lst,
+                departments = departments
+            )
+            
+            drive.save()
+            
+            data = {
+                'success':True,
+                'message' : f'{company} Drive added Successfully!!'
+            }
+            
+            return JsonResponse(data)
         
-        drive = Drive(
-            job_role = job_role,
-            date = date_obj,
-            company = company,
-            drive_mode = mode,
-            description = description,
-            file  = eligible_lst,
-            departments = departments
-        )
-        
-        drive.save()
-        
-        data = {
-            'success':True,
-            'message' : f'{company} drive added Successfully!!'
-        }
-        
-        return JsonResponse(data)
+        else:
+            print('Edit Drive', pk)
+            drive_obj = Drive.objects.get(pk=pk)
+            
+            drive_obj.job_role = job_role
+            drive_obj.date = date_obj
+            drive_obj.company = company
+            drive_obj.drive_mode = mode
+            drive_obj.description = description
+            drive_obj.file = eligible_lst
+            drive_obj.departments = departments
+            
+            drive_obj.save()
+            
+            data = {
+                'success':True,
+                'message' : f'{company} Drive Updated Successfully!!'
+            }
+            
+            return JsonResponse(data)
         
     except Exception as e:
         
@@ -1689,4 +1320,26 @@ def add_company_drive(request):
             'message' : 'Some Technical Error !!'
         }
     
+        return JsonResponse(data)
+
+@csrf_exempt
+def delete_drive(request):
+    drive_id = request.POST.get('drive_id')
+    print(drive_id)
+    
+    try:
+        drive = Drive.objects.get(pk=drive_id)
+        company = drive.company
+        drive.delete()
+        data = {
+            'success':True,
+            'message' : f'{company} Drive Deleted Successfully!!'
+        }
+        return JsonResponse(data)
+    
+    except Exception as e:
+        data = {
+            'success':False,
+            'message' : f'Some Technical Error !!'
+        }
         return JsonResponse(data)

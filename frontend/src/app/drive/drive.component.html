@@ -1,7 +1,5 @@
 <div class="main">
 
-    <img (click) = 'goBack()' src="../../assets/back.png" *ngIf="section==2" class="back">
-
     <div class="top">
         <div class="title" *ngIf="section==1">
             <h1>Placement Drive</h1>
@@ -95,7 +93,7 @@
                 
                 <div class="dialog-box">
                     <p>Are you sure you want to delete this drive?</p>
-                    <div class="btns">
+                    <div class="btns prevent-select">
                         <!--  -->
                         <!-- -->
                         <p class="del-btn" style="background-color: #2f96b4;" (click)="deleteDrive(drive.id)">Yes</p>
@@ -107,7 +105,7 @@
 
             <div class="desc-box" *ngIf="show_desc === (drive.id.toString())">
                 
-                <div class="desc-title">
+                <div class="desc-title prevent-select">
                     <span class="material-symbols-outlined" (click)="show_desc = ''">
                         close
                     </span>
@@ -122,7 +120,7 @@
                 </div> -->
             </div>
 
-            <div class="title-box">
+            <div class="title-box prevent-select">
                 <div class="left">
                     <p class="category">{{drive.category}}</p>
                     <div class="company">
@@ -146,7 +144,7 @@
             <div class="content">
                 
                 <div class="field">
-                    <span class="material-symbols-outlined">
+                    <span class="material-symbols-outlined prevent-select">
                         badge
                     </span>
                     <p style="font-family: 'Poppins';font-weight:500;">Placement Officer : </p>
@@ -154,7 +152,7 @@
                 </div>
 
                 <div class="field">
-                    <span class="material-symbols-outlined">
+                    <span class="material-symbols-outlined prevent-select">
                         account_box
                     </span>
                     <p style="font-family: 'Poppins';font-weight:500;">HR Name : </p>
@@ -162,37 +160,39 @@
                 </div>
                 
                 <div class="field">
-                    <span class="material-symbols-outlined">
+                    <span class="material-symbols-outlined prevent-select">
                         mail
                     </span>
                     <p style="font-family: 'Poppins';font-weight:500;">HR Mail : </p>
-                    <p>{{drive.HR_mail}}</p>
+                    <p>{{drive.lock_hr_mail? 'Not Available' : drive.HR_mail}}</p>
                 </div>
 
                 <div class="field">
-                    <span class="material-symbols-outlined">
+                    <span class="material-symbols-outlined prevent-select">
+                        phone
+                    </span>
+                    <p style="font-family: 'Poppins';font-weight:500;">HR Contact : </p>
+                    <p>{{drive.lock_hr_contact? 'Not Available' : '+91 '+drive.HR_contact}}</p>
+                </div>
+
+                <div class="field">
+                    <span class="material-symbols-outlined prevent-select">
                         push_pin
                     </span>
                     <p style="font-family: 'Poppins';font-weight:500;">Mode : </p>
                     <p>{{drive.mode}}</p>
                 </div>
 
-                <!-- <div class="dept-grid">
-                    <p class="dept">cse</p>
-                    <p class="dept">eee</p>
-                    <p class="dept">ece</p>
-                    <p class="dept">bme</p>
-                    <p class="dept">mech</p>
-                    <p class="dept">chem</p>
-                    <p class="dept">civil</p>
-                    <p class="dept">ad</p>
-                </div> -->
+                <div class="dept-grid prevent-select">
+                    <p class="dept" *ngFor="let dept of drive.departments">{{dept}}</p>
+                </div>
 
-                <div class="options-box">
-                    <span class="material-symbols-outlined" id="edit" matTooltip="edit" (click)='getDriveById(drive.id)'>
+                <div class="options-box prevent-select">
+                    <span class="material-symbols-outlined" id="edit" matTooltip="edit" (click)='openDrivePopup(drive)' [ngStyle]="drive.completed?{'pointer-events':'none'} : {}" *ngIf="role==='Director' || drive.placement_officer_id === cur_staff_id">
+                        <!-- getDriveById(drive.id) -->
                         edit
                     </span>
-                    <span class="material-symbols-outlined" id="delete" matTooltip="delete" (click)="show_delete = (drive.id.toString())">
+                    <span class="material-symbols-outlined" id="delete" matTooltip="delete" (click)="show_delete = (drive.id.toString())" *ngIf="role==='Director' || drive.placement_officer_id === cur_staff_id">
                         delete
                     </span>
                     <span class="material-symbols-outlined" id="info" matTooltip="description" (click)="show_desc = (drive.id.toString())">
@@ -212,7 +212,7 @@
                 </span>
             </div> -->
 
-            <div class="info" *ngIf="drive.placement_officer_id === cur_user_id">
+            <div class="info" *ngIf="drive.placement_officer_id === cur_staff_id">
                 <!-- <p>more</p> -->
                 <span class="material-symbols-outlined" matTooltip="posted by you">
                     check_circle
@@ -222,132 +222,8 @@
         </div>        
     </div>
 
-    <div class="add-drive-box" *ngIf="section==2">
-        <!-- [formGroup]="loginForm" (ngSubmit)="proceedLogin()" -->
-        
-        <form [formGroup]="addDriveForm" *ngIf="section==2">
-            
-            <div class="section">
-                <div class="input">
-                    <p>Company</p>
-                    <mat-form-field class="input">
-                        <mat-label>AutoDesk</mat-label>
-                        <input matInput formControlName = "company">
-                    </mat-form-field>
-                </div>
-    
-                <div class="input">
-                    <p>Job Role</p>
-                    <mat-form-field class="input">
-                        <mat-label>SDE Intern</mat-label>
-                        <input matInput formControlName = "job_role">
-                    </mat-form-field>
-                </div>
-            </div>
-            
-            <div class="section">
-                <div class="input">
-                    <p>Drive Date</p>
-                    <mat-form-field>
-                        <mat-label>Choose a date</mat-label>
-                        <input matInput [matDatepicker]="picker" formControlName = "date">
-                        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-                        <mat-datepicker #picker></mat-datepicker>
-                      </mat-form-field>
-                </div> 
-
-                <div class="input">
-                    <p>Drive Mode</p>
-                    <mat-form-field>
-                        <mat-label>Mode</mat-label>
-                        <mat-select formControlName = "mode">
-                            <mat-option value="online">Online</mat-option>
-                            <mat-option value="offline">Offline</mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                </div>
-            </div>
-             
-            <div class="section">
-
-                <div class="input">
-                    <p>Company Website</p>
-                    <mat-form-field>
-                        <mat-label>https://www.autodesk.com/careers</mat-label>
-                        <input type="url" matInput formControlName = "website">
-                    </mat-form-field>
-                </div>
-
-                <div class="input">
-                    <p>Category</p>
-                    <mat-form-field>
-                        <mat-label>Category</mat-label>
-                        <mat-select formControlName = "category">
-                            <mat-option value="Core">Core</mat-option>
-                            <mat-option value="IT - Product">IT - Product</mat-option>
-                            <mat-option value="IT - ES">IT - ES</mat-option>
-                            <mat-option value="Sales / Management">Sales / Management</mat-option>
-                            <mat-option value="Others">Others</mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                </div>
-            </div>
-            
-            
-
-            <div class="section">
-                <div class="input">
-                    <p>HR Name</p>
-                    <mat-form-field>
-                        <mat-label>Tom H</mat-label>
-                        <input matInput formControlName = "hr_name">
-                    </mat-form-field> 
-                </div>
-    
-                <div class="input">
-                    <p>HR Mail</p>
-                    <mat-form-field>
-                        <mat-label>TomH@amazon.com*</mat-label>
-                        <input matInput formControlName = "hr_mail">
-                    </mat-form-field> 
-                </div>
-            </div>
-            
-
-            <div class="input">
-                <p>Description</p>
-                <mat-form-field>
-                    <mat-label>Write Description Here</mat-label>
-                    <textarea matInput formControlName="description"></textarea>
-                </mat-form-field> 
-            </div>
-
-            <div class="input">
-                <p>Eligibe List</p>
-                <div class="file-sec">
-                    <div class="file-name">
-                      <p *ngIf="!selectedFile">No File Choosen...</p>
-                      <p *ngIf="selectedFile">{{selectedFile.name}}</p>
-                    </div>
-                    <div class="file-inp">
-                      <input class="inp" type="file" accept=".pdf,.csv,.xls,.doc" (change)="onFileSelected($event)" formControlName = 'file'>
-                      <span class="material-symbols-outlined" style="color:white;font-weight:bold">
-                        upload
-                      </span>
-                    </div>
-                  </div> 
-                  <span style="font-weight: 100;font-style:italic">(.csv, .pdf, .xls, .doc)</span>
-                  <span style="font-weight: 100;font-style:italic" *ngIf="action==='edit'">*upload required only for new files</span>
-            </div>
-                         
-
-            <div class="btns">
-              <button mat-raised-button id="reset" (click)="resetForm()">Reset</button>
-              <button mat-raised-button id="add" (click)="action==='add'?addDrive() : editDrive()">{{action==='add'?'Add Drive' : 'Save Changes'}}</button>
-            </div>
-          
-        </form>
-
+    <div class="popup-container" *ngIf="drive_popup">
+        <app-drive-popup (popup_closed)="handleDrivePopup($event)" [data] = 'drive_popup_data' *ngIf="drive_popup"></app-drive-popup>
     </div>
 
 </div>

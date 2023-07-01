@@ -3,6 +3,7 @@
         <h2>{{data.open_as==='add'?'Add Drive' : 'Edit Drive'}}</h2>
     </div>
     <div class="form-box">
+        <h1>{{company}}</h1>
         <form [formGroup]="addDriveForm">
         
             <div class="section">
@@ -90,12 +91,9 @@
                   <span style="font-weight: 100;font-style:italic" *ngIf="data.open_as==='edit'">*upload required only for new files</span>
             </div>
     
-            
-                         
-    
             <div class="btns">
               <button mat-raised-button id="reset" (click)="closePopup()">Cancel</button>
-              <button mat-raised-button id="add" (click)="data.open_as==='add'?addDrive() : editDrive()">{{data.open_as==='add'?'Add Drive' : 'Save Changes'}}</button>
+              <button mat-raised-button id="add" (click)="addDrive()">{{data.open_as==='add'?'Add Drive' : 'Save Changes'}}</button>
             </div>
           
         </form>

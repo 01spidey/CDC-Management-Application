@@ -8,7 +8,6 @@
     display: flex;
     flex-direction: column;
     padding-bottom: 5%;
-    position: relative;
 
     .title{
         margin-top: 30px;
@@ -420,12 +419,12 @@
                     row-gap: 5px;
                     column-gap: 5px;
                     // width: 70%;
-                    margin-top: 10px;
+                    margin-top: 5px;
                     .dept{
                         background-color: #198754;
                         color: white;
                         white-space: normal;
-                        font-size: .8rem;
+                        font-size: .7rem;
                         text-align: center;
                         border-radius: 10px;
                         font-family: 'Nunito';
@@ -610,31 +609,41 @@
         }
     }
 
-    .back{
-        height: 30px;
-        width: 30px;
+    .popup-container{
         position: absolute;
-        left: 40px;
-        cursor: pointer;
+        top : 0;
+        bottom : 0;
+        left : 0;
+        right: 0;
+        height: 100vh;
+        width: 100%;
+        z-index: 100;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: rgba(0,0,0,0.4);
+    }
+
+    .not-active-chip{
+        border: 1px solid rgb(104, 102, 102);
+        color: rgb(104, 102, 102) ;
+    }
+    .active-chip{
+        border: 1px solid #ea4034;
+        color: white;
+        background-color: #ea4034;
+    }
+    
+    .inactive-box{
+        filter: grayscale(100%);
+        opacity: 0.7;
+    }
+
+    .prevent-select {
+        -webkit-user-select: none; /* Safari */
+        -ms-user-select: none; /* IE 10 and IE 11 */
+        user-select: none; /* Standard syntax */
     }
 }
 
-// .active{
-//     background-color:#ea4034;
-//     color: white;
-//     border: none;
-// }
-.not-active-chip{
-    border: 1px solid rgb(104, 102, 102);
-    color: rgb(104, 102, 102) ;
-}
-.active-chip{
-    border: 1px solid #ea4034;
-    color: white;
-    background-color: #ea4034;
-}
 
-.inactive-box{
-    filter: grayscale(100%);
-    opacity: 0.7;
-}

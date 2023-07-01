@@ -1,4 +1,3 @@
-import { Member } from "../reports/reports.component"
 
 export interface serverResponse{
     success : boolean,
@@ -31,10 +30,14 @@ export interface drive{
     website : string,
     HR_name : string,
     HR_mail : string,
+    HR_contact : string,
+    lock_hr_mail : boolean,
+    lock_hr_contact : boolean,
     description : string,
     file : File|string,
     completed : boolean,
-    category : string
+    category : string,
+    departments : string[]
 }
 
 export interface driveByStatusResponse{

@@ -26,7 +26,7 @@ export class DrivePopupComponent implements OnInit{
   selectedFile: File | null = null;
   
   eligible_depts:string[] = []
-  cur_company!:company;
+  company!:string;
 
   departments = [
     {name:'CSE',value:false},
@@ -39,11 +39,7 @@ export class DrivePopupComponent implements OnInit{
     {name:'CHEM',value:false},
   ]
 
-  @Input() data:drive_popup_data = {
-    open_as : 'add',
-    drive : null
-  }
-
+  @Input() data!:drive_popup_data;
   @Output() popup_closed = new EventEmitter<boolean>();
 
 
@@ -65,12 +61,23 @@ export class DrivePopupComponent implements OnInit{
   ) {  }
 
   ngOnInit(): void {
-    this.data = {
-      open_as : 'add',
-      drive : null
+    console.log(this.data)
+    if(this.data.open_as == 'edit'){
+
+      this.addDriveForm.patchValue({
+        job_role : this.data.drive!.job_role,
+        date : this.patchDate(this.data.drive!.date),
+        description : this.data.drive!.description,
+        mode : this.data.drive!.mode,
+      })
+
+      for(let dept of this.departments){
+        if(this.data.drive!.departments.includes(dept.name)) dept.value = true
+      }
+      if((this.data.drive!.departments).length===this.departments.length) this.allDept = true
     }
-    console.log(this.data) 
-    this.cur_company = JSON.parse(sessionStorage.getItem('cur_company')!)
+     
+    this.company = this.data.open_as==='add'?JSON.parse(sessionStorage.getItem('cur_company')!).company : this.data.drive!.company
   }
 
 
@@ -86,13 +93,15 @@ export class DrivePopupComponent implements OnInit{
     if(this.addDriveForm.valid){
       if(this.someDeptSelected()){
         let formData = new FormData()
-        const formattedDate = this.datePipe.transform(this.addDriveForm.value.date!, 'dd-MM-yyyy');        
+        const formattedDate = this.datePipe.transform(this.addDriveForm.value.date, 'yyyy-MM-dd')!;        
         
         for(let dept of this.departments){
           if(dept.value) this.eligible_depts.push(dept.name)
         };
-        
-        formData.append('company',this.cur_company.company)
+        let pk = this.data.open_as==='edit'?(this.data.drive!.id).toString():''
+        console.log(pk)
+        formData.append('pk', pk)
+        formData.append('company',this.company)
         formData.append('job_role',this.addDriveForm.value.job_role!)
         formData.append('date',formattedDate!)
         formData.append('description',this.addDriveForm.value.description!)
@@ -100,7 +109,7 @@ export class DrivePopupComponent implements OnInit{
         formData.append('mode',this.addDriveForm.value.mode!)
         formData.append('eligible_depts',this.eligible_depts.join(','))
 
-        this.service.addCompanyDrive(formData).subscribe(
+        this.service.addCompanyDrive(formData, this.data.open_as).subscribe(
           (res:serverResponse)=>{
             this.eligible_depts = []
             if(res.success){
@@ -124,9 +133,6 @@ export class DrivePopupComponent implements OnInit{
     
   }
 
-  editDrive(){
-
-  }
 
   setAllDept(value: boolean){
     this.allDept = !this.allDept;
@@ -163,5 +169,17 @@ export class DrivePopupComponent implements OnInit{
       }
     }
     return bool;
+  }
+
+  patchDate(dateString: string) : string{
+    const parts = dateString.split('-');
+    let day = parts[0];
+    let month:string = parts[1] ;
+    day = day.length==1?`0${day}`:day
+    month = month.length==1?`0${month}`:month
+    const year = +parts[2];
+    const formattedDate = `${year}-${month}-${day}`; 
+    console.log(formattedDate)
+    return formattedDate;
   }
 }

@@ -31,14 +31,7 @@ urlpatterns = [
     path('get_drive_by_dateRange', include('app.urls')),
     path('delete_drive', include('app.urls')),
     path('get_drive_by_id', include('app.urls')),
-    path('update_drive', include('app.urls')),
-    
-    path('add_report', include('app.urls')),
-    path('update_report', include('app.urls')),
-    path('get_reports', include('app.urls')),
-    
-    path('get_members', include('app.urls')),
-    path('get_report_by_id', include('app.urls')),
+
     
     path('get_report_summary', include('app.urls')),
     path('get_notifications', include('app.urls')),
@@ -62,6 +55,6 @@ urlpatterns = [
     path('get_reports_by_company', include('app.urls')),
     path('add_and_update_company_report', include('app.urls')),
     path('delete_company_report', include('app.urls')),
-    path('add_company_drive', include('app.urls')),
+    path('add_and_update_company_drive', include('app.urls')),
     
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -123,10 +123,11 @@ export class AppService {
     return this.http.get<companyByIdResponse>(`${this.URL}/get_company_by_id`, { params : params })
   }
   
-  getCompanies(staff_id : string, filter : string){
+  getCompanies(staff_id : string, filter : string, role:string){
     const params = {
       staff_id : staff_id,
-      filter : filter
+      filter : filter,
+      role : role
     }
     return this.http.get<getCompaniesResponse>(`${this.URL}/get_companies`, {params : params})
   }

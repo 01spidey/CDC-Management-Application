@@ -1,13 +1,12 @@
-<div class="main">
+<div class="main" *ngIf="section==1">
 
-    <img (click) = "back()" src="../../assets/back.png" *ngIf="section==2" class="back">
+    <!-- <img (click) = "back()" src="../../assets/back.png" *ngIf="section==2" class="back"> -->
 
     <div class="top">
         <div class="title">
             <h1>Report Summary</h1>
             <hr id="line" style="width: 380px;">
         </div>
-
     </div>
 
     <div class="filter-box" >
@@ -39,7 +38,7 @@
                 </div>
     
             </div>
- 
+    
             <a>
                 <span matTooltip="Refresh" class="material-symbols-outlined" id="refresh" (click)="changeFilter(period_filter)">
                     <!-- (click)="applyFilter()" -->
@@ -55,8 +54,8 @@
                 <mat-label>Filter By Date Range</mat-label>
                 
                 <mat-date-range-input [rangePicker]="picker">
-                  <input matStartDate placeholder="Start date" [(ngModel)]="startDate">
-                  <input matEndDate placeholder="End date" [(ngModel)]="endDate">
+                    <input matStartDate placeholder="Start date" [(ngModel)]="startDate">
+                    <input matEndDate placeholder="End date" [(ngModel)]="endDate">
                 </mat-date-range-input>
 
                 <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
@@ -66,10 +65,18 @@
             <!--  -->
         </div>
     </div>
-
+    
     <div class="main-container">
-        
-        <div class="stats-box" *ngIf="section==1">
+        <div class="more prevent-select" *ngIf="section==1">
+            <button (click)= 'goto(2)'>
+                <p>View More</p>
+                <span class="material-symbols-outlined">
+                    arrow_forward_ios
+                </span>
+            </button>
+        </div>
+
+        <div class="stats-box prevent-select" *ngIf="section==1">
             <div class="card-1" style="background-color: #2a9d8f;">
                 <div class="card-title">Total Reports</div>
                 <div class="card-content">
@@ -102,8 +109,8 @@
             </div>
         </div>
         
-        <table *ngIf="section==1" class="prevent-select">
-            <tr>
+        <table *ngIf="section==1">
+            <tr class="prevent-select">
                 <th>S.No</th>
                 <th>Staff ID</th>
                 <th>Staff Name</th>
@@ -115,10 +122,10 @@
                 <td>{{summary.staff_id}}</td>
                 <td>{{summary.name}}</td>
                 <td>
-                    <p class="count">{{summary.total_reports}}</p>
+                    <p class="count prevent-select">{{summary.total_reports}}</p>
                 </td>
                 <td style="flex:3;overflow-x:scroll">
-                    <div class="company-chips-box">
+                    <div class="company-chips-box prevent-select">
                         <div class="company-chip" *ngFor="let company of summary.companies">
                             <p style="white-space: nowrap;">{{company}}</p>
                         </div>
@@ -127,56 +134,8 @@
             </tr>
         </table>
 
-        <div class="more" *ngIf="section==1">
-            <button (click)= 'goto(2)'>
-                <p>View More</p>
-                <span class="material-symbols-outlined">
-                    arrow_forward_ios
-                </span>
-            </button>
-        </div>
-
-        <div class="no-data" *ngIf="row_data.length==0 && section==2">
-            <img src="../../assets/no-data.svg" alt="no-data.svg">
-            <p>No Data Found...</p>
-        </div>
-
-        <div class="grid-container" *ngIf="section==2 && row_data.length>0">
-            <button id="csv-export" (click)="onBtnExport()">
-                <span class="material-symbols-outlined">
-                    download
-                </span>
-                Export as CSV
-            </button>
-            <ag-grid-angular
-                style="width: 100%; height: 500px;"
-                class="ag-theme-alpine"
-                [rowData]="row_data"
-                [columnDefs]="col_defs"
-                [defaultColDef]="defaultColDef"
-                [enableRangeSelection]="true"
-                (gridReady)="onGridReady($event)"
-                ></ag-grid-angular>
-        </div>
-        
     </div>
 
-<!-- 
-    <div class="grid-container" *ngIf="section==1">
-        <button id="csv-export" (click)="onBtnExport()">
-            <span class="material-symbols-outlined">
-                download
-            </span>
-            Export as CSV
-        </button>
-        <ag-grid-angular
-            style="width: 100%; height: 500px;"
-            class="ag-theme-alpine"
-            [rowData]="row_data"
-            [columnDefs]="col_defs"
-            [defaultColDef]="defaultColDef"
-            [enableRangeSelection]="true"
-            (gridReady)="onGridReady($event)"
-            ></ag-grid-angular>
-    </div> -->
 </div>
+
+<app-company (close_section) = handleValue($event) *ngIf="section==2"></app-company>

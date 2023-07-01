@@ -4,8 +4,7 @@ import { FormBuilder } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
 import { getReportsResponse, reportByIdResponse, reportSummaryResponse, summaryObject } from '../models/model';
-import { ColDef, GridApi, GridReadyEvent } from 'ag-grid-community';
-import { filter } from 'rxjs';
+
 
 @Component({
   selector: 'app-summary',
@@ -30,46 +29,6 @@ export class SummaryComponent implements OnInit {
 
   report_summary:summaryObject[] = []
 
-  row_data:any[] = []
-
-  col_defs : ColDef[] = [
-    {field : 'company'},
-
-    {field : 'date', filter: 'agDateColumnFilter'},
-
-    {field : 'staff_id'},
-
-    {field : 'HR_name'},
-    
-    {field : 'HR_mail'},
-
-    {field : 'contact_mode'},
-
-    {field : 'message'},
-
-    {field : 'visibility'},
-  ]
-
-  defaultColDef: ColDef = {
-    sortable: true,
-    cellStyle: { 'font-size': '15px','font-family':'Nunito', 'white-space': 'normal' },
-    filter: 'agSetColumnFilter',
-    menuTabs: ['filterMenuTab'],
-    resizable: true,
-    minWidth: 130,
-    autoHeight: true,
-    // enableRowGroup: true,
-    // rowGroup: true,
-  };
-
-  gridOptions = {
-    columnDefs: this.col_defs,
-    defaultColDef: {
-      // checkboxSelection: true,
-    },
-  };
-
-  private gridApi!: GridApi;
 
   constructor(
     private service : AppService,
@@ -121,39 +80,10 @@ export class SummaryComponent implements OnInit {
         }
       )
     }
-    else{
-      this.service.getReports(data).subscribe(
-        (res:getReportsResponse)=>{
-          if(res.success){
-            this.row_data = res.reports
-            console.log(this.row_data)
-          }else this.toastr.warning('Failed to get reports')
-        },
-        err=>{
-          this.toastr.warning('Serveer Not Responding')
-        }
-      )
-    }
   }
 
-
-  onBtnExport() {
-    const params = {
-      skipHeader: false,
-      skipFooters: true,
-      skipGroups: true,
-      skipFloatingTop: true,
-      skipFloatingBottom: true,
-      allColumns: false,
-      onlySelected: false,
-      columnKeys: ['company', 'date', 'staff_id', 'HR_name', 'HR_mail', 'contact_mode', 'message', 'visibility']
-    };
-  
-    this.gridApi.exportDataAsCsv(params);
-  }
-
-  onGridReady(params: GridReadyEvent) {
-    this.gridApi = params.api;
+  handleValue(val:boolean){
+    this.back()
   }
 
   back(){
@@ -163,7 +93,7 @@ export class SummaryComponent implements OnInit {
 
   goto(section:number){
     this.section = section
-    this.applyFilter(this.period_filter)
+    // this.applyFilter(this.period_filter)
   }
 
 }

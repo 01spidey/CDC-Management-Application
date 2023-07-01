@@ -822,9 +822,12 @@ def get_user_stats(request):
     print(staff_id)
     try:
         if(Company.objects.filter(placement_officer_id = staff_id)):
-            company = Company.objects.get(placement_officer_id = staff_id).company
-            user_reports = Report.objects.filter(company = company)
-            user_drives = Drive.objects.filter(company = company)
+            company = Company.objects.filter(placement_officer_id = staff_id)
+            company_lst = [item.company for item in company if item.placement_officer_id==staff_id]
+            
+            user_reports = Report.objects.filter(placement_officer_id = staff_id)
+            
+            user_drives = Drive.objects.filter(company__in = company_lst)
             
             reports = user_reports.filter(date = today)
             drives = user_drives.filter(date = today)
@@ -920,7 +923,7 @@ def get_reports_by_company(request):
     
     print(f'company : {company}\nstart_date : {start_date}\nend_date : {end_date}\nstaff_id : {staff_id}')
     try:
-        reports = Report.objects.filter(company = company, placement_officer_id = staff_id, date__range = [start_date, end_date]).order_by('-date')
+        reports = Report.objects.filter(company = company, date__range = [start_date, end_date]).order_by('-date')
         company = Company.objects.get(company = company)
         reports_lst = []
         a = 1
@@ -1059,6 +1062,7 @@ def get_company_by_id(request):
 def get_companies(request):
     staff_id = request.GET.get('staff_id')
     filter = request.GET.get('filter')
+    role = request.GET.get('role')
     
     try:
         today = datetime.now().date()
@@ -1066,13 +1070,24 @@ def get_companies(request):
         thirty_days_later = today + timedelta(days=30) 
         
         if filter=='Active':
-            companies = Company.objects.filter(placement_officer_id = staff_id, last_reminder_date__range = [thirty_days_ago, thirty_days_later])
+            if(role=='Officer'):
+                companies = Company.objects.filter(placement_officer_id = staff_id, last_reminder_date__range = [thirty_days_ago, thirty_days_later])
+            else:
+                companies = Company.objects.filter(last_reminder_date__range = [thirty_days_ago, thirty_days_later])
+                
         else:
-            companies = Company.objects.filter(placement_officer_id = staff_id)
+            if(role=='Officer'):
+                companies = Company.objects.filter(placement_officer_id = staff_id)
+            else:
+                companies = Company.objects.all()
+        
+        res = list(companies.values())
+        for company_obj in res:
+            company_obj['name'] = PlacementOfficer.objects.get(staff_id = company_obj['placement_officer_id']).name
         
         data = {
             'success' : True,
-            'companies' : list(companies.values())
+            'companies' : res
         }
         return JsonResponse(data)
     

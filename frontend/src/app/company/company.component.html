@@ -2,7 +2,7 @@
 
 
     <div class="top">
-        <img (click) = "back()" src="../../assets/back.png" *ngIf="section==2 || section==3" class="back">
+        <img (click) = "back()" src="../../assets/back.png" *ngIf="section==2 || section==3 || (section==1 && role==='Director')" class="back">
         <div class="title" *ngIf="section==1">
             <h1>My Companies</h1>
             <hr id="line" style="width: 320px;">
@@ -104,7 +104,7 @@
             </div>
             
             <div class="content" *ngIf="company_filter==='Active'">
-                
+
                 <div class="field">
                     <span class="material-symbols-outlined">
                         today
@@ -126,7 +126,7 @@
                         mail
                     </span>
                     <p style="font-family: 'Poppins';font-weight:500;">HR Mail : </p>
-                    <p>{{company.HR_mail}}</p>
+                    <p>{{(company.lock_hr_mail && role==='Director')?'--' : company.HR_mail}}</p>
                 </div>
 
                 <div class="field">
@@ -134,7 +134,11 @@
                         phone
                     </span>
                     <p style="font-family: 'Poppins';font-weight:500;">HR Contact : </p>
-                    <p>{{company.HR_contact!==null?company.HR_contact : 'Not Available'}}</p>
+                    <p>{{(company.lock_hr_contact && role==='Director')?'--' : company.HR_contact}}</p>
+                </div>
+
+                <div class="name" *ngIf="role==='Director'">
+                    <p>{{company.name}}</p>
                 </div>
 
             </div>
@@ -153,10 +157,25 @@
                         </span>
                     </a>
                 </div>
+                <div class="name" *ngIf="role==='Director'">
+                    <span class="material-symbols-outlined">
+                        person
+                    </span>
+                    <p>{{cur_company.name}}</p>
+                </div>
+                
             </div>
 
             <div class="content">
                 
+                <!-- <div class="field">
+                    <span class="material-symbols-outlined">
+                        person
+                    </span>
+                    <p style="font-family: 'Poppins';font-weight:500;">Followed By : </p>
+                    <p>{{cur_company.name}}</p>
+                </div> -->
+
                 <div class="field">
                     <span class="material-symbols-outlined">
                         today
@@ -238,8 +257,8 @@
                         <th colspan="2">Message</th>
                         <th>Reminder</th>
                         <th>Status</th>
-                        <th>Edit</th>
-                        <th>Delete</th>
+                        <th *ngIf="role==='Officer'">Edit</th>
+                        <th *ngIf="role==='Officer'">Delete</th>
                     </tr>
 
                     <tr *ngFor="let item of report_lst">
@@ -254,14 +273,14 @@
                         <td colspan="2">{{item.message}}</td>
                         <td>{{item.reminder_date}}</td>
                         <td>
-                            <p class="status prevent-select"  [ngClass]="{'active-status': !item.status, 'not-active-status' : item.status}" (click)="openPopup('add', item)">{{item.status?'Completed' : 'Update'}}</p>
+                            <p class="status prevent-select"  [ngClass]="{'active-status': !item.status, 'not-active-status' : item.status}" [ngStyle]="role==='Director'? {'pointer-events' : 'none'} : {}" (click)="openPopup('add', item)">{{item.status?'Completed' : 'Update'}}</p>
                         </td>
-                        <td style="width: 30px;">
+                        <td style="width: 30px;" *ngIf="role==='Officer'">
                             <span class="material-symbols-outlined prevent-select" (click)="openPopup('edit', item)">
                                 edit
                             </span>
                         </td>
-                        <td style="width: 30px;" [ngStyle]="!item.status?{'opacity' : '0.8', 'pointer-events' : 'none'} : {}">
+                        <td style="width: 30px;" [ngStyle]="!item.status?{'opacity' : '0.8', 'pointer-events' : 'none'} : {}" *ngIf="role==='Officer'">
                             <span class="material-symbols-outlined prevent-select" (click)="openDeletePopup(item.pk)">
                                 delete
                             </span>

@@ -16,9 +16,9 @@
     flex: 1;
     display: flex;
     flex-direction: column;
-    padding-bottom: 5%;
+    // padding-bottom: 5%;
     position: relative;
-    padding-bottom: 100px;
+    // padding-bottom: 30px;
 
     .back{
         height: 30px;
@@ -363,9 +363,9 @@
         }
 
         .members-container{
-            margin-top: 50px;
-            height: 300px;
-            // background-color: #152b51;
+            height: fit-content;
+            margin-top: 30px;
+
             .top{
                 display: flex;
                 align-items: center;

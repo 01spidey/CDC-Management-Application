@@ -190,7 +190,8 @@ export interface company{
     initiated_at : string,
     last_reminder_date : string,
     lock_hr_contact : boolean,
-    lock_hr_mail : boolean
+    lock_hr_mail : boolean,
+    name : string,
 }
 
 export interface companyByIdResponse{

@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { AppService } from '../service/app.service';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { DatePipe } from '@angular/common';
@@ -23,8 +23,6 @@ export class CompanyComponent implements OnInit{
   popup_data!:popup_data;
   drive_popup_data!:drive_popup_data;
   
-
-
   company_filter = 'Active'
   cur_company! : company;
 
@@ -48,6 +46,7 @@ export class CompanyComponent implements OnInit{
   popup_message = new FormControl('',Validators.required)
   popup_date = new FormControl('',Validators.required)
 
+  @Output() close_section = new EventEmitter<boolean>();
 
 
   addCompanyForm = this.builder.group({
@@ -148,7 +147,7 @@ export class CompanyComponent implements OnInit{
   }
 
   getCompanies(filter:string){
-    this.service.getCompanies(this.staff_id, this.company_filter).subscribe(
+    this.service.getCompanies(this.staff_id, this.company_filter, this.role).subscribe(
       (res:getCompaniesResponse)=>{
         if(res.success){
           console.log(res.companies)
@@ -308,8 +307,13 @@ export class CompanyComponent implements OnInit{
   
 
   back(){
+    if(this.section===1){
+      this.close_section.emit(true)
+    }else{
       this.section = 1
       sessionStorage.setItem('cur_company_section', this.section.toString())    
       this.getCompanies(this.company_filter)
+    }
+      
   }
 }

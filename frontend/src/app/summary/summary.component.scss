@@ -70,6 +70,39 @@
         border-radius: 10px;
     }
 
+    .more{
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        margin-bottom: 15px;
+        // width: 100%;
+        button{
+            background-color: #35363a;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            border-radius: 5px;
+            padding: 5px 10px;
+            cursor: pointer;
+            transition: 0.3s ease;
+            p{
+                font-family: 'Poppins';
+                font-weight: 500;
+            }
+            span{
+                font-size: 1rem;
+            }
+            &:hover{
+                // opacity: 0.9;
+                background-color: white;
+                color: #35363a;
+            }
+        }
+    }
+
+
     .filter-box{
         display: flex;
         flex-direction: column;
@@ -83,7 +116,6 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            // background-color: #152b51;
             // width: 100%;
             
             .filter-container{
@@ -186,33 +218,8 @@
         margin-left: 40px;
         height: fit-content;
         width: 95%;
-        margin-top: 2%;
-       
-        .more{
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            margin-top: 15px;
-            button{
-                background-color: #35363a;
-                color: white;
-                display: flex;
-                align-items: center;
-                gap: 5px;
-                border-radius: 5px;
-                padding: 3px 7px;
-                cursor: pointer;
-                p{
-                    font-family: 'Poppins';
-                    font-weight: 500;
-                }
-                span{
-                    font-size: 1rem;
-                }
-            }
-        }
-
+               
+        
         table, th, td{
             // border: 1px solid black;
             // border-collapse: collapse;
@@ -258,7 +265,7 @@
             height: 7px;
         }
         td::-webkit-scrollbar-thumb{
-            background-color: black;
+            background-color: #545353a2;
             border-radius: 10px;
         }
 

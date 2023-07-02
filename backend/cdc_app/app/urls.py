@@ -41,6 +41,7 @@ urlpatterns = [
     path('get_reports_by_company', views.get_reports_by_company),
     path('add_and_update_company_report', views.add_and_update_company_report),
     path('delete_company_report', views.delete_company_report),
+    path('export_as_csv', views.export_as_csv),
     
     path('add_and_update_company_drive', views.add_and_update_company_drive),
         

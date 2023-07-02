@@ -155,7 +155,7 @@ export class ProfileComponent implements OnInit {
 
 
           this.pk = pk
-          console.log(res.user)
+          //console.log(res.user)
           this.addMemberForm.patchValue({
             name : res.user.name,
             mail : res.user.mail,

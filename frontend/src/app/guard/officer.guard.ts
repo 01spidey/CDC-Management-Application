@@ -6,7 +6,7 @@ export class OfficerGuard implements CanActivate {
   constructor(private router: Router) {}
 
   canActivate(): boolean {
-    console.log('officer guard');
+    // console.log('officer guard');
     let curPage = sessionStorage.getItem('cur_page');
 
     curPage = (curPage==null || curPage==='home')?'' : curPage

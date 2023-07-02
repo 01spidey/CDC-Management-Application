@@ -8,8 +8,8 @@ import { Router } from '@angular/router';
 })
 export class AppService {
 
-  // URL = "http://127.0.0.1:8000";
-  URL = "https://8531-2409-4072-8e0b-519e-fdbe-6678-e205-b061.ngrok-free.app"
+  URL = "http://127.0.0.1:8000";
+  // URL = "https://8531-2409-4072-8e0b-519e-fdbe-6678-e205-b061.ngrok-free.app"
 
   constructor(
     private http:HttpClient,
@@ -156,6 +156,11 @@ export class AppService {
 
   addCompanyDrive(data:FormData, action:string){
     return this.http.post<serverResponse>(`${this.URL}/add_and_update_company_drive`, data)
+  }
+
+  exportAsCsv(data:any){
+    const options = { responseType: 'blob' as 'json' };
+    return this.http.post<any>(`${this.URL}/export_as_csv`, data, options)
   }
 
 

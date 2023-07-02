@@ -438,11 +438,37 @@
 
     .filter-box{
         display: flex;
-        flex-direction: column;
+        justify-content: space-between;
+        align-items: flex-start;
+        // background-color: #152b51;
         gap: 20px;
         flex: 1;
         margin-top: 30px;
-        width: 95%;
+        width: 100%;
+
+        .add-report{
+            display: flex;
+            align-items: center;
+            width: fit-content;
+            padding: 7px 15px;
+            border-radius: 5px;
+            color: white;
+            background-color:#1a6486;
+            font-weight: 500;
+
+            gap: 10px;
+            transition: 0.3s ease;
+        cursor: pointer;
+
+        p{
+            font-size: 17px;
+            font-family: 'Nunito';
+        }
+
+        &:hover{
+            opacity: 0.85;
+        }
+        }
 
         .container{
             display: flex;

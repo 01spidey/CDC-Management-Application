@@ -6,7 +6,7 @@ export class DirectorGuard implements CanActivate {
   constructor(private router: Router) {}
 
   canActivate(): boolean {
-    console.log('director guard');
+    //console.log('director guard');
     let curPage = sessionStorage.getItem('cur_page');
 
     curPage = (curPage==null || curPage==='home')?'' : curPage

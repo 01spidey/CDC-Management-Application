@@ -1,8 +1,9 @@
+import csv
 import json
 from django.conf import settings
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
-from django.http import JsonResponse
+from django.http import HttpResponse, JsonResponse
 from .models import PlacementDirector,PlacementOfficer,Report, Drive, Company
 from datetime import datetime, date, timedelta
 from django.core.files.storage import FileSystemStorage
@@ -938,8 +939,6 @@ def get_reports_by_company(request):
                     'status' : report.completed,
                     'message' : report.message,
                     'reminder_date' : None if report.reminder_date is None else convert_date_format(report.reminder_date),
-                    'hr_name' : company.HR_name,
-                    'hr_mail' : company.HR_mail,
                     'time' : UTCtoIST(str(report.timestamp))
                 }
             )
@@ -1336,6 +1335,41 @@ def add_and_update_company_drive(request):
         }
     
         return JsonResponse(data)
+
+@csrf_exempt
+def export_as_csv(request):
+    formdata = json.loads(request.body)
+    company = formdata['company']
+    start_date = formdata['start_date']
+    end_date = formdata['end_date']
+    staff_id = formdata['staff_id']
+    
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = f'attachment; filename="{company}_followup.csv"'
+    
+    staff_name =  PlacementOfficer.objects.get(staff_id = staff_id).name
+    
+    try:
+        reports = Report.objects.filter(company = company, date__range = [start_date, end_date]).order_by('date')
+        
+        
+        writer = csv.writer(response)
+        writer.writerow(['S.No','Staff', 'Date','Time', 'Company', 'Message', 'Reminder Date', 'Status'])
+        
+        
+        position = 1
+        for report in reports:
+            # print(UTCtoIST(str(report.timestamp)))
+            writer.writerow([position, report.placement_officer_id, report.date, UTCtoIST(str(report.timestamp)), report.company, report.message, report.reminder_date, 'Completed' if report.completed else 'Not Completed'])
+            position+=1
+        
+        
+    except Exception as e:
+        print(e)
+    
+    return response
+    
+    
 
 @csrf_exempt
 def delete_drive(request):

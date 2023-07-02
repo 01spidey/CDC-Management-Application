@@ -219,10 +219,8 @@
 
         <div class="company-reports" *ngIf="section==3">
             <div class="report-box">
-                <h2>My Reports</h2>
+                <h2>Follow-Ups</h2>
               
-                
-
                 <div class="filter-box" >
                     <div class="date-filter" *ngIf="section==3">
                         
@@ -240,12 +238,12 @@
                         <button mat-raised-button (click)="getReportsByCompany()" style="background-color: #35363a;">Apply</button>
                     </div>
 
-                    <!-- <div class="add-report">
+                    <div class="add-report" (click)="exportAsCsv()">
                         <span class="material-symbols-outlined">
-                            add_box
+                            download
                         </span>
-                        <p>Add Report</p>
-                    </div> -->
+                        <p>Export as CSV</p>
+                    </div>
                     
                 </div>
             </div>

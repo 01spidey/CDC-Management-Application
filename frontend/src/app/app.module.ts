@@ -13,12 +13,10 @@ import { DirectorDashboardComponent } from './director-dashboard/director-dashbo
 import { OfficerDashboardComponent } from './officer-dashboard/officer-dashboard.component';
 import { DriveComponent } from './drive/drive.component';
 import { ProfileComponent } from './profile/profile.component';
-import { AddMemberComponent } from './add-member/add-member.component';
 import { CommonModule, DatePipe } from '@angular/common';
 
 import { MatTooltipModule } from '@angular/material/tooltip';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
-import { AgGridModule } from 'ag-grid-angular';
 import { SummaryComponent } from './summary/summary.component';
 import { NotificationComponent } from './notification/notification.component';
 import { NgxUiLoaderHttpModule, NgxUiLoaderModule } from 'ngx-ui-loader';
@@ -40,7 +38,6 @@ import { DrivePopupComponent } from './drive-popup/drive-popup.component';
     OfficerDashboardComponent,
     DriveComponent,
     ProfileComponent,
-    AddMemberComponent,
     SummaryComponent,
     NotificationComponent,
     CompanyComponent,
@@ -59,7 +56,6 @@ import { DrivePopupComponent } from './drive-popup/drive-popup.component';
     MatTooltipModule,
     FormsModule,
     MatSlideToggleModule,
-    AgGridModule,
     NgxUiLoaderHttpModule.forRoot({ showForeground: true }),
     NgxUiLoaderModule,
     NgxOtpInputModule

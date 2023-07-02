@@ -34,7 +34,7 @@ export class PopupComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    console.log(this.data)
+    //console.log(this.data)
     this.date = this.datePipe.transform(new Date(), 'yyyy-MM-dd')!;
     if(this.data.open_as==='edit'){
       this.reportForm.patchValue({
@@ -99,7 +99,7 @@ export class PopupComponent implements OnInit {
     month = month.length==1?`0${month}`:month
     const year = +parts[2];
     const formattedDate = `${year}-${month}-${day}`; // Convert back to 'dd-mm-yyyy' format
-    console.log(formattedDate)
+    //console.log(formattedDate)
     return formattedDate;
     // 2023-07-01
   }

@@ -61,7 +61,7 @@ export class DrivePopupComponent implements OnInit{
   ) {  }
 
   ngOnInit(): void {
-    console.log(this.data)
+    //console.log(this.data)
     if(this.data.open_as == 'edit'){
 
       this.addDriveForm.patchValue({
@@ -99,7 +99,7 @@ export class DrivePopupComponent implements OnInit{
           if(dept.value) this.eligible_depts.push(dept.name)
         };
         let pk = this.data.open_as==='edit'?(this.data.drive!.id).toString():''
-        console.log(pk)
+        //console.log(pk)
         formData.append('pk', pk)
         formData.append('company',this.company)
         formData.append('job_role',this.addDriveForm.value.job_role!)
@@ -179,7 +179,7 @@ export class DrivePopupComponent implements OnInit{
     month = month.length==1?`0${month}`:month
     const year = +parts[2];
     const formattedDate = `${year}-${month}-${day}`; 
-    console.log(formattedDate)
+    //console.log(formattedDate)
     return formattedDate;
   }
 }

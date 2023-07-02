@@ -69,7 +69,7 @@ export class LoginComponent implements OnInit{
   }
 
   handleOtpChange(event:string[]) : void{
-    console.log(event)
+    //console.log(event)
     this.can_verify = false
     this.user_otp = event.join('')
   }
@@ -122,7 +122,7 @@ export class LoginComponent implements OnInit{
             this.toastr.success(res.message)
             sessionStorage.setItem('user_id', this.loginForm.value.user_id!)
             sessionStorage.setItem('cur_user_data', JSON.stringify(res.user_data))
-            console.log(res.user_data)
+            //console.log(res.user_data)
 
             
             if(this.role=='Director'){
@@ -176,7 +176,7 @@ export class LoginComponent implements OnInit{
   }
 
   verifyOTP(){
-    console.log(this.gen_otp, this.user_otp)
+    //console.log(this.gen_otp, this.user_otp)
     
     if(this.gen_otp==this.user_otp){
       this.section = 3

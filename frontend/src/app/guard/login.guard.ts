@@ -6,7 +6,7 @@ export class LoginGuard implements CanActivate {
   constructor(private router: Router) {}
 
   canActivate(): boolean {
-    console.log('login guard');
+    // console.log('login guard');
     const curPage = sessionStorage.getItem('cur_page');
 
     if (curPage === 'home' || curPage==null) {

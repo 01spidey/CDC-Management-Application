@@ -43,21 +43,21 @@ export class NotificationComponent implements OnInit{
 
   applyFilter(category : string) {
     this.category = category;
-    // console.log(this.userData)
+    // //console.log(this.userData)
 
     this.service.getNotifications(category, this.userData.staff_id).subscribe(
       (res : notificationResponse) =>{
         if(res.success){
           if(category==='drive_alerts') this.drive_notifications = res.notifications as driveNotification[]
           else{
-            console.log(res)
+            //console.log(res)
             this.report_notifications = res.notifications as reportNotification[]
-            console.log(this.report_notifications)
+            //console.log(this.report_notifications)
           }
         }else this.toastr.warning('Something went wrong!!')
       },
       err=>{
-        console.log(err)
+        //console.log(err)
         this.toastr.error('Server Not Responding!!')
       }
     )
@@ -65,7 +65,7 @@ export class NotificationComponent implements OnInit{
   }
 
   openPopup(report:reportNotification){
-    console.log(report)
+    //console.log(report)
     this.popup = true
     this.popup_data = {
       open_as : 'add',

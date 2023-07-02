@@ -95,7 +95,7 @@ export class CompanyComponent implements OnInit{
 
   handleValue(value: boolean) {
     this.popup = value
-    console.log(value)
+    //console.log(value)
     this.getReportsByCompany()
   }
 
@@ -150,7 +150,7 @@ export class CompanyComponent implements OnInit{
     this.service.getCompanies(this.staff_id, this.company_filter, this.role).subscribe(
       (res:getCompaniesResponse)=>{
         if(res.success){
-          console.log(res.companies)
+          //console.log(res.companies)
           this.companies = res.companies
         }
         else{
@@ -233,13 +233,13 @@ export class CompanyComponent implements OnInit{
     let data = {
       start_date : start_date,
       end_date : end_date,
-      staff_id : this.staff_id,
+      staff_id : this.cur_company.placement_officer_id,
       company : this.cur_company.company
     }
 
     this.service.getReportsByCompany(data).subscribe(
       (res:getReportsByCompanyResponse)=>{
-        console.log('getReportsByCompanyResponse')
+        //console.log('getReportsByCompanyResponse')
         if(res.success) this.report_lst = res.reports
         else this.toastr.warning('Something went wrong')
       },
@@ -287,7 +287,7 @@ export class CompanyComponent implements OnInit{
     }
     this.popup = true
 
-    // console.log(report)
+    // //console.log(report)
   }
 
   openDrivePopup(){
@@ -299,12 +299,34 @@ export class CompanyComponent implements OnInit{
   }
 
   trimTime(timestamp:string) : string{
-    console.log(timestamp)
+    //console.log(timestamp)
     let time = timestamp.split('T')[1]
     return time.split('.')[0]
   }
 
-  
+  exportAsCsv(){
+    let start_date = this.datePipe.transform(this.startDate, 'yyyy-MM-dd')!;
+    let end_date = this.datePipe.transform(this.endDate, 'yyyy-MM-dd')!;
+    let data = {
+      start_date : start_date,
+      end_date : end_date,
+      staff_id : this.cur_company.placement_officer_id,
+      company : this.cur_company.company
+    }
+
+    this.service.exportAsCsv(data).subscribe(
+      (res:any)=>{
+        const blob = new Blob([res], { type: 'text/csv' });
+        const downloadLink = document.createElement('a');
+        downloadLink.href = URL.createObjectURL(blob);
+        downloadLink.download = `${this.cur_company.company}_followup_${this.userData.name}.csv`;
+        downloadLink.click();
+      },
+      err=>{
+
+      }
+    )
+  }
 
   back(){
     if(this.section===1){

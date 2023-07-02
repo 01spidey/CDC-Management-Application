@@ -150,6 +150,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:4200',
     'https://cdc-management-application.vercel.app',
+    'https://8531-2409-4072-8e0b-519e-fdbe-6678-e205-b061.ngrok-free.app',
+    
 ]
 
 # Mail Configurations

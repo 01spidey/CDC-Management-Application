@@ -28,36 +28,4 @@ export class HomeComponent implements OnInit {
     sessionStorage.setItem('user_role',role);
     this.router.navigate(['login'])
   }
-
-  submit(){
-
-    
-
-
-    // let user_id:any = (document.getElementById('user_id') as HTMLInputElement).value.toString()
-    // let pass:any = (document.getElementById('pass') as HTMLInputElement).value.toString()
-    // let name:any = (document.getElementById('name') as HTMLInputElement).value.toString()
-    // let mail:any = (document.getElementById('mail') as HTMLInputElement).value.toString()
-    // let contact:any = (document.getElementById('contact') as HTMLInputElement).value.toString()
-    // let staff_id:any = (document.getElementById('staff_id') as HTMLInputElement).value.toString()
-
-
-
-    // let formData:FormData = new FormData()
-    // formData.append('user_id',user_id)
-    // formData.append('pass', pass)
-    // formData.append('name',name)
-    // formData.append('mail', mail)
-    // formData.append('contact',contact)
-    // formData.append('staff_id', staff_id)
-
-    // this.service.add_admin(formData).subscribe(
-    //   (res:submitResponse)=>{
-    //     this.temp = res.message!
-    //   },
-    //   err=>{
-
-    //   }
-    // )
-  }
 }

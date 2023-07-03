@@ -4,7 +4,7 @@ from django.conf import settings
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse, JsonResponse
-from .models import PlacementDirector,PlacementOfficer,Report, Drive, Company
+from .models import DriveSelection, PlacementDirector,PlacementOfficer,Report, Drive, Company, Student
 from datetime import datetime, date, timedelta
 from django.core.files.storage import FileSystemStorage
 from django.contrib.sites.shortcuts import get_current_site
@@ -19,6 +19,58 @@ import pytz
 # from models import PlacementDirector
 
 # Create your views here.
+def sample():
+    try:
+        # student = Student.objects.create(
+        #     reg_no = "20CS166",
+        #     name = "Srikumaran R",
+        #     phone = '1234567890',
+        #     mail = 'abc@gmail.com',
+        #     dept = 'CSE',
+        #     dob = '2002-11-15',
+        #     gender = 'male',
+        #     batch = '2024'
+        # )
+        
+        # # job_role = models.CharField(max_length=50, null=True)
+        # # date = models.DateField(default=now, null=False)
+        # # company = models.CharField(max_length=50, null=False)
+        # # drive_mode = models.CharField(max_length=50, null=False)
+        # # description = models.TextField(null=False)
+        # # file = models.FileField(upload_to='file_uploads/', null=True)  # Adjust the upload destination as per your requirements
+        # # departments = ArrayField(models.CharField(max_length=100), blank=True, null=True)
+        # # students = models.ManyToManyField('Student', through='DriveSelection')
+        # drive = Drive.objects.create(
+        #     job_role = 'Software Developer',
+        #     date = '2021-10-10',
+        #     company = 'Google',
+        #     drive_mode = 'Online',
+        #     description = 'Software Developer',
+        #     file = None,
+        #     departments = ['CSE','ECE','EEE','MECH','CIVIL']
+        # )
+        
+        # drive.students.add(student)
+        # student.drives.add(drive)
+        
+        # driveSelection = DriveSelection.objects.create(
+        #     drive = drive,
+        #     student = student,
+        #     selected = True
+        # )
+        
+        # driveSelection.save()
+        # drive.save()
+        # student.save()
+        drive = Drive.objects.get(pk = 12)
+        print(drive.students.all())
+        print(Student.objects.get(pk = '20CS166').drives.all())
+        print("Success")
+        
+    except Exception as e:
+        print(e)
+
+sample()
 
 @csrf_exempt
 def test(request):

@@ -95,6 +95,7 @@ class Student(models.Model):
     dob = models.DateField(null=False)
     gender = models.CharField(max_length=10, null=False)
     batch = models.CharField(max_length=10, null=False)
+    placement_interested = models.BooleanField(default=True)
     attended_drives = models.ManyToManyField('Drive', through='DriveSelection')
     
 class Drive(models.Model):

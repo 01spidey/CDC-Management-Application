@@ -1,3 +1,131 @@
 <div class="main">
-    <p (click)="closeTable()">click Me!!</p>
+    <div class="top">
+        <h1 class="title">Eligible List</h1>
+        <span class="material-icons" (click)="closeTable()">
+            disabled_by_default
+        </span>
+    </div>
+    
+    <div class="body">
+        <div class="left">
+            <p class="title">Filters</p>
+            <div class="section">
+                <p class="name">Department</p>
+                <div class="box" style="display: grid;grid-template-columns:1fr 1fr 1fr 1fr">
+                    <div class="option" *ngFor="let dept of depts">
+                        <mat-checkbox color="primary"></mat-checkbox>
+                        <p>{{dept}}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-container">
+                <div class="section">
+                    <p class="name">Batch</p>
+                    <div class="box">
+                        <input type="text" placeholder="2024" id="batch">
+                    </div>
+                </div>
+
+                <div class="section">
+                    <p class="name">Gender</p>
+                    <div class="box gender">
+                        <p [ngClass]="{'active-chip' : gender==='All', 'inactive-chip' : gender!=='All'}" (click)="gender='All'">All</p>
+                        <p [ngClass]="{'active-chip' : gender==='Male', 'inactive-chip' : gender!=='Male'}" (click)="gender='Male'">M</p>
+                        <p [ngClass]="{'active-chip' : gender==='Female', 'inactive-chip' : gender!=='Female'}" (click)="gender='Female'">F</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="temp">
+                <p class="section-name">SSLC</p>
+                <div class="section-sub" style="font-size: .85rem;">
+                    <p class="name">Medium</p>
+                    <div class="medium">
+                        <p [ngClass]="{'active-chip' : sslc_medium==='All', 'inactive-chip' : sslc_medium!=='All'}" (click)="sslc_medium='All'">All</p>
+                        <p [ngClass]="{'active-chip' : sslc_medium==='Tamil', 'inactive-chip' : sslc_medium!=='Tamil'}" (click)="sslc_medium='Tamil'">Tamil</p>
+                        <p [ngClass]="{'active-chip' : sslc_medium==='English', 'inactive-chip' : sslc_medium!=='English'}" (click)="sslc_medium='English'">English</p>
+                        <p [ngClass]="{'active-chip' : sslc_medium==='Others', 'inactive-chip' : sslc_medium!=='Others'}" (click)="sslc_medium='Others'">Others</p>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+            
+
+        </div>
+        <div class="right">
+            <table>
+                <!-- Table Header -->
+                <tr>
+                    <th rowspan="2">S.no</th>
+                    <th rowspan="2">
+                        <div class="temp" style="display: flex; gap:3px; align-items:center">
+                            <mat-checkbox color="primary"></mat-checkbox>
+                            <p>Reg No.</p>
+                        </div>
+                        
+                    </th>
+                    <th rowspan="2">Name</th>
+                    <th rowspan="2" >Branch</th>
+                    <th rowspan="2">Batch</th>
+                    <th rowspan="2">Gender</th>
+                    <th colspan="3">SSLC</th>
+                    <th colspan="4">HSC</th>
+                    <th rowspan="2">Diploma %</th>
+                    <th colspan="4">UG</th>
+                </tr>
+                <tr>
+                    <th>Percentage</th>
+                    <th>Board</th>
+                    <th>Medium</th>
+                    <th>Percentage</th>
+                    <th>Cut-off</th>
+                    <th>Board</th>
+                    <th>Medium</th>
+                    <th>CGPA</th>
+                    <th>Percentage</th>
+                    <th>Arrear History</th>
+                    <th>Backlogs</th>
+                </tr>
+
+                <!-- Table Rows -->
+                <tr>
+                    <td>1</td>
+                    <td style="display: flex; gap:3px; align-items:center">
+                        <mat-checkbox color="primary"></mat-checkbox>
+                        <p>20CS166</p>
+                    </td>
+                    <td>John Doe</td>
+                    <td>Computer Science</td>
+                    <td>2021</td>
+                    <td>Male</td>
+                    <td>95%</td>
+                    <td>State Board</td>
+                    <td>English</td>
+                    <td>92%</td>
+                    <td>95%</td>
+                    <td>State Board</td>
+                    <td>English</td>
+                    <td>85%</td>
+                    <td>8.5</td>
+                    <td>88%</td>
+                    <td>0</td>
+                    <td>0</td>
+                </tr>
+                
+            </table>
+
+            <div class="footer">
+                <button mat-raised-button>Generate</button>
+            </div>
+
+        </div>
+    </div>
+
+    
+
+
 </div>

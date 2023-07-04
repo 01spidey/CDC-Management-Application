@@ -4,6 +4,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
 import { company, drive, serverResponse } from '../models/model';
+import { student_table_data } from '../student-table/student-table.component';
 
 export interface drive_popup_data{
   open_as : string,
@@ -44,6 +45,9 @@ export class DrivePopupComponent implements OnInit{
   @Input() data!:drive_popup_data;
   @Output() popup_closed = new EventEmitter<boolean>();
   @Output() open_student_table = new EventEmitter<boolean>();
+  @Output() student_table_popup_data = new EventEmitter<student_table_data>();
+
+  // popup_data!:student_table_data;
 
   addDriveForm = this.builder.group({
     job_role:this.builder.control('',Validators.required),
@@ -135,6 +139,12 @@ export class DrivePopupComponent implements OnInit{
 
 
   openStudentTable(){
+    this.student_table_popup_data.emit(
+      {
+        action : this.data.open_as,
+        open_as : 'eligible_lst',
+        drive : this.data.drive
+      } )
     this.open_student_table.emit(true);
   }
 

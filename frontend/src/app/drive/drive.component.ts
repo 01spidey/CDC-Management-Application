@@ -28,6 +28,7 @@ export class DriveComponent implements OnInit {
   edit_drive_id = 0
   drive_popup = false
   drive_popup_data!:drive_popup_data;
+  student_table = false
 
   startDate!: string;
   endDate!: string;
@@ -142,6 +143,12 @@ export class DriveComponent implements OnInit {
   handleDrivePopup(value:boolean){
     this.drive_popup = value
     this.filterByStatus(this.filter)
+  }
+
+  handleStudentTable(value : boolean){
+    this.student_table = value 
+    if(value) this.toastr.info('Opening Student Table')
+    else this.toastr.info('Closing Student Table')
   }
 
   openDrivePopup(drive:drive){

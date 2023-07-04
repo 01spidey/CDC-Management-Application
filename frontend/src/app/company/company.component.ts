@@ -6,6 +6,7 @@ import { ToastrService } from 'ngx-toastr';
 import { company, getCompaniesResponse, getReportsByCompanyResponse, Report, serverResponse } from '../models/model';
 import { popup_data } from '../popup/popup.component';
 import { drive_popup_data } from '../drive-popup/drive-popup.component';
+import { student_table_data } from '../student-table/student-table.component';
 
 @Component({
   selector: 'app-company',
@@ -47,6 +48,8 @@ export class CompanyComponent implements OnInit{
   report_lst : Report[] = []
   popup_message = new FormControl('',Validators.required)
   popup_date = new FormControl('',Validators.required)
+
+  student_table_popup_data!:student_table_data;
 
   @Output() close_section = new EventEmitter<boolean>();
 
@@ -102,13 +105,17 @@ export class CompanyComponent implements OnInit{
 
   handleStudentTable(value : boolean){
     this.student_table = value 
-    if(value) this.toastr.info('Opening Student Table')
-    else this.toastr.info('Closing Student Table')
+    // if(value) this.toastr.info('Opening Student Table')
+    // else this.toastr.info('Closing Student Table')
   }
 
   handleDrivePopup(value: boolean) {
     this.drive_popup = value
     if(!value) this.student_table = false
+  }
+
+  handleStudentTablePopupData(value: student_table_data){
+    this.student_table_popup_data = value
   }
 
   changeSection(section: number, action:string){

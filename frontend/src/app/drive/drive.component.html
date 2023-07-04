@@ -223,7 +223,8 @@
     </div>
 
     <div class="popup-container" *ngIf="drive_popup">
-        <app-drive-popup (popup_closed)="handleDrivePopup($event)" [data] = 'drive_popup_data' *ngIf="drive_popup"></app-drive-popup>
+        <app-drive-popup (popup_closed)="handleDrivePopup($event)" (open_student_table)="handleStudentTable($event)" [data] = 'drive_popup_data' *ngIf="drive_popup"></app-drive-popup>
+        <app-student-table (close_student_table)="handleStudentTable($event)" *ngIf="student_table"></app-student-table>
     </div>
 
 </div>

@@ -41,6 +41,8 @@ export class CompanyComponent implements OnInit{
   delete_popup = false
   delete_report_pk = 0
   drive_popup = false
+  
+  student_table = true
 
   report_lst : Report[] = []
   popup_message = new FormControl('',Validators.required)
@@ -95,12 +97,18 @@ export class CompanyComponent implements OnInit{
 
   handleValue(value: boolean) {
     this.popup = value
-    //console.log(value)
     this.getReportsByCompany()
+  }
+
+  handleStudentTable(value : boolean){
+    this.student_table = value 
+    if(value) this.toastr.info('Opening Student Table')
+    else this.toastr.info('Closing Student Table')
   }
 
   handleDrivePopup(value: boolean) {
     this.drive_popup = value
+    if(!value) this.student_table = false
   }
 
   changeSection(section: number, action:string){

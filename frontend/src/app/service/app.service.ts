@@ -8,8 +8,8 @@ import { Router } from '@angular/router';
 })
 export class AppService {
 
-  // URL = "http://127.0.0.1:8000";
-  URL = "https://b0ad-123-63-135-33.ngrok-free.app"
+  URL = "http://127.0.0.1:8000";
+  // URL = "https://b0ad-123-63-135-33.ngrok-free.app"
 
   constructor(
     private http:HttpClient,

@@ -28,6 +28,7 @@ import { DirectorGuard } from './guard/director.guard';
 import { CompanyComponent } from './company/company.component';
 import { PopupComponent } from './popup/popup.component';
 import { DrivePopupComponent } from './drive-popup/drive-popup.component';
+import { StudentTableComponent } from './student-table/student-table.component';
 
 @NgModule({
   declarations: [
@@ -42,7 +43,8 @@ import { DrivePopupComponent } from './drive-popup/drive-popup.component';
     NotificationComponent,
     CompanyComponent,
     PopupComponent,
-    DrivePopupComponent
+    DrivePopupComponent,
+    StudentTableComponent
   ],
   imports: [
     BrowserModule,

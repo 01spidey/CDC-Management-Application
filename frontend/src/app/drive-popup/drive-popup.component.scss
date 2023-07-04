@@ -66,58 +66,92 @@
                 gap: 30px;
                 align-items: center;
             }
+
+            .spl-btn-box{
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+                width: 100%;
+                
+                gap: 50px;
+                
+
+                .spl-btn{
+                    opacity: 0.6;
+                    background-color: #35363a9a;
+                    border: 1px dashed;
+                    gap: 5px;
+                    font-weight: bold;
+                    padding: 10px 15px;
+                    height: 100px;
+                    flex: 1;
+                    border-radius: 10px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    cursor: pointer;
+                    transition: 0.3s ease;
+                }
+
+                .add-offer{
+                    cursor: pointer;
+                    // background-color: #1a6486;
+                    // color: white;
+                    // border-color: #1a6486;
+                    &:hover{
+                        opacity: 1;
+                        background-color: #1a6486;
+                        color: white;
+                        border-style: solid;
+                        border-color: #1a6486;
+                    }
+                }
+
+                .added-offer{
+                    opacity: 1;
+                    background-color: #1a6486;
+                    color: white;
+                    border-style: solid;
+                    border-color: #1a6486;
+                    
+                    &:hover{
+                        opacity: 0.85;
+                    }
+                }
+
+                .gen-btn{
+                    opacity: 1;
+                    color: white;
+                    background-color: #198754;
+                    border-color: #198754;
+                    &:hover{
+                        opacity: 0.85;
+                    }
+                }
+
+                .disabled{
+                    opacity: 0.6;
+                    cursor: not-allowed;
+                    background-color: #35363a9a;
+                }
+
+                .disabled-gen{
+                    
+                    &:hover{
+                        opacity: 1;
+                        background-color: #35363a9a;
+                        color: white;
+                        background-color: #198754;
+                        border-style: solid;
+                    }
+                }
+                
+            }
         }
 
         .dept-grid{
             display: grid;
             grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
-        }
-    
-        .file-sec{
-            display: flex;
-            height: 50px;
-            width: 90%;
-            border-radius: 5px;
-            background-color: #ececec;
-            box-shadow: 1px 1px 3px 1px rgba(0,0,0,0.2);
-    
-            .file-name{
-                flex: 1;
-                display: flex;
-                align-items: center;
-                justify-content: start;
-                padding-left: 10px;
-                margin-bottom: 0px;
-                border-radius: 5px 0px 0px 5px;
-                color: #8b8b8bff;
-                font-family: 'Arial';
-                font-weight: 100;
-            }
-            
-            .file-inp{
-                display: flex;
-                position: relative;
-                background-color:#152b51;
-                width: 20%;
-                align-items: center;
-                justify-content: center;
-                border-radius: 0px 5px 5px 0px;
-            }  
-            
-            .file-inp input{
-                position: absolute;
-                z-index: 1;
-                right: 0;
-                left: 0;
-                opacity: 0;
-                cursor: pointer;
-            }
-            
-            .file-inp button{
-                position: absolute;
-                pointer-events:inherit;
-                pointer-events: none;
-            }
         }
 
         .btns{

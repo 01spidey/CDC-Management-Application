@@ -1,10 +1,11 @@
 import csv
 import json
+import random
 from django.conf import settings
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse, JsonResponse
-from .models import DriveSelection, PlacementDirector,PlacementOfficer,Report, Drive, Company, Student
+from .models import DriveSelection, PlacementDirector,PlacementOfficer,Report, Drive, Company, Student, StudentEdu
 from datetime import datetime, date, timedelta
 from django.core.files.storage import FileSystemStorage
 from django.contrib.sites.shortcuts import get_current_site
@@ -14,63 +15,59 @@ from random import sample
 from cryptography.fernet import Fernet
 from django.utils import timezone
 import pytz
+import pandas as pd
 
-
-# from models import PlacementDirector
 
 # Create your views here.
-def sample():
-    try:
-        # student = Student.objects.create(
-        #     reg_no = "20CS166",
-        #     name = "Srikumaran R",
-        #     phone = '1234567890',
-        #     mail = 'abc@gmail.com',
-        #     dept = 'CSE',
-        #     dob = '2002-11-15',
-        #     gender = 'male',
-        #     batch = '2024'
-        # )
-        
-        # # job_role = models.CharField(max_length=50, null=True)
-        # # date = models.DateField(default=now, null=False)
-        # # company = models.CharField(max_length=50, null=False)
-        # # drive_mode = models.CharField(max_length=50, null=False)
-        # # description = models.TextField(null=False)
-        # # file = models.FileField(upload_to='file_uploads/', null=True)  # Adjust the upload destination as per your requirements
-        # # departments = ArrayField(models.CharField(max_length=100), blank=True, null=True)
-        # # students = models.ManyToManyField('Student', through='DriveSelection')
-        # drive = Drive.objects.create(
-        #     job_role = 'Software Developer',
-        #     date = '2021-10-10',
-        #     company = 'Google',
-        #     drive_mode = 'Online',
-        #     description = 'Software Developer',
-        #     file = None,
-        #     departments = ['CSE','ECE','EEE','MECH','CIVIL']
-        # )
-        
-        # drive.students.add(student)
-        # student.drives.add(drive)
-        
-        # driveSelection = DriveSelection.objects.create(
-        #     drive = drive,
-        #     student = student,
-        #     selected = True
-        # )
-        
-        # driveSelection.save()
-        # drive.save()
-        # student.save()
-        drive = Drive.objects.get(pk = 12)
-        print(drive.students.all())
-        print(Student.objects.get(pk = '20CS166').drives.all())
-        print("Success")
-        
-    except Exception as e:
-        print(e)
 
-sample()
+# def sample():
+#     try:
+#         data = pd.read_csv(r'D:\\CDC_Website\backend\\cdc_app\\app\student_data\\mech_data.csv')
+        
+#         for _, row in data.iterrows():
+#             dob = datetime.strptime(row['dob'], "%Y/%m/%d").strftime("%Y-%m-%d")
+#             student = Student(
+#                 reg_no=row['reg_no'],
+#                 name=row['name'],
+#                 phone=row['phone'],
+#                 mail=row['mail'],
+#                 gender=row['gender'],
+#                 dept=row['dept'],
+#                 dob=dob,
+#                 batch=row['batch'],
+#             )
+#             student.save()
+            
+#             studentEdu = StudentEdu(
+#                 reg_no=row['reg_no'],
+#                 mark_10 = row['mark_10'],
+#                 mark_12 = row['mark_12'],
+#                 percent_10 = row['percent_10'],
+#                 percent_12 = row['percent_12'],
+#                 board_10 = row['board_10'],
+#                 board_12 = row['board_12'],
+#                 medium_10 = row['medium_10'],
+#                 medium_12 = row['medium_12'],
+#                 cutoff_12 = row['cutoff_12'],
+                
+#                 # mark_diploma = models.FloatField(null=True)
+#                 # percent_diploma = models.FloatField(null=True)
+#                 school_10 = random.choice(["School-A", "School-B", "School-C", "School-D", "School-E", "School-F", "School-G", "School-H", "School-I", "School-J"]),
+#                 school_12 = random.choice(["School-A", "School-B", "School-C", "School-D", "School-E", "School-F", "School-G", "School-H", "School-I", "School-J"]),
+#                 # college_diploma = models.CharField(max_length=50, null=True)
+                
+#                 ug_cgpa = row['ug_cgpa'],
+#                 ug_percent = row['ug_percent'],
+#                 arrear_history = row['arrear_history'],
+#                 standing_arrears = row['standing_arrears'],
+#             )
+#             studentEdu.save()
+            
+#         print("Success")
+        
+#     except Exception as e:
+#         print(e)
+#         print("Out-uh vro!!")
 
 @csrf_exempt
 def test(request):
@@ -269,7 +266,7 @@ def add_admin(request):
         
         return JsonResponse(data)
         
- 
+
 @csrf_exempt
 def get_drive_by_status(request):
      
@@ -294,7 +291,7 @@ def get_drive_by_status(request):
             # print(drive.file.url)
             current_site = get_current_site(request)
             domain = current_site.domain
-            file_url = f"{settings.MEDIA_URL}{drive.file}"
+            file_url = '/media/file_uploads/empty.csv'
             file_absolute_url = f"http://{domain}{file_url}"
             drive_date = datetime.strptime(str(drive.date), '%Y-%m-%d').strftime('%d-%m-%Y')
             company_obj = Company.objects.get(company=drive.company)
@@ -317,6 +314,7 @@ def get_drive_by_status(request):
                     'lock_hr_mail' : company_obj.lock_hr_mail,
                     'lock_hr_contact' : company_obj.lock_hr_contact,
                     'departments' : drive.departments,
+                    'ctc' : drive.ctc,
                 }
             )
             
@@ -380,10 +378,7 @@ def get_drive_by_dateRange(request):
             # print(drive.file.url)
             current_site = get_current_site(request)
             domain = current_site.domain
-            file_url = f"{settings.MEDIA_URL}{drive.file}"
-            
-            if(file_url=='/media/None' or file_url=='/media/'):
-                file_url = '/media/file_uploads/empty.csv'
+            file_url = '/media/file_uploads/empty.csv'
             
             file_absolute_url = f"http://{domain}{file_url}"
             drive_date = datetime.strptime(str(drive.date), '%Y-%m-%d').strftime('%d-%m-%Y')
@@ -409,6 +404,7 @@ def get_drive_by_dateRange(request):
                     'lock_hr_mail' : company_obj.lock_hr_mail,
                     'lock_hr_contact' : company_obj.lock_hr_contact,
                     'departments' : drive.departments,
+                    'ctc' : drive.ctc
                 }
             )
             
@@ -440,7 +436,7 @@ def get_drive_by_id(request):
         drive = Drive.objects.get(pk=drive_id)
         current_site = get_current_site(request)
         domain = current_site.domain
-        file_url = f"{settings.MEDIA_URL}{drive.file}"
+        file_url = '/media/file_uploads/empty.csv'
         file_absolute_url = f"http://{domain}{file_url}"
         
         drive_obj = {
@@ -453,6 +449,7 @@ def get_drive_by_id(request):
                     'file' : (drive.file.name).split('/')[-1],
                     'completed' : True,
                     'departments' : drive.departments,
+                    'ctc' : drive.ctc,
                 }
         data = {
             'success':True,
@@ -1321,20 +1318,15 @@ def add_and_update_company_drive(request):
     job_role = formdata['job_role']
     description = formdata['description']
     mode = formdata['mode']
+    ctc = formdata['ctc']
      
     eligible_depts = formdata['eligible_depts']    
     date_obj = datetime.strptime(date_str, '%Y-%m-%d').date()
     
-    try:
-        eligible_lst = request.FILES['eligible_lst']
-    except:
-        eligible_lst = None
-    
     departments = eligible_depts.split(',')
     
-    print(f'company : {company}\ndate : {date_obj}\njob_role : {job_role}\ndescription : {description}\nmode : {mode}\neligible_lst : {eligible_lst}\neligible_depts : {departments}')
-
-   
+    print(f'company : {company}\ndate : {date_obj}\njob_role : {job_role}\ndescription : {description}\nmode : {mode}\neligible_depts : {departments}')
+ 
     try:     
         if(pk==''):   
             drive = Drive(
@@ -1343,8 +1335,8 @@ def add_and_update_company_drive(request):
                 company = company,
                 drive_mode = mode,
                 description = description,
-                file  = eligible_lst,
-                departments = departments
+                departments = departments,
+                ctc = float(ctc)
             )
             
             drive.save()
@@ -1365,8 +1357,8 @@ def add_and_update_company_drive(request):
             drive_obj.company = company
             drive_obj.drive_mode = mode
             drive_obj.description = description
-            drive_obj.file = eligible_lst
             drive_obj.departments = departments
+            drive_obj.ctc = float(ctc)
             
             drive_obj.save()
             

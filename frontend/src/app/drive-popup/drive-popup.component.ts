@@ -23,10 +23,12 @@ export class DrivePopupComponent implements OnInit{
   role = sessionStorage.getItem('user_role')!
   userData = JSON.parse(sessionStorage.getItem('cur_user_data')!);
   cur_user_id:string = this.userData.user_id
-  selectedFile: File | null = null;
   
   eligible_depts:string[] = []
   company!:string;
+  result_ready = false
+  eligible_lst_uploaded = false
+  result_uploaded = false
 
   departments = [
     {name:'CSE',value:false},
@@ -41,14 +43,16 @@ export class DrivePopupComponent implements OnInit{
 
   @Input() data!:drive_popup_data;
   @Output() popup_closed = new EventEmitter<boolean>();
-
+  @Output() open_student_table = new EventEmitter<boolean>();
 
   addDriveForm = this.builder.group({
     job_role:this.builder.control('',Validators.required),
     date:this.builder.control('',Validators.required),
     description:this.builder.control('',Validators.required),
-    file : this.builder.control(''),
     mode : this.builder.control('',Validators.required),
+    ctc : this.builder.control(0.0,Validators.compose([
+      Validators.required,
+      Validators.pattern('^[0-9]+.?[0-9]+$')])),
   });
 
   allDept: boolean = false;
@@ -69,6 +73,7 @@ export class DrivePopupComponent implements OnInit{
         date : this.patchDate(this.data.drive!.date),
         description : this.data.drive!.description,
         mode : this.data.drive!.mode,
+        ctc : this.data.drive!.ctc
       })
 
       for(let dept of this.departments){
@@ -78,11 +83,6 @@ export class DrivePopupComponent implements OnInit{
     }
      
     this.company = this.data.open_as==='add'?JSON.parse(sessionStorage.getItem('cur_company')!).company : this.data.drive!.company
-  }
-
-
-  onFileSelected(event: any) {
-    this.selectedFile = event.target.files[0];
   }
 
   closePopup(){
@@ -99,15 +99,15 @@ export class DrivePopupComponent implements OnInit{
           if(dept.value) this.eligible_depts.push(dept.name)
         };
         let pk = this.data.open_as==='edit'?(this.data.drive!.id).toString():''
-        //console.log(pk)
+
         formData.append('pk', pk)
         formData.append('company',this.company)
         formData.append('job_role',this.addDriveForm.value.job_role!)
         formData.append('date',formattedDate!)
         formData.append('description',this.addDriveForm.value.description!)
-        formData.append('eligible_lst',this.selectedFile!)
         formData.append('mode',this.addDriveForm.value.mode!)
         formData.append('eligible_depts',this.eligible_depts.join(','))
+        formData.append('ctc',(this.addDriveForm.value.ctc!).toString())
 
         this.service.addCompanyDrive(formData, this.data.open_as).subscribe(
           (res:serverResponse)=>{
@@ -133,6 +133,10 @@ export class DrivePopupComponent implements OnInit{
     
   }
 
+
+  openStudentTable(){
+    this.open_student_table.emit(true);
+  }
 
   setAllDept(value: boolean){
     this.allDept = !this.allDept;

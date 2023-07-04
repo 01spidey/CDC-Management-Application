@@ -688,6 +688,24 @@
                 }
             }
         }
+
+        app-student-table{
+            position: absolute;
+            z-index: 150;
+            top: 20px;
+            bottom: 50px;
+            left: 40px;
+            right: 40px;
+            border-radius: 20px;
+        }
+
+        app-popup{
+            z-index: 110;
+        }
+
+        app-drive-popup{
+            z-index: 120;
+        }
     }
     
     .not-active-chip{

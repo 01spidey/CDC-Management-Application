@@ -397,7 +397,7 @@
 
     </div>
 
-    <div class="popup-container" *ngIf="section==3 && (popup||delete_popup||drive_popup)">
+    <div class="popup-container" *ngIf="section==3 && (popup||delete_popup||drive_popup || student_table)">
         <app-popup (popup_closed)="handleValue($event)" [data] = 'popup_data' *ngIf="popup"></app-popup>
         <div class="delete-popup" *ngIf="delete_popup">
             <p>Are You sure You want to delete the Report?</p>
@@ -406,7 +406,8 @@
                 <button mat-raised-button style="background-color: red;" (click)="deleteReport(delete_report_pk)">Delete</button>
             </div>
         </div>
-        <app-drive-popup (popup_closed)="handleDrivePopup($event)" [data] = 'drive_popup_data' *ngIf="drive_popup"></app-drive-popup>
+        <app-drive-popup (popup_closed)="handleDrivePopup($event)" (open_student_table) = "handleStudentTable($event)" [data] = 'drive_popup_data' *ngIf="drive_popup"></app-drive-popup>
+        <app-student-table (close_student_table)="handleStudentTable($event)" *ngIf="student_table"></app-student-table>
     </div>
     
 

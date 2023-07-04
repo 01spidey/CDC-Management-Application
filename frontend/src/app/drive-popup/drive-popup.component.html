@@ -14,6 +14,15 @@
                         <input matInput formControlName = "job_role">
                     </mat-form-field>
                 </div>
+
+                <div class="input">
+                    <p>CTC</p>
+                    <mat-form-field class="input">
+                        <mat-label>8.0</mat-label>
+                        <input matInput formControlName = "ctc">
+                        <p style="margin-right: 10px;" matSuffix>LPA</p>
+                    </mat-form-field>
+                </div>
             </div>
             
             <div class="section">
@@ -73,24 +82,31 @@
                 
             </div>
     
-            <div class="input" style="margin-top: 25px;">
-                <p>Eligibe List</p>
-                <div class="file-sec">
-                    <div class="file-name">
-                      <p *ngIf="!selectedFile">No File Choosen...</p>
-                      <p *ngIf="selectedFile">{{selectedFile.name}}</p>
-                    </div>
-                    <div class="file-inp">
-                      <input class="inp" type="file" accept=".pdf,.csv,.xls,.doc" (change)="onFileSelected($event)" formControlName = 'file'>
-                      <span class="material-symbols-outlined" style="color:white;font-weight:bold">
-                        upload
-                      </span>
-                    </div>
-                  </div> 
-                  <!-- <span style="font-weight: 100;font-style:italic">(.csv, .pdf, .xls, .doc)</span> -->
-                  <span style="font-weight: 100;font-style:italic" *ngIf="data.open_as==='edit'">*upload required only for new files</span>
+            <div class="input spl-btn-box" style="margin-top: 20px;">
+                <div class="spl-btn" [ngClass]="{'gen-btn' : eligible_lst_uploaded, 'disabled-gen' :  !eligible_lst_uploaded}" (click)="openStudentTable()">
+                    <span class="material-icons" *ngIf="!eligible_lst_uploaded">
+                        add_box
+                    </span>
+                    <span class="material-icons" *ngIf="eligible_lst_uploaded">
+                        task_alt
+                    </span>
+                    <p>{{eligible_lst_uploaded? 'Eligible List Added' : 'Generate Eligible List'}}</p>
+                </div>
+
+                <div class="spl-btn" [ngClass]="{'add-offer' : result_ready, 'disabled' : !result_ready, 'added-offer' : result_uploaded}" [ngStyle]="!result_ready?{'cursor': 'not-allowed'} : {}">
+                    <span class="material-icons" *ngIf="!result_ready && !result_uploaded">
+                        pending_actions
+                    </span>
+                    <span class="material-icons" *ngIf="result_ready && !result_uploaded">
+                        add_box
+                    </span>
+                    <span class="material-icons" *ngIf="result_uploaded">
+                        task_alt
+                    </span>
+                    <p>{{result_uploaded?'Offer Details Added' : result_ready? 'Add Offer Details' : 'Result Pending'}}</p>
+                </div>
             </div>
-    
+
             <div class="btns">
               <button mat-raised-button id="reset" (click)="closePopup()">Cancel</button>
               <button mat-raised-button id="add" (click)="addDrive()">{{data.open_as==='add'?'Add Drive' : 'Save Changes'}}</button>

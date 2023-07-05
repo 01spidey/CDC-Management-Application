@@ -8,51 +8,215 @@
     
     <div class="body">
         <div class="left">
-            <p class="title">Filters</p>
-            <div class="section">
-                <p class="name">Department</p>
-                <div class="box" style="display: grid;grid-template-columns:1fr 1fr 1fr 1fr">
-                    <div class="option" *ngFor="let dept of depts">
-                        <mat-checkbox color="primary"></mat-checkbox>
-                        <p>{{dept}}</p>
+            <div class="left-top">
+                <p class="title">Filters</p>
+                <button mat-raised-button (click)="applyFilters()">Apply</button>
+            </div>
+            
+            <div class="container">
+                <!-- Data Bound -->
+                <div class="section prevent-select">
+                    <p class="name">Department</p>
+                    <div class="box" style="display: grid;grid-template-columns:1fr 1fr 1fr 1fr">
+                        <div class="option" *ngFor="let dept of depts">
+                            <mat-checkbox [(ngModel)]="dept.value" color="primary"></mat-checkbox>
+                            <p>{{dept.name}}</p>
+                        </div>
+                    </div>
+                </div>
+    
+                <!-- Data Bound -->
+                <div class="section-container">
+                    <div class="section">
+                        <p class="name">Batch</p>
+                        <div class="box">
+                            <input type="text" [(ngModel)]="batch" placeholder="2024" id="batch">
+                        </div>
+                    </div>
+    
+                    <div class="section prevent-select">
+                        <p class="name">Gender</p>
+                        <div class="box gender">
+                            <p [ngClass]="{'active-chip' : gender==='All', 'inactive-chip' : gender!=='All'}" (click)="gender='All'">All</p>
+                            <p [ngClass]="{'active-chip' : gender==='Male', 'inactive-chip' : gender!=='Male'}" (click)="gender='Male'">M</p>
+                            <p [ngClass]="{'active-chip' : gender==='Female', 'inactive-chip' : gender!=='Female'}" (click)="gender='Female'">F</p>
+                        </div>
+                    </div>
+                </div>
+    
+                <!-- SSLC -->
+                <div class="temp">
+                    <p class="section-name">SSLC</p>
+                    <div class="section-sub prevent-select" style="font-size: .85rem;">
+                        <p class="name">Medium of Study</p>
+                        <div class="medium">
+                            <p [ngClass]="{'active-chip' : sslc_medium==='All', 'inactive-chip' : sslc_medium!=='All'}" (click)="sslc_medium='All'">All</p>
+                            <p [ngClass]="{'active-chip' : sslc_medium==='Tamil', 'inactive-chip' : sslc_medium!=='Tamil'}" (click)="sslc_medium='Tamil'">Tamil</p>
+                            <p [ngClass]="{'active-chip' : sslc_medium==='English', 'inactive-chip' : sslc_medium!=='English'}" (click)="sslc_medium='English'">English</p>
+                            <p [ngClass]="{'active-chip' : sslc_medium==='Others', 'inactive-chip' : sslc_medium!=='Others'}" (click)="sslc_medium='Others'">Others</p>
+                        </div>
+                    </div>
+    
+                    <div class="section-sub prevent-select" style="font-size: .85rem;">
+                        <p class="name">Board of Study</p>
+                        <div class="medium">
+                            <p [ngClass]="{'active-chip' : sslc_board==='All', 'inactive-chip' : sslc_board!=='All'}" (click)="sslc_board='All'">All</p>
+                            <p [ngClass]="{'active-chip' : sslc_board==='State Board', 'inactive-chip' : sslc_board!=='State Board'}" (click)="sslc_board='State Board'">State Board</p>
+                            <p [ngClass]="{'active-chip' : sslc_board==='CBSE', 'inactive-chip' : sslc_board!=='CBSE'}" (click)="sslc_board='CBSE'">CBSE</p>
+                            <p [ngClass]="{'active-chip' : sslc_board==='Others', 'inactive-chip' : sslc_board!=='Others'}" (click)="sslc_board='Others'">Others</p>
+                        </div>
+                    </div>
+
+                    <div class="section-sub prevent-select" style="font-size: .85rem;">
+                        <p class="name">Percent</p>
+                        <div class="medium slider">
+                            <div class="slider-val">
+                                <p>Min : {{sslc_percent[0]}}</p>
+                                <p>Max : {{sslc_percent[1]}}</p>
+                            </div>
+                            <mat-slider min="0" max="100" step="1">
+                                <input [(ngModel)]="sslc_percent[0]" matSliderStartThumb>
+                                <input [(ngModel)]="sslc_percent[1]" matSliderEndThumb>
+                            </mat-slider>
+                        </div>
+                    </div>
+
+
+                </div>
+
+                <!-- HSC -->
+                <div class="temp" [ngStyle]="enable_hsc?{} : {'cursor': 'not-allowed', 'filter': 'grayscale(100%)'}">
+                    <div class="section-name" style="display:flex; gap:5px;padding-bottom:3px;justify-content:space-between;">
+                        <p>HSC</p>
+                        <mat-slide-toggle [(ngModel)]="enable_hsc" color="primary" (click) = 'enable_diploma = !enable_diploma'></mat-slide-toggle>
+                    </div>
+                    <!-- <p class="section-name">HSC</p> -->
+                    <div class="section-sub prevent-select" style="font-size: .85rem;">
+                        <p class="name">Medium of Study</p>
+                        <div class="medium">
+                            <p [ngClass]="{'active-chip' : hsc_medium==='All', 'inactive-chip' : hsc_medium!=='All'}" (click)="hsc_medium='All'">All</p>
+                            <p [ngClass]="{'active-chip' : hsc_medium==='Tamil', 'inactive-chip' : hsc_medium!=='Tamil'}" (click)="hsc_medium='Tamil'">Tamil</p>
+                            <p [ngClass]="{'active-chip' : hsc_medium==='English', 'inactive-chip' : hsc_medium!=='English'}" (click)="hsc_medium='English'">English</p>
+                            <p [ngClass]="{'active-chip' : hsc_medium==='Others', 'inactive-chip' : hsc_medium!=='Others'}" (click)="hsc_medium='Others'">Others</p>
+                        </div>
+                    </div>
+    
+                    <div class="section-sub prevent-select" style="font-size: .85rem;">
+                        <p class="name">Board of Study</p>
+                        <div class="medium">
+                            <p [ngClass]="{'active-chip' : hsc_board==='All', 'inactive-chip' : hsc_board!=='All'}" (click)="hsc_board='All'">All</p>
+                            <p [ngClass]="{'active-chip' : hsc_board==='State Board', 'inactive-chip' : hsc_board!=='State Board'}" (click)="hsc_board='State Board'">State Board</p>
+                            <p [ngClass]="{'active-chip' : hsc_board==='CBSE', 'inactive-chip' : hsc_board!=='CBSE'}" (click)="hsc_board='CBSE'">CBSE</p>
+                            <p [ngClass]="{'active-chip' : hsc_board==='Others', 'inactive-chip' : hsc_board!=='Others'}" (click)="hsc_board='Others'">Others</p>
+                        </div>
+                    </div>
+
+                    <div class="section-sub prevent-select" style="font-size: .85rem;">
+                        <p class="name">Percent</p>
+                        <div class="medium slider">
+                            <div class="slider-val">
+                                <p>Min : {{hsc_percent[0]}}</p>
+                                <p>Max : {{hsc_percent[1]}}</p>
+                            </div>
+                            <mat-slider min="0" max="100" step="1" [disabled]="!enable_hsc">
+                                <input [(ngModel)]="hsc_percent[0]" matSliderStartThumb>
+                                <input [(ngModel)]="hsc_percent[1]" matSliderEndThumb>
+                            </mat-slider>
+                        </div>
+                    </div>
+
+                    <div class="section-sub prevent-select" style="font-size: .85rem;">
+                        <p class="name">Cut-off</p>
+                        <div class="medium slider">
+                            <div class="slider-val">
+                                <p style="background-color: #ff4081;">Min : {{hsc_cutoff[0]}}</p>
+                                <p style="background-color: #ff4081;">Max : {{hsc_cutoff[1]}}</p>
+                            </div>
+                            <mat-slider min="0" max="200" step="1" color="accent" [disabled]="!enable_hsc">
+                                <input [(ngModel)]="hsc_cutoff[0]" matSliderStartThumb>
+                                <input [(ngModel)]="hsc_cutoff[1]" matSliderEndThumb>
+                            </mat-slider>
+                        </div>
+                    </div>
+
+
+                </div>
+
+                <!-- Diploma -->
+                <div class="temp" [ngStyle]="enable_diploma?{} : {'cursor': 'not-allowed', 'filter': 'grayscale(100%)'}">
+                    <div class="section-name" style="display:flex; gap:5px;padding-bottom:3px;justify-content:space-between;">
+                        <p>Diploma</p>
+                        <mat-slide-toggle [(ngModel)]="enable_diploma" color="primary" (click) = 'enable_hsc = !enable_hsc'></mat-slide-toggle>
+                    </div>
+
+                    <div class="section-sub prevent-select" style="font-size: .85rem;">
+                        <p class="name">Percent</p>
+                        <div class="medium slider">
+                            <div class="slider-val">
+                                <p>Min : {{diploma_percent[0]}}</p>
+                                <p>Max : {{diploma_percent[1]}}</p>
+                            </div>
+                            <mat-slider min="0" max="100" step="1" [disabled]="!enable_diploma">
+                                <input [(ngModel)]="diploma_percent[0]" matSliderStartThumb>
+                                <input [(ngModel)]="diploma_percent[1]" matSliderEndThumb>
+                            </mat-slider>
+                        </div>
+                    </div>
+
+
+                </div>
+
+                <!-- UG -->
+                <div class="temp">
+                    <p class="section-name">UnderGraduate</p>
+
+                    <div class="section-sub prevent-select" style="font-size: .85rem;">
+                        <p class="name">CGPA</p>
+                        <div class="medium slider">
+                            <div class="slider-val">
+                                <p>Min : {{cgpa[0]}}</p>
+                                <p>Max : {{cgpa[1]}}</p>
+                            </div>
+                            <mat-slider min="0" max="10" step="0.1">
+                                <input [(ngModel)]="cgpa[0]" matSliderStartThumb>
+                                <input [(ngModel)]="cgpa[1]" matSliderEndThumb>
+                            </mat-slider>
+                        </div>
+                    </div>
+
+                    <div class="section-sub prevent-select" style="font-size: .85rem;">
+                        <p class="name">Status</p>
+                        <div class="prevent-select" style="font-size: .85rem;display:flex;justify-content:flex-start;gap:20px">
+                            <div class="box" style="display: flex;align-items:center">
+                                <mat-checkbox color="warn" [checked]="status[0]"></mat-checkbox>
+                                <p>Placed</p>
+                            </div>
+    
+                            <div class="box" style="display: flex;align-items:center">
+                                <mat-checkbox color="warn" [checked]="status[1]"></mat-checkbox>
+                                <p>Non-Placed</p>
+                            </div>
+    
+                        </div>
+                    </div>
+                    
+                    <div class="section-sub prevent-select" style="font-size: .85rem;">
+                        <p class="name">Backlogs</p>
+                        <div class="prevent-select" style="font-size: .85rem;display:flex;justify-content:flex-start;gap:20px">
+                            <div class="box" style="display: flex;align-items:center">
+                                <mat-checkbox color="accent" [checked]="backlogs[0]" [(ngModel)] = "backlogs[0]"></mat-checkbox>
+                                <p>History</p>
+                            </div>
+    
+                            <div class="box" style="display: flex;align-items:center">
+                                <mat-checkbox color="accent" [checked]="backlogs[1]" [(ngModel)] = "backlogs[1]"></mat-checkbox>
+                                <p>Standing</p>
+                            </div>
+    
+                        </div>
                     </div>
                 </div>
             </div>
-
-            <div class="section-container">
-                <div class="section">
-                    <p class="name">Batch</p>
-                    <div class="box">
-                        <input type="text" placeholder="2024" id="batch">
-                    </div>
-                </div>
-
-                <div class="section">
-                    <p class="name">Gender</p>
-                    <div class="box gender">
-                        <p [ngClass]="{'active-chip' : gender==='All', 'inactive-chip' : gender!=='All'}" (click)="gender='All'">All</p>
-                        <p [ngClass]="{'active-chip' : gender==='Male', 'inactive-chip' : gender!=='Male'}" (click)="gender='Male'">M</p>
-                        <p [ngClass]="{'active-chip' : gender==='Female', 'inactive-chip' : gender!=='Female'}" (click)="gender='Female'">F</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="temp">
-                <p class="section-name">SSLC</p>
-                <div class="section-sub" style="font-size: .85rem;">
-                    <p class="name">Medium</p>
-                    <div class="medium">
-                        <p [ngClass]="{'active-chip' : sslc_medium==='All', 'inactive-chip' : sslc_medium!=='All'}" (click)="sslc_medium='All'">All</p>
-                        <p [ngClass]="{'active-chip' : sslc_medium==='Tamil', 'inactive-chip' : sslc_medium!=='Tamil'}" (click)="sslc_medium='Tamil'">Tamil</p>
-                        <p [ngClass]="{'active-chip' : sslc_medium==='English', 'inactive-chip' : sslc_medium!=='English'}" (click)="sslc_medium='English'">English</p>
-                        <p [ngClass]="{'active-chip' : sslc_medium==='Others', 'inactive-chip' : sslc_medium!=='Others'}" (click)="sslc_medium='Others'">Others</p>
-                    </div>
-                </div>
-            </div>
-
-
-
-
             
 
         </div>
@@ -63,7 +227,11 @@
                     <th rowspan="2">S.no</th>
                     <th rowspan="2">
                         <div class="temp" style="display: flex; gap:3px; align-items:center">
-                            <mat-checkbox color="primary"></mat-checkbox>
+                            <mat-checkbox 
+                                color="primary"
+                                [checked]="all_checked"
+                                (change)="setAllChecked($event.checked)"
+                                ></mat-checkbox>
                             <p>Reg No.</p>
                         </div>
                         
@@ -92,34 +260,39 @@
                 </tr>
 
                 <!-- Table Rows -->
-                <tr>
-                    <td>1</td>
+                <tr *ngFor="let student of filtered_students">
+                    <td>{{student.position}}</td>
                     <td style="display: flex; gap:3px; align-items:center">
-                        <mat-checkbox color="primary"></mat-checkbox>
-                        <p>20CS166</p>
+                        <mat-checkbox 
+                            color="primary"
+                            [checked] = "student.checked"
+                            [(ngModel)] = "student.checked"
+                            (ngModelChange)="updateCheckedStudents(student)">
+                        </mat-checkbox>
+                        <p>{{student.reg_no}}</p>
                     </td>
-                    <td>John Doe</td>
-                    <td>Computer Science</td>
-                    <td>2021</td>
-                    <td>Male</td>
-                    <td>95%</td>
-                    <td>State Board</td>
-                    <td>English</td>
-                    <td>92%</td>
-                    <td>95%</td>
-                    <td>State Board</td>
-                    <td>English</td>
-                    <td>85%</td>
-                    <td>8.5</td>
-                    <td>88%</td>
-                    <td>0</td>
-                    <td>0</td>
+                    <td>{{student.name}}</td>
+                    <td>{{student.dept}}</td>
+                    <td>{{student.batch}}</td>
+                    <td>{{student.gender}}</td>
+                    <td>{{student.sslc.percent}}%</td>
+                    <td>{{student.sslc.board}}</td>
+                    <td>{{student.sslc.medium}}</td>
+                    <td>{{student.hsc.percent}}%</td>
+                    <td>{{student.hsc.cutoff}}</td>
+                    <td>{{student.hsc.board}}</td>
+                    <td>{{student.hsc.medium}}</td>
+                    <td>{{student.diploma.percent}}%</td>
+                    <td>{{student.ug.cgpa}}</td>
+                    <td>{{student.ug.percent}}</td>
+                    <td>{{student.ug.arrear_history}}</td>
+                    <td>{{student.ug.standing_arrears}}</td>
                 </tr>
                 
             </table>
 
             <div class="footer">
-                <button mat-raised-button>Generate</button>
+                <button mat-raised-button (click)="saveList()">Generate</button>
             </div>
 
         </div>

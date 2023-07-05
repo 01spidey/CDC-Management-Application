@@ -16,6 +16,8 @@ import {MatChipsModule} from '@angular/material/chips';
 import {MatNativeDateModule} from '@angular/material/core';
 import {MatDatepickerModule, matDatepickerAnimations} from '@angular/material/datepicker';
 import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatSliderModule} from '@angular/material/slider';
+
 
 @NgModule({
     exports: [
@@ -34,7 +36,8 @@ import {MatFormFieldModule} from '@angular/material/form-field';
         MatChipsModule,
         MatNativeDateModule,
         MatDatepickerModule,
-        MatFormFieldModule
+        MatFormFieldModule,
+        MatSliderModule
         
     ]
 })

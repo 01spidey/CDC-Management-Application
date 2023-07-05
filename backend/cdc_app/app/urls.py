@@ -44,5 +44,7 @@ urlpatterns = [
     path('export_as_csv', views.export_as_csv),
     
     path('add_and_update_company_drive', views.add_and_update_company_drive),
+    
+    path('get_eligible_students', views.get_eligible_students),
         
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

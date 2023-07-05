@@ -54,6 +54,8 @@ urlpatterns = [
     path('add_and_update_company_report', include('app.urls')),
     path('delete_company_report', include('app.urls')),
     path('add_and_update_company_drive', include('app.urls')),
-    path('export_as_csv', include('app.urls'))
+    path('export_as_csv', include('app.urls')),
+    
+    path('get_eligible_students', include('app.urls')),
     
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

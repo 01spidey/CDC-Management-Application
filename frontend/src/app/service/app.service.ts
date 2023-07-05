@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http'
-import { companyByIdResponse, driveByIdResponse, driveByStatusResponse, filterOptions, getCompaniesResponse, getCompanyStatsResponse, getMembersResponse, getReportsByCompanyResponse, getReportsResponse, getUserStatsResponse, loadMembersResponse, loginResponse, notificationResponse, openMemberResponse, reportByIdResponse, reportSummaryResponse, sendOTPResponse, serverResponse, user, userByIdResponse } from '../models/model';
+import { companyByIdResponse, driveByIdResponse, driveByStatusResponse, filterOptions, getCompaniesResponse, getCompanyStatsResponse, getMembersResponse, getReportsByCompanyResponse, getReportsResponse, getUserStatsResponse, loadMembersResponse, loginResponse, notificationResponse, openMemberResponse, reportByIdResponse, reportSummaryResponse, sendOTPResponse, serverResponse, studentTableFilterOptions, studentTableFilterResponse, user, userByIdResponse } from '../models/model';
 import { Router } from '@angular/router';
 
 @Injectable({
@@ -163,5 +163,10 @@ export class AppService {
     return this.http.post<any>(`${this.URL}/export_as_csv`, data, options)
   }
 
+  // ---------------------------------------------------------------------------
+
+  getEligibleStudents(filters:studentTableFilterOptions){
+    return this.http.post<studentTableFilterResponse>(`${this.URL}/get_eligible_students`, filters)
+  }
 
 }

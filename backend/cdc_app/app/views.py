@@ -1436,3 +1436,126 @@ def delete_drive(request):
             'message' : f'Some Technical Error !!'
         }
         return JsonResponse(data)
+
+
+@csrf_exempt
+def get_eligible_students(request):
+    formdata = json.loads(request.body)
+    # print(formdata)
+    departments = formdata['departments']
+    batch = formdata['batch']
+    gender = formdata['gender']
+    
+    sslc = formdata['sslc']
+    sslc_medium = sslc['medium']
+    sslc_board = sslc['board']
+    sslc_percent = sslc['percentage'] #array [min, max]
+    
+    hsc = formdata['hsc']
+    hsc_enabled = hsc['enabled']
+    hsc_medium = hsc['medium']
+    hsc_board = hsc['board']
+    hsc_percent = hsc['percentage'] #array [min, max]
+    hsc_cutoff = hsc['cutoff'] #array [min, max]
+    
+    diploma = formdata['diploma']
+    diploma_enabled = diploma['enabled']
+    diploma_percent = diploma['percentage'] #array [min, max]
+    
+    ug = formdata['ug']
+    cgpa = ug['cgpa'] #array [min, max]
+    backlogs = ug['backlogs'] #array [history, standing]
+    status = ug['status'] #array [placed, non-placed]
+    
+    # eligible_students = Student.objects.filter(department__in = formdata['departments'], cgpa__gte = formdata['cgpa'], arrears__lte = formdata['arrears'], placed = False)
+   
+    eligible_students = Student.objects.filter(
+        placement_interested = True, 
+        dept__in = formdata['departments'], 
+        batch = formdata['batch'],
+        gender__in = ['Male', 'Female'] if gender=='All' else [gender] 
+    )
+    
+    eligible_students_id = eligible_students.values_list('reg_no', flat=True).distinct()
+    
+    
+    eligible_students = StudentEdu.objects.filter(
+        reg_no__in=eligible_students_id, 
+        percent_10__range = sslc_percent,
+        board_10__in = [sslc_board] if sslc_board != 'All' else ['CBSE', 'Others', 'State Board'], 
+        medium_10__in = [sslc_medium] if sslc_medium!='All' else ['English', 'Tamil', 'Others'],
+    )
+    
+    
+    
+    if(hsc_enabled):
+        eligible_students = eligible_students.filter(
+            percent_12__range = hsc_percent,
+            cutoff_12__range = hsc_cutoff,
+            board_12__in = [hsc_board] if hsc_board!='All' else ['CBSE', 'Others', 'State Board'],
+            medium_12__in  = [hsc_medium] if hsc_medium!='All' else ['English', 'Tamil', 'Others'], 
+        )
+    else:
+        eligible_students = eligible_students.filter(
+            percent_diploma__range = diploma_percent,
+        )
+    
+    eligible_students_edu = eligible_students.filter(ug_cgpa__range = cgpa)
+    
+    # print(backlogs)
+    
+    if((not backlogs[0]) and (not backlogs[1])):
+        eligible_students_edu = eligible_students.filter(arrear_history = 0, standing_arrears = 0)
+    
+    
+    eligible_students_edu = eligible_students_edu.order_by('reg_no')
+    eligible_students_id = eligible_students_edu.values_list('reg_no', flat=True).distinct()
+    eligible_students_personal = Student.objects.filter(reg_no__in = eligible_students_id).order_by('reg_no')
+    
+    eligible_students = []
+    
+    position = 1
+    
+    for student_personal, student_edu in zip(eligible_students_personal, eligible_students_edu):
+        eligible_students.append({
+            'checked':False,
+            'position':position,
+            'reg_no' : student_personal.reg_no,
+            'name' : student_personal.name,
+            'dept' : student_personal.dept,
+            'batch' : student_personal.batch,
+            'gender' : student_personal.gender,
+            'sslc' : {
+                'percent' : student_edu.percent_10,
+                'board' : student_edu.board_10,
+                'medium' : student_edu.medium_10
+            },
+            'hsc' : {
+                'percent' : student_edu.percent_12,
+                'cutoff' : student_edu.cutoff_12,
+                'board' : student_edu.board_12,
+                'medium' : student_edu.medium_12
+            },
+            'diploma' : {
+                'percent' : student_edu.percent_diploma
+            },
+            'ug' : {
+                'cgpa' : student_edu.ug_cgpa,
+                'percent' : student_edu.ug_percent,
+                'arrear_history' : student_edu.arrear_history,
+                'standing_arrears' : student_edu.standing_arrears,
+            }
+        })  
+        position+=1  
+    
+    # for student in eligible_students.values():
+    #     print(student)  
+    
+    
+    
+    data = {
+        'success':True,
+        'filtered_students' : eligible_students
+    }
+    
+    return JsonResponse(data)

@@ -36,115 +36,177 @@
     }
 
     .body{
-        flex: 1;
+        height: 93%;
         margin-top: 10px;
         display: flex;
         gap: 10px;
         position: relative;
+        // background-color: #198754;
 
         .left{
             height: 100%;
             width: 350px;
             background-color: #efefef;
-            padding: 10px;
+            padding: 10px 5px;
             border-radius: 10px;
             display: flex;
             flex-direction: column;
             gap: 15px;
             
-
-            .title{
-                font-size: 1.3rem;
-                color: #35363a;
-                padding-right: 20px;
-                background-color:#198754;
-                color: white;
-                border-radius: 5px;
-                padding-left: 10px;
-            }
-
-            .section-container{
+            .left-top{
                 display: flex;
+                justify-content: space-between;
                 align-items: center;
-
-                *{
+                padding-bottom: 5px;
+                border-bottom: 2px solid;
+                .title{
+                    font-size: 1.3rem;
                     flex: 1;
+                    margin-right: 30px;
+                    font-weight: 700;
+                    align-self: flex-end;
+                    letter-spacing: 1.5px;
+                }
+                button{
+                    background-color: #198754;
+                    color: white;
                 }
             }
+            
 
-            .section{
-                font-size: 1rem;
-                font-family: 'Nunito';
+            .container{
                 display: flex;
                 flex-direction: column;
-                justify-content: flex-start;
-                gap: 5px;
-                .name{
-                    border-bottom: 1px solid;
-                    width: fit-content;
-                    padding-right: 20px;  
-                    font-weight: bold;                  
-                }
-                .box{
-                    .option{
-                        display: flex;
-                        align-items: center;
-                        font-size: .85rem;
-                    }
-                    #batch{
-                        width: 130px;
-                        padding:3px 5px;
-                        border-radius: 5px;
-                        border: none;
-                    }
-
-                }
-                .gender{
+                gap: 10px;
+                overflow-y: scroll;
+                overflow-x: hidden;
+                flex: 1;
+                height: 100%;
+                padding-bottom: 10px;
+                .section-container{
                     display: flex;
+                    align-items: center;
                     gap: 10px;
-                    text-align: center;
-                    p{
-                        padding: 3px 0px;
-                        border-radius: 10px;
-                        cursor: pointer;
-                        font-size: .85rem;
+    
+                    *{
+                        flex: 1;
                     }
                 }
-            }
-
-            .temp{
-                display: flex;
-                flex-direction: column;
-                gap: 5px;
-                .section-name{
+    
+                .section{
+                    font-size: 1rem;
                     font-family: 'Nunito';
-                    font-weight: bold;
-                    border-bottom: 1px solid;
-                }
-                .section-sub{
                     display: flex;
                     flex-direction: column;
+                    justify-content: flex-start;
                     gap: 5px;
-
+                    background-color: white;
+                    padding: 5px;
+                    border-radius: 5px;
                     .name{
                         border-bottom: 1px solid;
-                        padding-right: 20px;
-                        width: fit-content;
+                        // width: fit-content;
+                        padding-right: 20px;  
+                        font-weight: bold;                  
                     }
-                    .medium{
+                    .box{
+                        .option{
+                            display: flex;
+                            align-items: center;
+                            font-size: .85rem;
+                        }
+                        #batch{
+                            width: 130px;
+                            padding:3px 5px;
+                            border-radius: 5px;
+                            border: 1px solid;
+                            font-weight: 500;
+                            font-family: 'Poppins';
+                        }
+    
+                    }
+                    .gender{
                         display: flex;
                         gap: 10px;
-                        width: 100%;
+                        text-align: center;
                         p{
-                            padding: 3px 5px;
+                            padding: 3px 0px;
                             border-radius: 10px;
                             cursor: pointer;
                             font-size: .85rem;
                         }
                     }
                 }
-                
+    
+                .temp{
+                    display: flex;
+                    flex-direction: column;
+                    font-family: 'Nunito';
+                    gap: 10px;
+                    background-color: white;
+                    padding: 5px;
+                    border-radius: 5px;
+
+                    .section-name{
+                        font-weight: bold;
+                        border-bottom: 1px solid;
+                    }
+                    .section-sub{
+                        display: flex;
+                        flex-direction: column;
+                        gap: 5px;
+    
+                        .name{
+                            border-bottom: 1px solid;
+                            padding-right: 20px;
+                            width: fit-content;
+                            font-style: italic;
+                        }
+                        .medium{
+                            display: flex;
+                            gap: 10px;
+                            width: 100%;
+                            p{
+                                padding: 3px 5px;
+                                border-radius: 10px;
+                                cursor: pointer;
+                                font-size: .85rem;
+                            }
+                            
+                        }
+                        .slider{
+                            flex-direction: column;
+                            gap: 0px;
+                            align-items: center;
+                            .slider-val{
+                                display: flex;
+                                justify-content: space-between;
+                                align-items: center;
+                                width: 100%;
+                                font-family: 'Poppins';
+                                font-weight: 500;
+                                p{
+                                    background-color:#3949ab;
+                                    color: white;
+                                    border-radius: 3px;
+                                    font-size: .7rem;
+                                }
+                            }
+                            mat-slider{
+                                width: 80%;
+                                color: #35363a;
+                            }
+                        }
+                    }
+                    
+                }
             }
+
+            .container::-webkit-scrollbar{
+                display: none;
+            }
+
+            
 
         }
 
@@ -215,13 +277,17 @@
     }
     .inactive-chip{
         border: 1px solid;
-        transition: 0.3s;
-        &:active{
-            transform: scale(.95);
-        }
+        transition: 0.15s ease;
+        
         &:hover{
             background-color: rgba(0,0,0,0.3);
         }
+    }
+
+    .prevent-select {
+        -webkit-user-select: none; /* Safari */
+        -ms-user-select: none; /* IE 10 and IE 11 */
+        user-select: none; /* Standard syntax */
     }
     
 }

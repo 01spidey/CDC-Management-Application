@@ -224,3 +224,65 @@ export interface getReportsByCompanyResponse{
     success : boolean,
     reports : Report[]
 }
+
+export interface studentTableFilterOptions{
+    departments : string[],
+    batch : string,
+    gender : string,
+    sslc : {
+        medium : string,
+        board : string,
+        percentage : number[],
+    },
+    hsc : {
+        enabled : boolean,
+        medium : string,
+        board : string,
+        percentage : number[],
+        cutoff : number[]
+    },
+    diploma : {
+        enabled : boolean,
+        percentage : number[],
+    },
+    ug : {
+        cgpa : number[],
+        backlogs : boolean[],
+        status : boolean[]
+    }
+}
+
+export interface filtered_student{
+    checked : boolean,
+    position : number,
+    reg_no : string,
+    name : string,
+    dept : string,
+    batch : string,
+    gender : string,
+    sslc : {
+        percent : number,
+        board : string,
+        medium : string
+    },
+    hsc : {
+        percent : number,
+        cutoff : number,
+        board : string,
+        medium : string
+    },
+    diploma : {
+        percent : number
+    },
+    ug : {
+        cgpa : number,
+        percent : number,
+        arrear_history : number,
+        standing_arrears : number
+    }
+}
+
+export interface studentTableFilterResponse{
+    success : boolean,
+    filtered_students : filtered_student[]
+}

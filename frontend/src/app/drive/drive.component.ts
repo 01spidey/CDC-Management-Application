@@ -145,8 +145,8 @@ export class DriveComponent implements OnInit {
     this.filterByStatus(this.filter)
   }
 
-  handleStudentTable(value : boolean){
-    this.student_table = value 
+  handleStudentTable(value : any){
+    this.student_table = value.close 
     if(value) this.toastr.info('Opening Student Table')
     else this.toastr.info('Closing Student Table')
   }

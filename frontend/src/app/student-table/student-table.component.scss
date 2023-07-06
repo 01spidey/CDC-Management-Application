@@ -6,7 +6,7 @@
 
 .main{
     height: 100%;
-    overflow: hidden;
+    width: 100%;
     display: flex;
     flex-direction: column;
     padding: 0px 15px;
@@ -30,21 +30,47 @@
             padding-right: 20px;
         }
 
-        span{
-            cursor: pointer;
-            color: #ea4034;
+        .options{
+            display: flex;
+            gap: 10px;
+
+            .option{
+                display: flex;
+                gap: 3px;
+                // background-color: #152b51;
+                padding: 2px 5px;
+                border-radius: 5px;
+                color: white;
+                font-family: 'Poppins';
+                font-size: .85rem;
+                font-weight:normal;
+                align-items: center;
+                white-space: nowrap;
+                transition: 0.3s ease;
+                cursor: pointer;
+
+                span{
+                    font-size: 1rem;
+                }
+
+                &:hover{
+                    opacity: 0.9;
+                }
+            }
         }
     }
 
     .body{
-        height: fit-content;
-        height: 97%;
-        overflow: hidden;
+        height: 92%;
+        // flex: 1;
+        width: 100%;
+        overflow-y: hidden;
         margin-top: 10px;
         display: flex;
         gap: 10px;
         position: relative;
-        // background-color: #198754;
+        // background-color:#152b51;
+        border-radius: 5px;
 
         .left{
             height: 100%;
@@ -73,6 +99,7 @@
                 button{
                     background-color: #198754;
                     color: white;
+                    position: relative;
                 }
             }
             
@@ -215,55 +242,61 @@
 
         .right{
             height: 100%;
+            display: flex;
+            gap: 10px;
             flex: 1;
-            overflow-x: scroll;
-            display: flex;
+            overflow: hidden;
             flex-direction: column;
-           
-            table{
+            padding-bottom: 5px;
+            position: relative;
+            // background-color: #35363a;
+           .table{
+                overflow-x: scroll;
+                flex: 1;
                 width: 100%;
-                border-collapse: collapse;
-                th,td{
-                    
-                    white-space: nowrap;
-                    padding: 3px 30px;
-                    text-align: center;
-                    font-size: .85rem;
+                // flex: 1;
+                table{
+                    border-collapse: collapse;
+
+                    th,td{
+                        
+                        white-space: nowrap;
+                        padding: 3px 30px;
+                        text-align: center;
+                        font-size: .85rem;
+                    }
+                    th{
+                        border: 1px solid;
+                        font-weight: 300;
+                        background-color: #35363a;
+                        color: white;
+                    }
+
+                    td{
+                        padding: 7px 30px;
+                        background-color: #35363a74;
+                        // color: white;
+                        font-family: 'Nunito';
+                    }
                 }
-                th{
-                    border: 1px solid;
-                    font-weight: 300;
-                    background-color: #35363a;
+           }
+           .footer{
+            text-align: right;
+                button{
+                    background-color: #198754;
                     color: white;
+                    font-family: 'Poppins';
+                    font-weight: 500;
+                    padding: 5px 15px;
                 }
-
-                td{
-                    padding: 7px 30px;
-                    background-color: #35363a74;
-                    // color: white;
-                    font-family: 'Nunito';
-                }
-            }
+           }
+            
         }
 
-        .footer{
-            display: flex;
-            justify-content: flex-end;
-            justify-self: flex-end;
-            width: 100%;
-            position: absolute;
-            bottom: 0;
-            right: 0;
-            button{
-                background-color: #198754;
-                color: white;
-                font-family: 'Poppins';
-                font-weight: 500;
-                padding: 5px 15px;
-            }
-        }
+       
+        
 
-        .right::-webkit-scrollbar{
+        .table::-webkit-scrollbar{
             width: 5px;
             display: none;
         }

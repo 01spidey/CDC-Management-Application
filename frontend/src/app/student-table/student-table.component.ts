@@ -7,7 +7,8 @@ import { AppService } from '../service/app.service';
 export interface student_table_data{
   action : string,
   open_as : string,
-  drive : drive|null
+  drive : drive|null,
+  checked_students:Set<string>
 }
 
 @Component({
@@ -17,7 +18,13 @@ export interface student_table_data{
 })
 export class StudentTableComponent implements OnInit{
 
-  @Output() close_student_table = new EventEmitter<boolean>();
+  @Output() close_student_table = new EventEmitter<{
+    close:boolean,
+    checked_students?:Set<string>,
+    depts:Set<string>
+  }>();
+
+  
   @Input() student_table_popup_data!:student_table_data;
 
   depts = [
@@ -34,7 +41,7 @@ export class StudentTableComponent implements OnInit{
   filtered_students:filtered_student[] = []
   filtered_student_count = 0
   checked_students : Set<string> = new Set();
-  // total_filtered_students:filtered_student[] = []
+  checked_depts:Set<string> = new Set();
 
   gender = 'All'
   sslc_medium = 'All'
@@ -65,20 +72,54 @@ export class StudentTableComponent implements OnInit{
   ) { }
 
   ngOnInit(): void {
-    this.student_table_popup_data = {
-      action : 'add',
-      open_as : 'eligible_lst',
-      drive : null,
-    }
+    
+
+    this.checked_students = this.student_table_popup_data.checked_students
+    console.log(this.checked_students)
     if(this.student_table_popup_data.action == 'add'){
       this.applyFilters()
     }
-    // console.log(this.student_table_popup_data)    
+    
+    this.filtered_students.forEach(student => {
+      if(this.checked_students.has(student.reg_no)){ 
+        student.checked = true
+        this.updateCheckedStudents(student, false)
+      }
+    })
+
+  }
+
+  clearAll(){
+    this.checked_students.clear()
+    this.filtered_students.forEach(student => {
+      student.checked = false
+    })
+    this.all_checked = false
+  }
+
+  viewSelected(){
+    this.filtered_students = []
+    this.filtered_student_count = 0
+
+    this.all_checked = false
+
+    this.appService.onlySelected(this.checked_students).subscribe(
+      (res:studentTableFilterResponse) => {
+        this.filtered_students = res.filtered_students
+
+        this.filtered_students.forEach(student => {
+          this.updateCheckedStudents(student, false)
+        })
+      },
+      (err) => {
+        this.toastr.error('Server Not Responding!')
+      }
+    )
   }
 
   applyFilters(){
     
-    console.log(this.checked_students)
+    // console.log(this.checked_students)
     
     const filters:studentTableFilterOptions = {
       checked_students: [...this.checked_students],
@@ -108,16 +149,15 @@ export class StudentTableComponent implements OnInit{
       }
     }
 
+
     this.filtered_students = []
     this.filtered_student_count = 0
 
     this.all_checked = false
 
-    
     this.appService.getEligibleStudents(filters).subscribe(
       (res:studentTableFilterResponse) => {
         this.filtered_students = res.filtered_students
-
         let a=0
         this.filtered_students.forEach(student => {
           this.updateCheckedStudents(student, false)
@@ -144,11 +184,6 @@ export class StudentTableComponent implements OnInit{
     console.log(this.checked_students)
   }
 
-  saveList(){
-    
-    console.log(this.checked_students)
-  }
-
   updateCheckedStudents(student:filtered_student, manual:boolean){
     if(student.checked){ 
       this.filtered_student_count += 1
@@ -165,10 +200,34 @@ export class StudentTableComponent implements OnInit{
     if(this.filtered_student_count == this.filtered_students.length) this.all_checked = true
     else this.all_checked = false
 
-    console.log(this.filtered_student_count+" "+this.filtered_students.length)
+    // console.log(this.filtered_student_count+" "+this.filtered_students.length)
+  }
+
+  setCheckedDept(reg_no:string):string{
+    let val = reg_no.substring(2,4)
+    val = val==='CS'? 'CSE': 
+    val==='AD'? 'AI-DS': 
+    val==='EC'? 'ECE': 
+    val==='EE'? 'EEE': 
+    val==='BM'? 'BME': 
+    val==='ME'? 'MECH': 
+    val==='CE'? 'CIVIL': 
+    val==='CH'? 'CHEM': 'NA'
+
+    return val
+
   }
 
   closeTable(){
-    this.close_student_table.emit(false);
+    // console.log(this.checked_students)
+    this.checked_students.forEach(reg_no => {
+      this.checked_depts.add(this.setCheckedDept(reg_no))
+    })
+
+    this.close_student_table.emit({
+      close:false,
+      checked_students: this.checked_students,
+      depts: this.checked_depts
+    });
   }
 }

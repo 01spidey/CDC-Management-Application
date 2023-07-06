@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output,} from '@angular/core';
 import { AppService } from '../service/app.service';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { DatePipe } from '@angular/common';
@@ -43,16 +43,16 @@ export class CompanyComponent implements OnInit{
   delete_report_pk = 0
   drive_popup = false
   
-  student_table = true
 
   report_lst : Report[] = []
   popup_message = new FormControl('',Validators.required)
   popup_date = new FormControl('',Validators.required)
 
-  student_table_popup_data!:student_table_data;
+  
 
   @Output() close_section = new EventEmitter<boolean>();
 
+  checked_students!:Set<string>;
 
   addCompanyForm = this.builder.group({
     company:this.builder.control('',Validators.required),
@@ -82,6 +82,8 @@ export class CompanyComponent implements OnInit{
     private toastr:ToastrService
   ) { }
 
+  
+
   ngOnInit(): void {
     this.action = sessionStorage.getItem('cur_action')!
     this.section = sessionStorage.getItem('cur_company_section')?Number(sessionStorage.getItem('cur_company_section')):1
@@ -103,20 +105,14 @@ export class CompanyComponent implements OnInit{
     this.getReportsByCompany()
   }
 
-  handleStudentTable(value : boolean){
-    this.student_table = value 
-    // if(value) this.toastr.info('Opening Student Table')
-    // else this.toastr.info('Closing Student Table')
-  }
 
   handleDrivePopup(value: boolean) {
     this.drive_popup = value
-    if(!value) this.student_table = false
   }
 
-  handleStudentTablePopupData(value: student_table_data){
-    this.student_table_popup_data = value
-  }
+  // handleStudentTablePopupData(value: student_table_data){
+  //   this.student_table_popup_data = value
+  // }
 
   changeSection(section: number, action:string){
     sessionStorage.setItem('cur_company_section', section.toString())

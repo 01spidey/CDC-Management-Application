@@ -169,4 +169,10 @@ export class AppService {
     return this.http.post<studentTableFilterResponse>(`${this.URL}/get_eligible_students`, filters)
   }
 
+  onlySelected(checked_students:Set<string>){
+    let arr = Array.from(checked_students)
+    const params = { checked_students : arr.join(',') }
+    return this.http.get<studentTableFilterResponse>(`${this.URL}/get_eligible_students`, {params : params})
+  }
+
 }

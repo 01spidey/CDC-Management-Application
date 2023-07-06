@@ -20,16 +20,20 @@ export interface checkBox{
   templateUrl: './drive-popup.component.html',
   styleUrls: ['./drive-popup.component.scss']
 })
+
 export class DrivePopupComponent implements OnInit{
   role = sessionStorage.getItem('user_role')!
   userData = JSON.parse(sessionStorage.getItem('cur_user_data')!);
   cur_user_id:string = this.userData.user_id
   
-  eligible_depts:string[] = []
+  eligible_depts:Set<string> = new Set();
   company!:string;
   result_ready = false
   eligible_lst_uploaded = false
   result_uploaded = false
+  student_table = false
+
+  student_table_popup_data!:student_table_data;
 
   departments = [
     {name:'CSE',value:false},
@@ -43,10 +47,18 @@ export class DrivePopupComponent implements OnInit{
   ]
 
   @Input() data!:drive_popup_data;
-  @Output() popup_closed = new EventEmitter<boolean>();
-  @Output() open_student_table = new EventEmitter<boolean>();
-  @Output() student_table_popup_data = new EventEmitter<student_table_data>();
+  // @Input() checked_students!:Set<string>;
+  checked_students:Set<string> = new Set();
 
+  @Output() popup_closed = new EventEmitter<boolean>();
+  // @Output() open_student_table = new EventEmitter<boolean>();
+  // @Output() student_table_popup_data = new EventEmitter<student_table_data>();
+
+  
+  @Output() open_student_table = new EventEmitter<{
+    close:boolean,
+    checked_students?:Set<string>
+  }>();
   // popup_data!:student_table_data;
 
   addDriveForm = this.builder.group({
@@ -70,6 +82,7 @@ export class DrivePopupComponent implements OnInit{
 
   ngOnInit(): void {
     //console.log(this.data)
+
     if(this.data.open_as == 'edit'){
 
       this.addDriveForm.patchValue({
@@ -99,9 +112,7 @@ export class DrivePopupComponent implements OnInit{
         let formData = new FormData()
         const formattedDate = this.datePipe.transform(this.addDriveForm.value.date, 'yyyy-MM-dd')!;        
         
-        for(let dept of this.departments){
-          if(dept.value) this.eligible_depts.push(dept.name)
-        };
+        let eligible_depts_arr =[...this.eligible_depts]
         let pk = this.data.open_as==='edit'?(this.data.drive!.id).toString():''
 
         formData.append('pk', pk)
@@ -110,12 +121,11 @@ export class DrivePopupComponent implements OnInit{
         formData.append('date',formattedDate!)
         formData.append('description',this.addDriveForm.value.description!)
         formData.append('mode',this.addDriveForm.value.mode!)
-        formData.append('eligible_depts',this.eligible_depts.join(','))
+        formData.append('eligible_depts',eligible_depts_arr.join(','))
         formData.append('ctc',(this.addDriveForm.value.ctc!).toString())
 
         this.service.addCompanyDrive(formData, this.data.open_as).subscribe(
           (res:serverResponse)=>{
-            this.eligible_depts = []
             if(res.success){
               this.toastr.success(res.message);
               this.popup_closed.emit(false);
@@ -125,27 +135,38 @@ export class DrivePopupComponent implements OnInit{
           },
           err=>{
             this.toastr.error('Server Not Responding!!');
-            this.eligible_depts = []
             this.popup_closed.emit(false);
           }
         )
         
 
-      }else this.toastr.warning('Please select Eligible Departments!!');
+      }
+      else this.toastr.warning('Please select Eligible Departments!!');
       
     }else this.toastr.error('Form Invalid!!');
     
   }
 
+  handleStudentTable(value : any){
+    this.student_table = value.close
+    if(value.checked_students.size>0){
+      this.eligible_lst_uploaded = true 
+      this.checked_students = value.checked_students
+      this.eligible_depts = value.depts
+
+    }else this.eligible_lst_uploaded = false
+    
+    console.log(value.depts)
+  }
 
   openStudentTable(){
-    this.student_table_popup_data.emit(
-      {
-        action : this.data.open_as,
-        open_as : 'eligible_lst',
-        drive : this.data.drive
-      } )
-    this.open_student_table.emit(true);
+    this.student_table = true
+    this.student_table_popup_data = {
+      action : 'add',
+      open_as  : 'eligible_lst',
+      drive : this.data.drive!,
+      checked_students : this.checked_students
+    }
   }
 
   setAllDept(value: boolean){
@@ -160,7 +181,6 @@ export class DrivePopupComponent implements OnInit{
         dept.value = false;
       })
     }
-    
   }
 
   updateAllDept(){

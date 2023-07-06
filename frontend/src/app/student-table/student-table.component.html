@@ -1,12 +1,30 @@
 <div class="main">
     <div class="top">
         <h1 class="title">Eligible List</h1>
-        <span class="material-icons" (click)="closeTable()">
-            disabled_by_default
-        </span>
+        <div class="options">
+            <div class="option" style="background-color: #2f96b4" (click)="viewSelected()">
+                <span class="material-icons">
+                    filter_alt
+                </span>
+                <p>View Selected</p>
+            </div>
+            <div class="option" style="background-color:#ea4034" (click)="clearAll()">
+                <span class="material-icons">
+                    cleaning_services
+                </span>
+                <p>Clear All</p>
+            </div>
+            <div class="option" style="background-color: red;" (click)="closeTable()">
+                <span class="material-icons">
+                    close
+                </span>
+                <p>Close</p>
+            </div>
+        </div>
     </div>
     
     <div class="body">
+
         <div class="left">
             <div class="left-top">
                 <p class="title">Filters</p>
@@ -14,7 +32,6 @@
             </div>
             
             <div class="container">
-                <!-- Data Bound -->
                 <div class="section prevent-select">
                     <p class="name">Department</p>
                     <div class="box" style="display: grid;grid-template-columns:1fr 1fr 1fr 1fr">
@@ -25,7 +42,6 @@
                     </div>
                 </div>
     
-                <!-- Data Bound -->
                 <div class="section-container">
                     <div class="section">
                         <p class="name">Batch</p>
@@ -44,7 +60,6 @@
                     </div>
                 </div>
     
-                <!-- SSLC -->
                 <div class="temp">
                     <p class="section-name">SSLC</p>
                     <div class="section-sub prevent-select" style="font-size: .85rem;">
@@ -84,13 +99,12 @@
 
                 </div>
 
-                <!-- HSC -->
                 <div class="temp" [ngStyle]="enable_hsc?{} : {'cursor': 'not-allowed', 'filter': 'grayscale(100%)'}">
                     <div class="section-name" style="display:flex; gap:5px;padding-bottom:3px;justify-content:space-between;">
                         <p>HSC</p>
                         <mat-slide-toggle [(ngModel)]="enable_hsc" color="primary" (click) = 'enable_diploma = !enable_diploma'></mat-slide-toggle>
                     </div>
-                    <!-- <p class="section-name">HSC</p> -->
+
                     <div class="section-sub prevent-select" style="font-size: .85rem;">
                         <p class="name">Medium of Study</p>
                         <div class="medium">
@@ -142,7 +156,6 @@
 
                 </div>
 
-                <!-- Diploma -->
                 <div class="temp" [ngStyle]="enable_diploma?{} : {'cursor': 'not-allowed', 'filter': 'grayscale(100%)'}">
                     <div class="section-name" style="display:flex; gap:5px;padding-bottom:3px;justify-content:space-between;">
                         <p>Diploma</p>
@@ -166,7 +179,6 @@
 
                 </div>
 
-                <!-- UG -->
                 <div class="temp">
                     <p class="section-name">UnderGraduate</p>
 
@@ -220,80 +232,86 @@
             
 
         </div>
+<!-- 
         <div class="right">
-            <table>
-                <!-- Table Header -->
-                <tr>
-                    <th rowspan="2">S.no</th>
-                    <th rowspan="2">
-                        <div class="temp" style="display: flex; gap:3px; align-items:center">
+
+        </div> -->
+
+        <div class="right">
+            <div class="table">
+                <table>
+                    <tr>
+                        <th rowspan="2">S.no</th>
+                        <th rowspan="2">
+                            <div class="temp" style="display: flex; gap:3px; align-items:center">
+                                <mat-checkbox 
+                                    color="primary"
+                                    [checked]="all_checked"
+                                    (change)="setAllChecked($event.checked)"
+                                    ></mat-checkbox>
+                                <p>Reg No.</p>
+                            </div>
+                            
+                        </th>
+                        <th rowspan="2">Name</th>
+                        <th rowspan="2" >Branch</th>
+                        <th rowspan="2">Batch</th>
+                        <th rowspan="2">Gender</th>
+                        <th colspan="3">SSLC</th>
+                        <th colspan="4">HSC</th>
+                        <th rowspan="2">Diploma %</th>
+                        <th colspan="4">UG</th>
+                    </tr>
+                    <tr>
+                        <th>Percentage</th>
+                        <th>Board</th>
+                        <th>Medium</th>
+                        <th>Percentage</th>
+                        <th>Cut-off</th>
+                        <th>Board</th>
+                        <th>Medium</th>
+                        <th>CGPA</th>
+                        <th>Percentage</th>
+                        <th>Arrear History</th>
+                        <th>Backlogs</th>
+                    </tr>
+    
+                    <tr *ngFor="let student of filtered_students">
+                        <td>{{student.position}}</td>
+                        <td style="display: flex; gap:3px; align-items:center">
                             <mat-checkbox 
                                 color="primary"
-                                [checked]="all_checked"
-                                (change)="setAllChecked($event.checked)"
-                                ></mat-checkbox>
-                            <p>Reg No.</p>
-                        </div>
-                        
-                    </th>
-                    <th rowspan="2">Name</th>
-                    <th rowspan="2" >Branch</th>
-                    <th rowspan="2">Batch</th>
-                    <th rowspan="2">Gender</th>
-                    <th colspan="3">SSLC</th>
-                    <th colspan="4">HSC</th>
-                    <th rowspan="2">Diploma %</th>
-                    <th colspan="4">UG</th>
-                </tr>
-                <tr>
-                    <th>Percentage</th>
-                    <th>Board</th>
-                    <th>Medium</th>
-                    <th>Percentage</th>
-                    <th>Cut-off</th>
-                    <th>Board</th>
-                    <th>Medium</th>
-                    <th>CGPA</th>
-                    <th>Percentage</th>
-                    <th>Arrear History</th>
-                    <th>Backlogs</th>
-                </tr>
+                                [checked] = "student.checked"
+                                [(ngModel)] = "student.checked"
+                                (ngModelChange)="updateCheckedStudents(student, true)">
+                            </mat-checkbox>
+                            <p>{{student.reg_no}}</p>
+                        </td>
+                        <td>{{student.name}}</td>
+                        <td>{{student.dept}}</td>
+                        <td>{{student.batch}}</td>
+                        <td>{{student.gender}}</td>
+                        <td>{{student.sslc.percent}}%</td>
+                        <td>{{student.sslc.board}}</td>
+                        <td>{{student.sslc.medium}}</td>
+                        <td>{{student.hsc.percent===null? '-' : (student.hsc.percent+'%')}}</td>
+                        <td>{{student.hsc.cutoff}}</td>
+                        <td>{{student.hsc.board}}</td>
+                        <td>{{student.hsc.medium}}</td>
+                        <td>{{student.diploma.percent===null?'-' : (student.diploma.percent+'%')}}</td>
+                        <td>{{student.ug.cgpa}}</td>
+                        <td>{{student.ug.percent}}</td>
+                        <td>{{student.ug.arrear_history}}</td>
+                        <td>{{student.ug.standing_arrears}}</td>
+                    </tr>
+                    
+                </table>
+            </div>
+            <div class="footer">
+                <button mat-raised-button (click)="closeTable()">Generate</button>
+            </div>
+            
 
-                <!-- Table Rows -->
-                <tr *ngFor="let student of filtered_students">
-                    <td>{{student.position}}</td>
-                    <td style="display: flex; gap:3px; align-items:center">
-                        <mat-checkbox 
-                            color="primary"
-                            [checked] = "student.checked"
-                            [(ngModel)] = "student.checked"
-                            (ngModelChange)="updateCheckedStudents(student, true)">
-                        </mat-checkbox>
-                        <p>{{student.reg_no}}</p>
-                    </td>
-                    <td>{{student.name}}</td>
-                    <td>{{student.dept}}</td>
-                    <td>{{student.batch}}</td>
-                    <td>{{student.gender}}</td>
-                    <td>{{student.sslc.percent}}%</td>
-                    <td>{{student.sslc.board}}</td>
-                    <td>{{student.sslc.medium}}</td>
-                    <td>{{student.hsc.percent}}%</td>
-                    <td>{{student.hsc.cutoff}}</td>
-                    <td>{{student.hsc.board}}</td>
-                    <td>{{student.hsc.medium}}</td>
-                    <td>{{student.diploma.percent}}%</td>
-                    <td>{{student.ug.cgpa}}</td>
-                    <td>{{student.ug.percent}}</td>
-                    <td>{{student.ug.arrear_history}}</td>
-                    <td>{{student.ug.standing_arrears}}</td>
-                </tr>
-                
-            </table>
-
-            <!-- <div class="footer">
-                <button mat-raised-button (click)="saveList()">Generate</button>
-            </div> -->
 
         </div>
     </div>

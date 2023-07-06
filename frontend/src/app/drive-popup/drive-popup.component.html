@@ -55,33 +55,19 @@
                     <textarea matInput formControlName="description"></textarea>
                 </mat-form-field> 
             </div>
-    
-            <div class="input">
-                <div style="display: flex;align-items:center;">
-                    <p>Eligible Departments</p>
-                    <mat-checkbox
-                        (change)="setAllDept($event.checked)"
-                        [checked]="allDept"
-                        color="primary">
-                    </mat-checkbox>
-                </div>
-                
-                <div class="dept-grid">
-                    <mat-checkbox 
-                        *ngFor="let item of departments" 
-                        [value]="item.name" 
-                        [(ngModel)]="item.value"
-                        [ngModelOptions]="{standalone: true}"
-                        color="primary"
-                        (ngModelChange)="updateAllDept()">
 
-                        {{item.name}}
-                    
-                    </mat-checkbox> 
+            <div class="input">
+                <p>Eligible Departments</p>
+                <div class="dept-grid" *ngIf="eligible_depts.size>0">
+                    <p class="dept-name" *ngFor="let dept of eligible_depts">
+                       {{dept}} 
+                    </p>
                 </div>
-                
+                <div *ngIf="eligible_depts.size===0">
+                    <p>--</p>
+                </div>
             </div>
-    
+
             <div class="input spl-btn-box" style="margin-top: 20px;">
                 <div class="spl-btn" [ngClass]="{'gen-btn' : eligible_lst_uploaded, 'disabled-gen' :  !eligible_lst_uploaded}" (click)="openStudentTable()">
                     <span class="material-icons" *ngIf="!eligible_lst_uploaded">
@@ -107,6 +93,34 @@
                 </div>
             </div>
 
+            <!-- <div class="input">
+                <div style="display: flex;align-items:center;">
+                    <p>Eligible Departments</p>
+                    <mat-checkbox
+                        (change)="setAllDept($event.checked)"
+                        [checked]="allDept"
+                        color="primary">
+                    </mat-checkbox>
+                </div>
+                
+                <div class="dept-grid">
+                    <mat-checkbox 
+                        *ngFor="let item of departments" 
+                        [value]="item.name" 
+                        [(ngModel)]="item.value"
+                        [ngModelOptions]="{standalone: true}"
+                        color="primary"
+                        (ngModelChange)="updateAllDept()">
+
+                        {{item.name}}
+                    
+                    </mat-checkbox> 
+                </div>
+                
+            </div> -->
+
+            
+
             <div class="btns">
               <button mat-raised-button id="reset" (click)="closePopup()">Cancel</button>
               <button mat-raised-button id="add" (click)="addDrive()">{{data.open_as==='add'?'Add Drive' : 'Save Changes'}}</button>
@@ -115,5 +129,13 @@
         </form>
     </div>
     
+</div>
 
+<div class="popup-container" *ngIf="student_table">
+    <app-student-table 
+        (close_student_table)="handleStudentTable($event)" 
+        [student_table_popup_data] = "student_table_popup_data"
+        *ngIf="student_table">
+    </app-student-table>
+    
 </div>

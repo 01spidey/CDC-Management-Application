@@ -34,7 +34,7 @@ export class StudentTableComponent implements OnInit{
   filtered_students:filtered_student[] = []
   filtered_student_count = 0
   checked_students : Set<string> = new Set();
-  total_filtered_students:filtered_student[] = []
+  // total_filtered_students:filtered_student[] = []
 
   gender = 'All'
   sslc_medium = 'All'
@@ -42,6 +42,8 @@ export class StudentTableComponent implements OnInit{
   sslc_board = 'All'
   hsc_board = 'All'
   all_checked = false
+
+  first_load = true
   
   batch = '2024'
 
@@ -71,11 +73,15 @@ export class StudentTableComponent implements OnInit{
     if(this.student_table_popup_data.action == 'add'){
       this.applyFilters()
     }
-    console.log(this.student_table_popup_data)    
+    // console.log(this.student_table_popup_data)    
   }
 
   applyFilters(){
+    
+    console.log(this.checked_students)
+    
     const filters:studentTableFilterOptions = {
+      checked_students: [...this.checked_students],
       departments: this.depts.filter(dept => dept.value).map(dept => dept.name),
       batch: this.batch,
       gender: this.gender,
@@ -102,18 +108,22 @@ export class StudentTableComponent implements OnInit{
       }
     }
 
-    this.total_filtered_students.push(...this.filtered_students)
     this.filtered_students = []
     this.filtered_student_count = 0
+
     this.all_checked = false
 
+    
     this.appService.getEligibleStudents(filters).subscribe(
       (res:studentTableFilterResponse) => {
-        // console.log(res.filtered_students)
         this.filtered_students = res.filtered_students
-        
-        console.log(this.filtered_students.length)
-        console.log(this.total_filtered_students.length)
+
+        let a=0
+        this.filtered_students.forEach(student => {
+          this.updateCheckedStudents(student, false)
+        })
+        this.first_load = false
+
         this.toastr.success('Filter Applied!!')
       },
       (err) => {
@@ -126,32 +136,36 @@ export class StudentTableComponent implements OnInit{
 
   setAllChecked(val:boolean){
     this.all_checked = val
+    this.filtered_student_count = 0
     this.filtered_students.forEach(student => {
       student.checked = val
-    })
-  }
-
-  saveList(){
-    this.total_filtered_students.push(...this.filtered_students)
-    // console.log(this.total_filtered_students.length)
-    this.total_filtered_students.forEach(student => {
-      if(student.checked){
-        this.checked_students.add(student.reg_no)
-      }
+      this.updateCheckedStudents(student, true)
     })
     console.log(this.checked_students)
   }
 
-  updateCheckedStudents(student:filtered_student){
+  saveList(){
+    
+    console.log(this.checked_students)
+  }
+
+  updateCheckedStudents(student:filtered_student, manual:boolean){
     if(student.checked){ 
       this.filtered_student_count += 1
+      this.checked_students.add(student.reg_no)
+      // console.log(student.reg_no+" "+this.filtered_student_count)
     }
     else{
-      this.filtered_student_count -= 1
+      if(manual){ 
+        this.filtered_student_count -= 1
+        this.checked_students.delete(student.reg_no)
+      }
     }
 
     if(this.filtered_student_count == this.filtered_students.length) this.all_checked = true
     else this.all_checked = false
+
+    console.log(this.filtered_student_count+" "+this.filtered_students.length)
   }
 
   closeTable(){

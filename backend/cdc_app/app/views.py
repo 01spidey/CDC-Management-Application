@@ -1442,6 +1442,8 @@ def delete_drive(request):
 def get_eligible_students(request):
     formdata = json.loads(request.body)
     # print(formdata)
+    checked_students = formdata['checked_students']
+    
     departments = formdata['departments']
     batch = formdata['batch']
     gender = formdata['gender']
@@ -1518,7 +1520,7 @@ def get_eligible_students(request):
     
     for student_personal, student_edu in zip(eligible_students_personal, eligible_students_edu):
         eligible_students.append({
-            'checked':False,
+            'checked': True if student_personal.reg_no in checked_students else False,
             'position':position,
             'reg_no' : student_personal.reg_no,
             'name' : student_personal.name,

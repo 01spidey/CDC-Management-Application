@@ -267,7 +267,7 @@
                             color="primary"
                             [checked] = "student.checked"
                             [(ngModel)] = "student.checked"
-                            (ngModelChange)="updateCheckedStudents(student)">
+                            (ngModelChange)="updateCheckedStudents(student, true)">
                         </mat-checkbox>
                         <p>{{student.reg_no}}</p>
                     </td>
@@ -291,9 +291,9 @@
                 
             </table>
 
-            <div class="footer">
+            <!-- <div class="footer">
                 <button mat-raised-button (click)="saveList()">Generate</button>
-            </div>
+            </div> -->
 
         </div>
     </div>

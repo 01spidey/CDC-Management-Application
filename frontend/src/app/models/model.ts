@@ -226,6 +226,7 @@ export interface getReportsByCompanyResponse{
 }
 
 export interface studentTableFilterOptions{
+    checked_students : string[],
     departments : string[],
     batch : string,
     gender : string,

@@ -1,6 +1,10 @@
 <div class="main">
     <div class="top">
-        <h1 class="title">Eligible List</h1>
+        <div class="title" *ngIf="student_table_popup_data.open_as!=='eligible_lst'">
+            <input type="text" placeholder="Round Name">
+        </div>
+        <h1 class="title" *ngIf="student_table_popup_data.open_as==='eligible_lst'">Eligible List</h1>
+        
         <div class="options">
             <div class="option" style="background-color: #2f96b4" (click)="viewSelected()">
                 <span class="material-icons">
@@ -14,7 +18,7 @@
                 </span>
                 <p>Clear All</p>
             </div>
-            <div class="option" style="background-color: red;" (click)="closeTable()">
+            <div class="option" style="background-color: red;" (click)="closeTable(false)">
                 <span class="material-icons">
                     close
                 </span>
@@ -200,12 +204,12 @@
                         <p class="name">Status</p>
                         <div class="prevent-select" style="font-size: .85rem;display:flex;justify-content:flex-start;gap:20px">
                             <div class="box" style="display: flex;align-items:center">
-                                <mat-checkbox color="warn" [checked]="status[0]"></mat-checkbox>
+                                <mat-checkbox color="warn" [checked]="status[0]" [(ngModel)] = "status[0]"></mat-checkbox>
                                 <p>Placed</p>
                             </div>
     
                             <div class="box" style="display: flex;align-items:center">
-                                <mat-checkbox color="warn" [checked]="status[1]"></mat-checkbox>
+                                <mat-checkbox color="warn" [checked]="status[1]" [(ngModel)] = "status[1]"></mat-checkbox>
                                 <p>Non-Placed</p>
                             </div>
     
@@ -308,7 +312,8 @@
                 </table>
             </div>
             <div class="footer">
-                <button mat-raised-button (click)="closeTable()">Generate</button>
+                <p>Selected : <span>{{checked_students.size}}</span></p>
+                <button mat-raised-button (click)="closeTable(true)">Generate</button>
             </div>
             
 

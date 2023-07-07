@@ -203,15 +203,9 @@
                 <!-- <img src="../../../../backend/cdc_app/media/" alt=""> -->
             </div>
 
-            <a [href]="drive.file" download><button mat-raised-button>Eligible List</button></a>
-
-            <!-- <div class="info">
-                <p>more</p>
-                <span class="material-symbols-outlined">
-                    chevron_right
-                </span>
-            </div> -->
-
+            <a ><button mat-raised-button>Eligible List</button></a>
+            <!-- [href]="drive.file" download -->
+           
             <div class="info" *ngIf="drive.placement_officer_id === cur_staff_id">
                 <!-- <p>more</p> -->
                 <span class="material-symbols-outlined" matTooltip="posted by you">
@@ -223,8 +217,7 @@
     </div>
 
     <div class="popup-container" *ngIf="drive_popup">
-        <app-drive-popup (popup_closed)="handleDrivePopup($event)" (open_student_table)="handleStudentTable($event)" [data] = 'drive_popup_data' *ngIf="drive_popup"></app-drive-popup>
-        <app-student-table (close_student_table)="handleStudentTable($event)" *ngIf="student_table"></app-student-table>
+        <app-drive-popup (popup_closed)="handleDrivePopup($event)" [data] = 'drive_popup_data' *ngIf="drive_popup"></app-drive-popup>
     </div>
 
 </div>

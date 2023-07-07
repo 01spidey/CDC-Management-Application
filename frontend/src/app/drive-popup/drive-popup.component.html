@@ -56,19 +56,65 @@
                 </mat-form-field> 
             </div>
 
-            <div class="input">
-                <p>Eligible Departments</p>
-                <div class="dept-grid" *ngIf="eligible_depts.size>0">
-                    <p class="dept-name" *ngFor="let dept of eligible_depts">
-                       {{dept}} 
-                    </p>
+            <div class="section" style="align-items:flex-start">
+                <div class="input">
+                    <p>Eligible Departments</p>
+                    <div class="dept-grid" *ngIf="eligible_depts.length>0">
+                        <p class="dept-name" *ngFor="let dept of eligible_depts">
+                           {{dept}} 
+                        </p>
+                    </div>
+                    <div *ngIf="eligible_depts.length===0">
+                        <p>--</p>
+                    </div>
                 </div>
-                <div *ngIf="eligible_depts.size===0">
-                    <p>--</p>
+
+                <div class="input spl-btn-box">
+                    <div class="spl-btn" [ngClass]="{'gen-btn' : eligible_lst_uploaded, 'disabled-gen' :  !eligible_lst_uploaded}" (click)="openStudentTable()">
+                        <span class="material-icons" *ngIf="!eligible_lst_uploaded">
+                            add_box
+                        </span>
+                        <span class="material-icons" *ngIf="eligible_lst_uploaded">
+                            task_alt
+                        </span>
+                        <p>{{eligible_lst_uploaded? 'Eligible List Added' : 'Generate Eligible List'}}</p>
+                    </div>
                 </div>
             </div>
 
-            <div class="input spl-btn-box" style="margin-top: 20px;">
+            <div class="input" style="margin-top: 15px;">
+                <p>Rounds</p>
+                <div class="round-box">
+                    <div class="round" style="color:white; background-color: #1a6486;" *ngFor="let round of rounds" (click)="openStudentTableforRound(round)">
+                        <p class="heading">Round - {{round.number}}</p>
+                        <p class="round-name">
+                            {{round.name}}
+                        </p>   
+                    </div>
+
+                    <div class="round add-round"  (click) = "openStudentTableforRound({number : rounds.length+1, name : 'NA'})">
+                        <div class="round-name">
+                            <span class="material-icons" *ngIf="result_ready">
+                                add_box
+                            </span>
+                            <span class="material-icons" *ngIf="!result_ready">
+                                pending_actions
+                            </span>
+                            <p>{{result_ready?'Add Round' : 'Result Pending'}}</p>
+                        </div>   
+                        <!-- <p class="round-name" *ngIf="add_round">
+                            <input type="text" (keydown)="onKeyDown($event)">
+                        </p> -->
+                    </div>
+
+                    <!-- <div class="round" *ngIf = 'add_round'>
+                        <input type="text">
+                    </div> -->
+                </div>
+            </div>
+            
+
+            <!-- <div class="input spl-btn-box" style="margin-top: 20px;">
                 <div class="spl-btn" [ngClass]="{'gen-btn' : eligible_lst_uploaded, 'disabled-gen' :  !eligible_lst_uploaded}" (click)="openStudentTable()">
                     <span class="material-icons" *ngIf="!eligible_lst_uploaded">
                         add_box
@@ -77,9 +123,9 @@
                         task_alt
                     </span>
                     <p>{{eligible_lst_uploaded? 'Eligible List Added' : 'Generate Eligible List'}}</p>
-                </div>
+                </div> -->
 
-                <div class="spl-btn" [ngClass]="{'add-offer' : result_ready, 'disabled' : !result_ready, 'added-offer' : result_uploaded}" [ngStyle]="!result_ready?{'cursor': 'not-allowed'} : {}">
+                <!-- <div class="spl-btn" [ngClass]="{'add-offer' : result_ready, 'disabled' : !result_ready, 'added-offer' : result_uploaded}" [ngStyle]="!result_ready?{'cursor': 'not-allowed'} : {}" (click)="addOfferDetails()">
                     <span class="material-icons" *ngIf="!result_ready && !result_uploaded">
                         pending_actions
                     </span>
@@ -90,8 +136,8 @@
                         task_alt
                     </span>
                     <p>{{result_uploaded?'Offer Details Added' : result_ready? 'Add Offer Details' : 'Result Pending'}}</p>
-                </div>
-            </div>
+                </div> -->
+            <!-- </div> -->
 
             <!-- <div class="input">
                 <div style="display: flex;align-items:center;">

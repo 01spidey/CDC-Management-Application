@@ -8,7 +8,7 @@ export interface student_table_data{
   action : string,
   open_as : string,
   drive : drive|null,
-  checked_students:Set<string>
+  filters:studentTableFilterOptions
 }
 
 @Component({
@@ -19,9 +19,9 @@ export interface student_table_data{
 export class StudentTableComponent implements OnInit{
 
   @Output() close_student_table = new EventEmitter<{
+    response_for : string,
     close:boolean,
-    checked_students?:Set<string>,
-    depts:Set<string>
+    applied_filters:studentTableFilterOptions,
   }>();
 
   
@@ -40,28 +40,30 @@ export class StudentTableComponent implements OnInit{
 
   filtered_students:filtered_student[] = []
   filtered_student_count = 0
-  checked_students : Set<string> = new Set();
+  filters! : studentTableFilterOptions;
+
+
+  checked_students:Set<string> = new Set();
   checked_depts:Set<string> = new Set();
 
-  gender = 'All'
-  sslc_medium = 'All'
-  hsc_medium = 'All'
-  sslc_board = 'All'
-  hsc_board = 'All'
+  gender = ''
+  sslc_medium = ''
+  hsc_medium = ''
+  sslc_board = ''
+  hsc_board = ''
   all_checked = false
 
-  first_load = true
   
-  batch = '2024'
+  batch = ''
 
   enable_hsc = true
   enable_diploma = false
 
-  sslc_percent = [0,100]
-  hsc_percent = [0,100]
-  hsc_cutoff = [0,200]
-  diploma_percent = [0,100]
-  cgpa = [0.0, 10.0]
+  sslc_percent = [0, 100]
+  hsc_percent = [0, 100 ]
+  hsc_cutoff = [0, 200]
+  diploma_percent = [0, 100]
+  cgpa = [0, 10]
 
   backlogs = [false, false]
   status = [true, true]
@@ -72,21 +74,61 @@ export class StudentTableComponent implements OnInit{
   ) { }
 
   ngOnInit(): void {
-    
+    this.filters = this.student_table_popup_data.filters
+    this.configureAll(this.filters)
 
-    this.checked_students = this.student_table_popup_data.checked_students
-    console.log(this.checked_students)
-    if(this.student_table_popup_data.action == 'add'){
+    if(this.student_table_popup_data.open_as == 'eligible_lst'){
+      console.log(this.student_table_popup_data)
+      
+      
       this.applyFilters()
+      
+      this.filtered_students.forEach(student => {
+        if(this.checked_students.has(student.reg_no)){ 
+          student.checked = true
+          this.updateCheckedStudents(student, false)
+        }
+      })
     }
-    
-    this.filtered_students.forEach(student => {
-      if(this.checked_students.has(student.reg_no)){ 
-        student.checked = true
-        this.updateCheckedStudents(student, false)
+    else {
+      let cur_round = Number(this.student_table_popup_data.open_as)
+      let last_round = this.student_table_popup_data.drive?.rounds.length!
+      console.log(cur_round, last_round)
+      if(cur_round>last_round){
+        this.toastr.info(this.student_table_popup_data.open_as)
+      }
+    }
+  }
+
+  configureAll(filters : studentTableFilterOptions){
+    console.log(filters)
+    this.checked_students = new Set(filters.checked_students);
+    this.depts.forEach(dept => {
+      if(filters.departments.includes(dept.name)){
+        dept.value = true
       }
     })
 
+    this.gender = filters.gender
+    this.sslc_medium = filters.sslc.medium
+    this.hsc_medium = filters.hsc.medium
+    this.sslc_board = filters.sslc.board
+    this.hsc_board = filters.hsc.board
+    this.all_checked = false
+    
+    this.batch = filters.batch
+
+    this.enable_hsc = filters.hsc.enabled
+    this.enable_diploma = filters.diploma.enabled
+
+    this.sslc_percent = filters.sslc.percentage
+    this.hsc_percent = filters.hsc.percentage
+    this.hsc_cutoff = filters.hsc.cutoff
+    this.diploma_percent = filters.diploma.percentage
+    this.cgpa = filters.ug.cgpa
+
+    this.backlogs = filters.ug.backlogs
+    this.status = filters.ug.status
   }
 
   clearAll(){
@@ -162,7 +204,6 @@ export class StudentTableComponent implements OnInit{
         this.filtered_students.forEach(student => {
           this.updateCheckedStudents(student, false)
         })
-        this.first_load = false
 
         this.toastr.success('Filter Applied!!')
       },
@@ -218,16 +259,51 @@ export class StudentTableComponent implements OnInit{
 
   }
 
-  closeTable(){
-    // console.log(this.checked_students)
-    this.checked_students.forEach(reg_no => {
-      this.checked_depts.add(this.setCheckedDept(reg_no))
-    })
+  closeTable(save_state:boolean){
+    if(save_state){
+      this.checked_students.forEach(reg_no => {
+        this.checked_depts.add(this.setCheckedDept(reg_no))
+      })
 
-    this.close_student_table.emit({
-      close:false,
-      checked_students: this.checked_students,
-      depts: this.checked_depts
-    });
+      const applied_filters:studentTableFilterOptions = {
+        checked_students: [...this.checked_students],
+        departments: [...this.checked_depts],
+        batch: this.batch,
+        gender: this.gender,
+        sslc: {
+          medium: this.sslc_medium,
+          board: this.sslc_board,
+          percentage: this.sslc_percent
+        },
+        hsc: {
+          enabled: this.enable_hsc,
+          medium: this.hsc_medium,
+          board: this.hsc_board,
+          percentage: this.hsc_percent,
+          cutoff: this.hsc_cutoff
+        },
+        diploma: {
+          enabled: this.enable_diploma,
+          percentage: this.diploma_percent
+        },
+        ug: {
+          cgpa: this.cgpa,
+          backlogs: this.backlogs,
+          status: this.status
+        }
+      }
+
+      this.close_student_table.emit({
+        response_for : this.student_table_popup_data.open_as,
+        close:false,
+        applied_filters: applied_filters,
+      });
+    }else{
+      this.close_student_table.emit({
+        response_for : this.student_table_popup_data.open_as,
+        close:false,
+        applied_filters: this.student_table_popup_data.filters,
+      });
+    }
   }
 }

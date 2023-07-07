@@ -266,7 +266,7 @@ def add_admin(request):
         
         return JsonResponse(data)
         
-
+# Need to be changed
 @csrf_exempt
 def get_drive_by_status(request):
      
@@ -288,11 +288,6 @@ def get_drive_by_status(request):
 
 
         for drive in drives:
-            # print(drive.file.url)
-            current_site = get_current_site(request)
-            domain = current_site.domain
-            file_url = '/media/file_uploads/empty.csv'
-            file_absolute_url = f"http://{domain}{file_url}"
             drive_date = datetime.strptime(str(drive.date), '%Y-%m-%d').strftime('%d-%m-%Y')
             company_obj = Company.objects.get(company=drive.company)
 
@@ -309,12 +304,13 @@ def get_drive_by_status(request):
                     'HR_mail' : company_obj.HR_mail,
                     'HR_contact' : company_obj.HR_contact,
                     'description' : drive.description,
-                    'file' : file_absolute_url,
                     'category' : company_obj.category,
                     'lock_hr_mail' : company_obj.lock_hr_mail,
                     'lock_hr_contact' : company_obj.lock_hr_contact,
                     'departments' : drive.departments,
                     'ctc' : drive.ctc,
+                    'filters' : drive.filter_criteria,
+                    'rounds' : [] if drive.drive_rounds==None else drive.drive_rounds
                 }
             )
             
@@ -334,6 +330,7 @@ def get_drive_by_status(request):
             }
         )
  
+# Need to be changed
 @csrf_exempt
 def get_drive_by_dateRange(request):
     drive_lst = []
@@ -375,12 +372,6 @@ def get_drive_by_dateRange(request):
             drives = Drive.objects.filter(date__range=[start_date, end_date], date__lt=today)
         
         for drive in drives:
-            # print(drive.file.url)
-            current_site = get_current_site(request)
-            domain = current_site.domain
-            file_url = '/media/file_uploads/empty.csv'
-            
-            file_absolute_url = f"http://{domain}{file_url}"
             drive_date = datetime.strptime(str(drive.date), '%Y-%m-%d').strftime('%d-%m-%Y')
             company_obj = Company.objects.get(company=drive.company)
             
@@ -398,13 +389,14 @@ def get_drive_by_dateRange(request):
                     'HR_mail' : company_obj.HR_mail,
                     'HR_contact' : company_obj.HR_contact,
                     'description' : drive.description,
-                    'file' : file_absolute_url,
                     'completed' : True if status == 'Completed' else drive.date < today,
                     'category' : company_obj.category,
                     'lock_hr_mail' : company_obj.lock_hr_mail,
                     'lock_hr_contact' : company_obj.lock_hr_contact,
                     'departments' : drive.departments,
-                    'ctc' : drive.ctc
+                    'ctc' : drive.ctc,
+                    'filters' : drive.filter_criteria,
+                    'rounds' : [] if drive.drive_rounds==None else drive.drive_rounds
                 }
             )
             
@@ -423,7 +415,10 @@ def get_drive_by_dateRange(request):
                 'drive_lst':drive_lst
             }
         )
-                                               
+    
+                                        #    
+
+# Need to be changed
 @csrf_exempt
 def get_drive_by_id(request):
     
@@ -434,10 +429,6 @@ def get_drive_by_id(request):
     
     try:
         drive = Drive.objects.get(pk=drive_id)
-        current_site = get_current_site(request)
-        domain = current_site.domain
-        file_url = '/media/file_uploads/empty.csv'
-        file_absolute_url = f"http://{domain}{file_url}"
         
         drive_obj = {
                     'id' : drive.pk,
@@ -446,10 +437,11 @@ def get_drive_by_id(request):
                     'mode': drive.drive_mode,
                     'date': drive.date,
                     'description' : drive.description,
-                    'file' : (drive.file.name).split('/')[-1],
                     'completed' : True,
                     'departments' : drive.departments,
                     'ctc' : drive.ctc,
+                    'filters' : drive.filter_criteria,
+                    'rounds' : [] if drive.drive_rounds==None else json.loads(drive.drive_rounds)
                 }
         data = {
             'success':True,
@@ -465,7 +457,6 @@ def get_drive_by_id(request):
         }
     
         return JsonResponse(data)
-
 
 def get_report_summary_by_id(staff_id, filter, start_date, end_date):
     # staff_id = request.GET.get('staff_id', 'default_staff_id')
@@ -1308,6 +1299,7 @@ def delete_company_report(request):
         
         return JsonResponse(data)
 
+# Need to Make changes in this function
 @csrf_exempt
 def add_and_update_company_drive(request):
     formdata = request.POST
@@ -1319,14 +1311,13 @@ def add_and_update_company_drive(request):
     description = formdata['description']
     mode = formdata['mode']
     ctc = formdata['ctc']
-     
-    eligible_depts = formdata['eligible_depts']    
+    checked_students = formdata['checked_students'].split(',')
+    filters = formdata['filters']
+    departments = formdata['eligible_depts'].split(',')  
     date_obj = datetime.strptime(date_str, '%Y-%m-%d').date()
     
-    departments = eligible_depts.split(',')
-    
-    print(f'company : {company}\ndate : {date_obj}\njob_role : {job_role}\ndescription : {description}\nmode : {mode}\neligible_depts : {departments}')
- 
+    # departments = eligible_depts.split(',')
+    print(f'pk : {pk}\ncompany : {company}\ndate : {date_obj}\njob_role : {job_role}\ndescription : {description}\nmode : {mode}\nctc : {ctc}\nchecked_students : {checked_students}\ndepartments : {departments}')
     try:     
         if(pk==''):   
             drive = Drive(
@@ -1336,10 +1327,19 @@ def add_and_update_company_drive(request):
                 drive_mode = mode,
                 description = description,
                 departments = departments,
-                ctc = float(ctc)
+                ctc = float(ctc),
+                filter_criteria = filters
             )
-            
+            print(filters)
             drive.save()
+            
+            students = Student.objects.filter(reg_no__in=checked_students)
+            drive.attended_students.set(students)
+            
+            
+            # Update attended_drives field in Student model
+            for student in students:
+                student.attended_drives.add(drive)            
             
             data = {
                 'success':True,
@@ -1351,6 +1351,10 @@ def add_and_update_company_drive(request):
         else:
             print('Edit Drive', pk)
             drive_obj = Drive.objects.get(pk=pk)
+
+            already_selected_students = drive_obj.attended_students.all()
+            for student in already_selected_students:
+                student.attended_drives.remove(drive_obj)
             
             drive_obj.job_role = job_role
             drive_obj.date = date_obj
@@ -1358,9 +1362,17 @@ def add_and_update_company_drive(request):
             drive_obj.drive_mode = mode
             drive_obj.description = description
             drive_obj.departments = departments
+            drive_obj.filter_criteria = filters
             drive_obj.ctc = float(ctc)
             
             drive_obj.save()
+            
+            students = Student.objects.filter(reg_no__in=checked_students)
+            drive_obj.attended_students.set(students)
+            
+            # Update attended_drives field in Student model
+            for student in students:
+                student.attended_drives.add(drive_obj)
             
             data = {
                 'success':True,
@@ -1412,7 +1424,6 @@ def export_as_csv(request):
         print(e)
     
     return response
-    
     
 
 @csrf_exempt
@@ -1476,20 +1487,25 @@ def get_eligible_students(request):
     
         eligible_students = Student.objects.filter(
             placement_interested = True, 
-            dept__in = formdata['departments'], 
-            batch = formdata['batch'],
+            dept__in = departments, 
+            batch = batch,
             gender__in = ['Male', 'Female'] if gender=='All' else [gender] 
         )
         
-        eligible_students_id = eligible_students.values_list('reg_no', flat=True).distinct()
+        # print(status)
+        if(status[0] and (not status[1])):
+            eligible_students = eligible_students.filter(attended_drives__driveselection__selected=True)
+        elif(status[1] and (not status[0])):
+            eligible_students = eligible_students.filter(Q(attended_drives__driveselection__selected=False) | Q(attended_drives = None))
         
+        eligible_students_id = eligible_students.values_list('reg_no', flat=True).distinct().order_by('reg_no')
         
         eligible_students = StudentEdu.objects.filter(
             reg_no__in=eligible_students_id, 
             percent_10__range = sslc_percent,
             board_10__in = [sslc_board] if sslc_board != 'All' else ['CBSE', 'Others', 'State Board'], 
             medium_10__in = [sslc_medium] if sslc_medium!='All' else ['English', 'Tamil', 'Others'],
-        )
+        ).order_by('reg_no')
         
         
         
@@ -1505,12 +1521,15 @@ def get_eligible_students(request):
                 percent_diploma__range = diploma_percent,
             )
         
+        # cgpa = [cgpa[0]+0.01, cgpa[1]+0.01]
+        # print(cgpa)
         eligible_students_edu = eligible_students.filter(ug_cgpa__range = cgpa)
         
         # print(backlogs)
         
         if((not backlogs[0]) and (not backlogs[1])):
-            eligible_students_edu = eligible_students.filter(arrear_history = 0, standing_arrears = 0)
+            eligible_students_edu = eligible_students_edu.filter(arrear_history = 0, standing_arrears = 0)
+        
         
         
         eligible_students_edu = eligible_students_edu.order_by('reg_no')
@@ -1564,7 +1583,9 @@ def get_eligible_students(request):
         }
         
         return JsonResponse(data)
+    
     else: 
+        print('Else Bruh!!')
         checked_students = request.GET.get('checked_students').split(',')
         students_personal = Student.objects.filter(reg_no__in = checked_students).order_by('reg_no')
         students_edu = StudentEdu.objects.filter(reg_no__in = checked_students).order_by('reg_no')

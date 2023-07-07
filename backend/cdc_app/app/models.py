@@ -2,6 +2,8 @@ from django.db import models
 from django.utils.timezone import now
 from django.contrib.postgres.fields import ArrayField
 # from app.models import Student, Drive
+from django.contrib.postgres.fields.jsonb import JSONField
+
 
 
 # Create your models here.
@@ -85,6 +87,7 @@ class DriveSelection(models.Model):
     drive = models.ForeignKey('Drive', on_delete=models.CASCADE)
     student = models.ForeignKey('Student', on_delete=models.CASCADE)
     selected = models.BooleanField(default=False)
+    round = models.IntegerField(default=0)
 
 class Student(models.Model):
     reg_no = models.CharField(max_length=50, null=False, primary_key=True)
@@ -106,7 +109,9 @@ class Drive(models.Model):
     description = models.TextField(null=False)
     ctc = models.FloatField(null=True)
     departments = ArrayField(models.CharField(max_length=100), blank=True, null=True)
+    filter_criteria = models.JSONField(null=True)
     attended_students = models.ManyToManyField('Student', through='DriveSelection')
+    drive_rounds = ArrayField(models.JSONField(null=True), default=list)
 
     class Meta:
         ordering = ['-date']

@@ -3,7 +3,7 @@ import { AppService } from '../service/app.service';
 import { FormBuilder, Validators } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
-import { company, drive, serverResponse } from '../models/model';
+import { company, drive, serverResponse, studentTableFilterOptions } from '../models/model';
 import { student_table_data } from '../student-table/student-table.component';
 
 export interface drive_popup_data{
@@ -26,12 +26,16 @@ export class DrivePopupComponent implements OnInit{
   userData = JSON.parse(sessionStorage.getItem('cur_user_data')!);
   cur_user_id:string = this.userData.user_id
   
-  eligible_depts:Set<string> = new Set();
+  eligible_depts:string[] = []
   company!:string;
   result_ready = false
   eligible_lst_uploaded = false
   result_uploaded = false
   student_table = false
+
+  add_round = false
+  round_added = false
+  round_list_uploaded = false
 
   student_table_popup_data!:student_table_data;
 
@@ -47,19 +51,48 @@ export class DrivePopupComponent implements OnInit{
   ]
 
   @Input() data!:drive_popup_data;
-  // @Input() checked_students!:Set<string>;
-  checked_students:Set<string> = new Set();
+  checked_students:string[] = []
+
+  filters : studentTableFilterOptions = {
+    checked_students: [],
+    departments: [],
+    batch: '2024',
+    gender: 'All',
+    sslc: {
+      medium: 'All',
+      board: 'All',
+      percentage: [0, 100]
+    },
+    hsc: {
+      enabled: true,
+      medium: 'All',
+      board: 'All',
+      percentage: [0, 100],
+      cutoff: [0, 200]
+    },
+    diploma: {
+      enabled: false,
+      percentage: [0, 100]
+    },
+    ug: {
+      cgpa: [0, 10],
+      backlogs: [false, false],
+      status: [true, true]
+    }
+  }
+
+  rounds : {
+    number:number,
+    name:string,
+  }[] = []
 
   @Output() popup_closed = new EventEmitter<boolean>();
-  // @Output() open_student_table = new EventEmitter<boolean>();
-  // @Output() student_table_popup_data = new EventEmitter<student_table_data>();
 
   
   @Output() open_student_table = new EventEmitter<{
     close:boolean,
     checked_students?:Set<string>
   }>();
-  // popup_data!:student_table_data;
 
   addDriveForm = this.builder.group({
     job_role:this.builder.control('',Validators.required),
@@ -81,9 +114,16 @@ export class DrivePopupComponent implements OnInit{
   ) {  }
 
   ngOnInit(): void {
-    //console.log(this.data)
-
     if(this.data.open_as == 'edit'){
+      this.filters = JSON.parse(this.data.drive!.filters)
+      console.log(this.filters)
+      this.checked_students = this.filters.checked_students
+      this.eligible_depts = this.filters.departments
+      
+      this.eligible_lst_uploaded = true
+      this.result_ready = true
+
+      this.rounds = this.data.drive!.rounds
 
       this.addDriveForm.patchValue({
         job_role : this.data.drive!.job_role,
@@ -103,16 +143,16 @@ export class DrivePopupComponent implements OnInit{
   }
 
   closePopup(){
+    console.log('close')
     this.popup_closed.emit(false);
   }
 
   addDrive(){
     if(this.addDriveForm.valid){
-      if(this.someDeptSelected()){
+      if(this.checked_students.length>0){
         let formData = new FormData()
         const formattedDate = this.datePipe.transform(this.addDriveForm.value.date, 'yyyy-MM-dd')!;        
-        
-        let eligible_depts_arr =[...this.eligible_depts]
+      
         let pk = this.data.open_as==='edit'?(this.data.drive!.id).toString():''
 
         formData.append('pk', pk)
@@ -121,8 +161,10 @@ export class DrivePopupComponent implements OnInit{
         formData.append('date',formattedDate!)
         formData.append('description',this.addDriveForm.value.description!)
         formData.append('mode',this.addDriveForm.value.mode!)
-        formData.append('eligible_depts',eligible_depts_arr.join(','))
+        formData.append('eligible_depts',this.eligible_depts.join(','))
         formData.append('ctc',(this.addDriveForm.value.ctc!).toString())
+        formData.append('checked_students', this.checked_students.join(','))
+        formData.append('filters', JSON.stringify(this.filters))
 
         this.service.addCompanyDrive(formData, this.data.open_as).subscribe(
           (res:serverResponse)=>{
@@ -138,71 +180,61 @@ export class DrivePopupComponent implements OnInit{
             this.popup_closed.emit(false);
           }
         )
-        
-
       }
-      else this.toastr.warning('Please select Eligible Departments!!');
+      else this.toastr.warning('Please Generate Eligible List!!');
       
     }else this.toastr.error('Form Invalid!!');
     
   }
 
-  handleStudentTable(value : any){
+  handleStudentTable(value : { response_for : string,close:boolean, applied_filters:studentTableFilterOptions}){
     this.student_table = value.close
-    if(value.checked_students.size>0){
-      this.eligible_lst_uploaded = true 
-      this.checked_students = value.checked_students
-      this.eligible_depts = value.depts
+    if(value.response_for === 'eligible_lst'){
+      const applied_filters = value.applied_filters
+      console.log(applied_filters)
 
-    }else this.eligible_lst_uploaded = false
+      
+      this.checked_students = applied_filters.checked_students
+      this.eligible_depts = applied_filters.departments
+
+      if(applied_filters.checked_students.length>0){
+        this.eligible_lst_uploaded = true   
+        this.filters = applied_filters
+      }else this.eligible_lst_uploaded = false
+    }
     
-    console.log(value.depts)
+    
   }
 
   openStudentTable(){
     this.student_table = true
     this.student_table_popup_data = {
-      action : 'add',
+      action : this.data.open_as,
       open_as  : 'eligible_lst',
       drive : this.data.drive!,
-      checked_students : this.checked_students
+      filters : this.filters
     }
   }
 
-  setAllDept(value: boolean){
-    this.allDept = !this.allDept;
-    if(value){
-      this.departments.forEach((dept)=>{
-        dept.value = true;
-      })
-    }
-    else{
-      this.departments.forEach((dept)=>{
-        dept.value = false;
-      })
+  openStudentTableforRound(round: { number: number, name: string }){
+    this.student_table = true
+
+    this.student_table_popup_data = {
+      action : this.data.open_as,
+      open_as  : round.number.toString(),
+      drive : this.data.drive!,
+      filters : this.filters
     }
   }
 
-  updateAllDept(){
-    // this.allDept = false;
-    let bool = true;
-    this.departments.forEach((dept)=>{
-      if(!dept.value){
-        bool = false;
-      }
-    })
-    this.allDept = bool;
-  }
-
-  someDeptSelected():boolean{
-    let bool = false;
-    for(let dept of this.departments){
-      if(dept.value){
-        bool = true;
-        return bool;
-      }
+  addOfferDetails(){
+    this.student_table = true
+    this.student_table_popup_data = {
+      action : this.data.open_as,
+      open_as  : 'offer_details',
+      drive : this.data.drive!,
+      filters : this.filters
     }
-    return bool;
   }
 
   patchDate(dateString: string) : string{
@@ -216,4 +248,25 @@ export class DrivePopupComponent implements OnInit{
     //console.log(formattedDate)
     return formattedDate;
   }
+
+  captureRoundName(event: Event) {
+    const roundName = (event.target as HTMLInputElement).value;
+    this.add_round = false;
+    if(roundName.trim().length>0){
+      this.rounds.push({
+        name: roundName,
+        number: this.rounds.length + 1
+      });
+    }
+    
+  }
+
+  onKeyDown(event: KeyboardEvent) {
+    if (event.keyCode === 13) {
+      event.preventDefault(); // Prevent the default behavior of the Enter key
+      this.captureRoundName(event); // Call the captureRoundName function
+    }
+  }
+  
+
 }

@@ -101,7 +101,7 @@ export class DriveComponent implements OnInit {
       this.service.getDriveByDateRange(formData).subscribe(
         (res: driveByStatusResponse) => {
           this.drive_lst = res.drive_lst;
-
+          console.log(this.drive_lst)
           if(!res.success) this.toastr.warning('Technical Error!!');
         },
         err => {
@@ -145,14 +145,8 @@ export class DriveComponent implements OnInit {
     this.filterByStatus(this.filter)
   }
 
-  handleStudentTable(value : any){
-    this.student_table = value.close 
-    if(value) this.toastr.info('Opening Student Table')
-    else this.toastr.info('Closing Student Table')
-  }
-
   openDrivePopup(drive:drive){
-    // console.log(drive)
+    console.log(drive)
     drive.departments = drive.departments===null?[]:drive.departments
     this.drive_popup_data = {
       open_as : 'edit',

@@ -34,11 +34,12 @@ export interface drive{
     lock_hr_mail : boolean,
     lock_hr_contact : boolean,
     description : string,
-    file : File|string,
     ctc : number,
     completed : boolean,
     category : string,
     departments : string[],
+    filters : any,
+    rounds : any[],
     
 }
 

@@ -70,7 +70,8 @@
                 </div>
 
                 <div class="input spl-btn-box">
-                    <div class="spl-btn" [ngClass]="{'gen-btn' : eligible_lst_uploaded, 'disabled-gen' :  !eligible_lst_uploaded}" (click)="openStudentTable()">
+                    <div class="spl-btn" [ngClass]="{'gen-btn' : eligible_lst_uploaded, 'disabled-gen' :  !eligible_lst_uploaded}" 
+                    (click)="openStudentTable()">
                         <span class="material-icons" *ngIf="!eligible_lst_uploaded">
                             add_box
                         </span>
@@ -86,13 +87,13 @@
                 <p>Rounds</p>
                 <div class="round-box">
                     <div class="round" style="color:white; background-color: #1a6486;" *ngFor="let round of rounds" (click)="openStudentTableforRound(round)">
-                        <p class="heading">Round - {{round.number}}</p>
+                        <p class="heading">Round - {{round.num}}</p>
                         <p class="round-name">
                             {{round.name}}
                         </p>   
                     </div>
 
-                    <div class="round add-round"  (click) = "openStudentTableforRound({number : rounds.length+1, name : 'NA'})">
+                    <div class="round add-round" [ngClass]="{'disable' : !result_ready}" (click) = "openStudentTableforRound({'num' : rounds.length+1, 'name' : 'NA' })">
                         <div class="round-name">
                             <span class="material-icons" *ngIf="result_ready">
                                 add_box

@@ -39,7 +39,7 @@ export interface drive{
     category : string,
     departments : string[],
     filters : any,
-    rounds : any[],
+    rounds : { num : number, name : string}[],
     
 }
 
@@ -227,6 +227,8 @@ export interface getReportsByCompanyResponse{
 }
 
 export interface studentTableFilterOptions{
+    drive_id : number|null,
+    round : Number,
     checked_students : string[],
     departments : string[],
     batch : string,

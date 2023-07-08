@@ -13,7 +13,6 @@ urlpatterns = [
     path('get_drive_by_status', views.get_drive_by_status),
     path('get_drive_by_dateRange', views.get_drive_by_dateRange),
     path('delete_drive', views.delete_drive),
-    path('get_drive_by_id', views.get_drive_by_id),
        
     path('get_report_summary', views.get_report_summary),
     

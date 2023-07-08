@@ -75,7 +75,6 @@ export class DriveComponent implements OnInit {
     this.filter = status
 
     if (status === 'Today' || status === 'Upcoming') {
-      // console.log(status)
      
       this.service.getDriveByStatus(status).subscribe(
         (res:driveByStatusResponse)=>{
@@ -101,7 +100,6 @@ export class DriveComponent implements OnInit {
       this.service.getDriveByDateRange(formData).subscribe(
         (res: driveByStatusResponse) => {
           this.drive_lst = res.drive_lst;
-          console.log(this.drive_lst)
           if(!res.success) this.toastr.warning('Technical Error!!');
         },
         err => {
@@ -146,7 +144,15 @@ export class DriveComponent implements OnInit {
   }
 
   openDrivePopup(drive:drive){
-    console.log(drive)
+    
+    // Setting the last round as active round and removing the 'Round-0'
+    let rounds = drive.rounds
+    let cur_active_round = rounds.length-1
+    drive.filters.round = cur_active_round
+    // rounds.splice(0,1)
+    // drive.rounds = rounds
+    
+
     drive.departments = drive.departments===null?[]:drive.departments
     this.drive_popup_data = {
       open_as : 'edit',

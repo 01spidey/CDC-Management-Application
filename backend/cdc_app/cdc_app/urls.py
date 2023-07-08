@@ -30,8 +30,6 @@ urlpatterns = [
     path('get_drive_by_status', include('app.urls')),
     path('get_drive_by_dateRange', include('app.urls')),
     path('delete_drive', include('app.urls')),
-    path('get_drive_by_id', include('app.urls')),
-
     
     path('get_report_summary', include('app.urls')),
     path('get_notifications', include('app.urls')),

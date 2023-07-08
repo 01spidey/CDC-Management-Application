@@ -34,7 +34,7 @@ export class DrivePopupComponent implements OnInit{
   student_table = false
 
   add_round = false
-  round_added = false
+  new_round_added = false
   round_list_uploaded = false
 
   student_table_popup_data!:student_table_data;
@@ -54,6 +54,8 @@ export class DrivePopupComponent implements OnInit{
   checked_students:string[] = []
 
   filters : studentTableFilterOptions = {
+    drive_id : null,
+    round : 0,
     checked_students: [],
     departments: [],
     batch: '2024',
@@ -82,7 +84,7 @@ export class DrivePopupComponent implements OnInit{
   }
 
   rounds : {
-    number:number,
+    num:number,
     name:string,
   }[] = []
 
@@ -113,17 +115,20 @@ export class DrivePopupComponent implements OnInit{
     private toastr:ToastrService
   ) {  }
 
-  ngOnInit(): void {
+  ngOnInit(): void { 
+    console.log(this.data)
     if(this.data.open_as == 'edit'){
-      this.filters = JSON.parse(this.data.drive!.filters)
-      console.log(this.filters)
+
+      // configuting the data from 'Drive Component'
+      this.filters = this.data.drive!.filters
       this.checked_students = this.filters.checked_students
       this.eligible_depts = this.filters.departments
       
       this.eligible_lst_uploaded = true
       this.result_ready = true
 
-      this.rounds = this.data.drive!.rounds
+      this.rounds = [...this.data.drive!.rounds]
+      this.rounds.splice(0,1)
 
       this.addDriveForm.patchValue({
         job_role : this.data.drive!.job_role,
@@ -143,7 +148,6 @@ export class DrivePopupComponent implements OnInit{
   }
 
   closePopup(){
-    console.log('close')
     this.popup_closed.emit(false);
   }
 
@@ -165,6 +169,7 @@ export class DrivePopupComponent implements OnInit{
         formData.append('ctc',(this.addDriveForm.value.ctc!).toString())
         formData.append('checked_students', this.checked_students.join(','))
         formData.append('filters', JSON.stringify(this.filters))
+        formData.append('round', this.filters.round.toString())
 
         this.service.addCompanyDrive(formData, this.data.open_as).subscribe(
           (res:serverResponse)=>{
@@ -189,11 +194,12 @@ export class DrivePopupComponent implements OnInit{
 
   handleStudentTable(value : { response_for : string,close:boolean, applied_filters:studentTableFilterOptions}){
     this.student_table = value.close
-    if(value.response_for === 'eligible_lst'){
-      const applied_filters = value.applied_filters
-      console.log(applied_filters)
+    const applied_filters = value.applied_filters
+    
+    console.log(value)
+    let round_name = value.response_for.split('^')[1]
 
-      
+    if(round_name === 'Eligible List'){
       this.checked_students = applied_filters.checked_students
       this.eligible_depts = applied_filters.departments
 
@@ -201,6 +207,20 @@ export class DrivePopupComponent implements OnInit{
         this.eligible_lst_uploaded = true   
         this.filters = applied_filters
       }else this.eligible_lst_uploaded = false
+    }
+    else{
+      let round_num = Number(value.response_for.split('^')[0])
+      
+      if(applied_filters.checked_students.length>0){
+        this.filters = applied_filters
+        if(round_num>this.rounds.length){
+          this.rounds.push({
+            num : round_num,
+            name : round_name
+          })
+          this.result_ready = false
+        }
+      }
     }
     
     
@@ -216,15 +236,16 @@ export class DrivePopupComponent implements OnInit{
     }
   }
 
-  openStudentTableforRound(round: { number: number, name: string }){
+  openStudentTableforRound(round: {num:number, name:string}){
     this.student_table = true
-
+    // console.log
     this.student_table_popup_data = {
       action : this.data.open_as,
-      open_as  : round.number.toString(),
+      open_as  : round.num.toString(),
       drive : this.data.drive!,
       filters : this.filters
     }
+    // let x = round.key
   }
 
   addOfferDetails(){
@@ -245,28 +266,8 @@ export class DrivePopupComponent implements OnInit{
     month = month.length==1?`0${month}`:month
     const year = +parts[2];
     const formattedDate = `${year}-${month}-${day}`; 
-    //console.log(formattedDate)
     return formattedDate;
   }
 
-  captureRoundName(event: Event) {
-    const roundName = (event.target as HTMLInputElement).value;
-    this.add_round = false;
-    if(roundName.trim().length>0){
-      this.rounds.push({
-        name: roundName,
-        number: this.rounds.length + 1
-      });
-    }
-    
-  }
-
-  onKeyDown(event: KeyboardEvent) {
-    if (event.keyCode === 13) {
-      event.preventDefault(); // Prevent the default behavior of the Enter key
-      this.captureRoundName(event); // Call the captureRoundName function
-    }
-  }
-  
 
 }

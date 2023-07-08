@@ -1,9 +1,10 @@
 <div class="main">
     <div class="top">
-        <div class="title" *ngIf="student_table_popup_data.open_as!=='eligible_lst'">
-            <input type="text" placeholder="Round Name">
+        <div class="title" *ngIf="new_round && student_table_popup_data.open_as!=='eligible_lst'">
+            <input type="text" placeholder="Round Name" [(ngModel)]="round_name">
         </div>
-        <h1 class="title" *ngIf="student_table_popup_data.open_as==='eligible_lst'">Eligible List</h1>
+        <h1 class="title" style="border-bottom: 3px solid #152b51;" *ngIf="!new_round">{{round_name}}</h1>
+        <!-- <h1 class="title" style="border-bottom: 3px solid #152b51;" *ngIf="student_table_popup_data.open_as==='eligible_lst'">Eligible List</h1> -->
         
         <div class="options">
             <div class="option" style="background-color: #2f96b4" (click)="viewSelected()">
@@ -32,7 +33,7 @@
         <div class="left">
             <div class="left-top">
                 <p class="title">Filters</p>
-                <button mat-raised-button (click)="applyFilters()">Apply</button>
+                <button mat-raised-button (click)="applyFilters(cur_round)">Apply</button>
             </div>
             
             <div class="container">

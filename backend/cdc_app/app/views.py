@@ -290,7 +290,7 @@ def get_drive_by_status(request):
         for drive in drives:
             drive_date = datetime.strptime(str(drive.date), '%Y-%m-%d').strftime('%d-%m-%Y')
             company_obj = Company.objects.get(company=drive.company)
-
+            print(json.loads(drive.drive_rounds))
             drive_lst.append(
                 {
                     'id' : drive.pk,
@@ -309,8 +309,8 @@ def get_drive_by_status(request):
                     'lock_hr_contact' : company_obj.lock_hr_contact,
                     'departments' : drive.departments,
                     'ctc' : drive.ctc,
-                    'filters' : drive.filter_criteria,
-                    'rounds' : [] if drive.drive_rounds==None else drive.drive_rounds
+                    'filters' : json.loads(drive.filter_criteria),
+                    'rounds' : [] if drive.drive_rounds==None else drive.drive_rounds,
                 }
             )
             
@@ -374,8 +374,8 @@ def get_drive_by_dateRange(request):
         for drive in drives:
             drive_date = datetime.strptime(str(drive.date), '%Y-%m-%d').strftime('%d-%m-%Y')
             company_obj = Company.objects.get(company=drive.company)
+            print(drive.drive_rounds)
             
-            # print(file_url)
             drive_lst.append(
                 {
                     'id' : drive.pk,
@@ -395,8 +395,8 @@ def get_drive_by_dateRange(request):
                     'lock_hr_contact' : company_obj.lock_hr_contact,
                     'departments' : drive.departments,
                     'ctc' : drive.ctc,
-                    'filters' : drive.filter_criteria,
-                    'rounds' : [] if drive.drive_rounds==None else drive.drive_rounds
+                    'filters' : json.loads(drive.filter_criteria),
+                    'rounds' : [] if drive.drive_rounds==None else drive.drive_rounds, 
                 }
             )
             
@@ -415,48 +415,6 @@ def get_drive_by_dateRange(request):
                 'drive_lst':drive_lst
             }
         )
-    
-                                        #    
-
-# Need to be changed
-@csrf_exempt
-def get_drive_by_id(request):
-    
-    drive_id = request.GET.get('drive_id')
-    # print(drive_id)
-    
-    drive_obj = {}
-    
-    try:
-        drive = Drive.objects.get(pk=drive_id)
-        
-        drive_obj = {
-                    'id' : drive.pk,
-                    'company' : drive.company,
-                    'job_role': drive.job_role,
-                    'mode': drive.drive_mode,
-                    'date': drive.date,
-                    'description' : drive.description,
-                    'completed' : True,
-                    'departments' : drive.departments,
-                    'ctc' : drive.ctc,
-                    'filters' : drive.filter_criteria,
-                    'rounds' : [] if drive.drive_rounds==None else json.loads(drive.drive_rounds)
-                }
-        data = {
-            'success':True,
-            'drive' : drive_obj
-        }
-    
-        return JsonResponse(data)
-    
-    except Exception as e:
-        data = {
-            'success':False,
-            'drive' : {}
-        }
-    
-        return JsonResponse(data)
 
 def get_report_summary_by_id(staff_id, filter, start_date, end_date):
     # staff_id = request.GET.get('staff_id', 'default_staff_id')
@@ -1314,10 +1272,9 @@ def add_and_update_company_drive(request):
     checked_students = formdata['checked_students'].split(',')
     filters = formdata['filters']
     departments = formdata['eligible_depts'].split(',')  
+    cur_round = formdata['round']
     date_obj = datetime.strptime(date_str, '%Y-%m-%d').date()
     
-    # departments = eligible_depts.split(',')
-    print(f'pk : {pk}\ncompany : {company}\ndate : {date_obj}\njob_role : {job_role}\ndescription : {description}\nmode : {mode}\nctc : {ctc}\nchecked_students : {checked_students}\ndepartments : {departments}')
     try:     
         if(pk==''):   
             drive = Drive(
@@ -1328,7 +1285,8 @@ def add_and_update_company_drive(request):
                 description = description,
                 departments = departments,
                 ctc = float(ctc),
-                filter_criteria = filters
+                filter_criteria = filters,
+                drive_rounds = [{'num' : 0, 'name' : 'Eligible List'}]
             )
             print(filters)
             drive.save()
@@ -1350,11 +1308,12 @@ def add_and_update_company_drive(request):
         
         else:
             print('Edit Drive', pk)
+            print(filters)
             drive_obj = Drive.objects.get(pk=pk)
-
-            already_selected_students = drive_obj.attended_students.all()
-            for student in already_selected_students:
-                student.attended_drives.remove(drive_obj)
+            
+            # already_selected_students = drive_obj.attended_students.all()
+            # for student in already_selected_students:
+            #     student.attended_drives.remove(drive_obj)
             
             drive_obj.job_role = job_role
             drive_obj.date = date_obj
@@ -1365,14 +1324,15 @@ def add_and_update_company_drive(request):
             drive_obj.filter_criteria = filters
             drive_obj.ctc = float(ctc)
             
-            drive_obj.save()
             
-            students = Student.objects.filter(reg_no__in=checked_students)
-            drive_obj.attended_students.set(students)
+            # drive_obj.save()
             
-            # Update attended_drives field in Student model
-            for student in students:
-                student.attended_drives.add(drive_obj)
+            # students = Student.objects.filter(reg_no__in=checked_students)
+            # drive_obj.attended_students.set(students)
+            
+            # # Update attended_drives field in Student model
+            # for student in students:
+            #     student.attended_drives.add(drive_obj)
             
             data = {
                 'success':True,
@@ -1457,6 +1417,26 @@ def get_eligible_students(request):
         formdata = json.loads(request.body)
         # print(formdata)
         checked_students = formdata['checked_students']
+        round = formdata['round']
+        pk = formdata['drive_id']
+        print(pk, round)
+        
+        eligible_students = Student.objects.all() 
+        
+        if(pk!=None):
+            print(f'Requesting for Drive - {pk}\nRound - {round}')
+            # filter the students based on the round
+            # If round exists in drive_rounds, then filter the students based on the round
+            # else filter the students based on the previous round
+            cur_round = int(round)
+            drive = Drive.objects.get(pk=pk)
+            drive_rounds = drive.drive_rounds
+            
+            if(cur_round>len(drive_rounds)-1):
+                cur_round = len(drive_rounds)-1
+                print('Round does not exist in drive_rounds, so filtering based on previous round')
+                
+            eligible_students = eligible_students.filter(attended_drives__pk=pk, driveselection__round=cur_round)
         
         departments = formdata['departments']
         batch = formdata['batch']

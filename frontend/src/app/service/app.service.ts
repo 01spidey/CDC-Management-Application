@@ -166,6 +166,7 @@ export class AppService {
   // ---------------------------------------------------------------------------
 
   getEligibleStudents(filters:studentTableFilterOptions){
+    // console.error(filters)
     return this.http.post<studentTableFilterResponse>(`${this.URL}/get_eligible_students`, filters)
   }
 

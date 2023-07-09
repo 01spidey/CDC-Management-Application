@@ -100,6 +100,7 @@ export class DriveComponent implements OnInit {
       this.service.getDriveByDateRange(formData).subscribe(
         (res: driveByStatusResponse) => {
           this.drive_lst = res.drive_lst;
+          console.log(this.drive_lst)
           if(!res.success) this.toastr.warning('Technical Error!!');
         },
         err => {

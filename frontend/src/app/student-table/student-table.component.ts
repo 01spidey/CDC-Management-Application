@@ -80,10 +80,9 @@ export class StudentTableComponent implements OnInit{
   ) { }
 
   ngOnInit(): void {
-    // this.toastr.info(this.student_table_popup_data.open_as)
     this.filters = this.student_table_popup_data.filters
     this.configureAll(this.filters)
-    
+    console.log(this.checked_students)
     if(this.student_table_popup_data.open_as == 'eligible_lst'){      
       
       this.applyFilters(0)
@@ -96,12 +95,12 @@ export class StudentTableComponent implements OnInit{
       })
     }
     else {
-      let cur_round = Number(this.student_table_popup_data.open_as)
+      this.cur_round = Number(this.student_table_popup_data.open_as)
       let last_round = this.student_table_popup_data.drive?.rounds.length!-1
 
-      this.applyFilters(cur_round)
+      this.applyFilters(this.cur_round)
       
-      if(cur_round>last_round){
+      if(this.cur_round>last_round){
         this.new_round = true
         this.toastr.info(this.student_table_popup_data.open_as)
       }else{
@@ -113,7 +112,7 @@ export class StudentTableComponent implements OnInit{
 
   configureAll(filters : studentTableFilterOptions){
     if(!this.new_round){
-      this.checked_students = new Set(filters.checked_students);
+      this.checked_students = new Set();
       this.depts.forEach(dept => {
         if(filters.departments.includes(dept.name)){
           dept.value = true
@@ -176,7 +175,7 @@ export class StudentTableComponent implements OnInit{
     let drive = this.student_table_popup_data.drive
     const filters:studentTableFilterOptions = {
       drive_id: drive!==null? this.student_table_popup_data.drive!.id : null,
-      round : round,
+      round : this.cur_round,
       checked_students: [...this.checked_students],
       departments: this.depts.filter(dept => dept.value).map(dept => dept.name),
       batch: this.batch,
@@ -214,10 +213,13 @@ export class StudentTableComponent implements OnInit{
       (res:studentTableFilterResponse) => {
         this.filtered_students = res.filtered_students
         let a=0
-        
+        // console.log(res)
+
         this.filtered_students.forEach(student => {
           this.updateCheckedStudents(student, false)
         })
+
+        console.log(this.checked_students)
 
         this.toastr.success('Filter Applied!!')
       },
@@ -243,10 +245,10 @@ export class StudentTableComponent implements OnInit{
       this.checked_students.add(student.reg_no)
     }
     else{
-      if(manual){ 
+      // if(manual){ 
         this.filtered_student_count -= 1
         this.checked_students.delete(student.reg_no)
-      }
+      // }
     }
 
     if(this.filtered_student_count == this.filtered_students.length) this.all_checked = true

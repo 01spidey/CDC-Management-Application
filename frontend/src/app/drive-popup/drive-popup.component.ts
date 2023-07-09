@@ -36,6 +36,7 @@ export class DrivePopupComponent implements OnInit{
   add_round = false
   new_round_added = false
   round_list_uploaded = false
+  round_name = 'NA'
 
   student_table_popup_data!:student_table_data;
 
@@ -167,9 +168,8 @@ export class DrivePopupComponent implements OnInit{
         formData.append('mode',this.addDriveForm.value.mode!)
         formData.append('eligible_depts',this.eligible_depts.join(','))
         formData.append('ctc',(this.addDriveForm.value.ctc!).toString())
-        formData.append('checked_students', this.checked_students.join(','))
         formData.append('filters', JSON.stringify(this.filters))
-        formData.append('round', this.filters.round.toString())
+        formData.append('round_name', this.round_name)
 
         this.service.addCompanyDrive(formData, this.data.open_as).subscribe(
           (res:serverResponse)=>{
@@ -197,9 +197,9 @@ export class DrivePopupComponent implements OnInit{
     const applied_filters = value.applied_filters
     
     console.log(value)
-    let round_name = value.response_for.split('^')[1]
+    this.round_name = value.response_for.split('^')[1]
 
-    if(round_name === 'Eligible List'){
+    if(this.round_name === 'Eligible List'){
       this.checked_students = applied_filters.checked_students
       this.eligible_depts = applied_filters.departments
 
@@ -208,6 +208,7 @@ export class DrivePopupComponent implements OnInit{
         this.filters = applied_filters
       }else this.eligible_lst_uploaded = false
     }
+
     else{
       let round_num = Number(value.response_for.split('^')[0])
       
@@ -216,7 +217,7 @@ export class DrivePopupComponent implements OnInit{
         if(round_num>this.rounds.length){
           this.rounds.push({
             num : round_num,
-            name : round_name
+            name : this.round_name
           })
           this.result_ready = false
         }

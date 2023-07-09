@@ -395,7 +395,7 @@ def get_drive_by_dateRange(request):
                     'lock_hr_contact' : company_obj.lock_hr_contact,
                     'departments' : drive.departments,
                     'ctc' : drive.ctc,
-                    'filters' : json.loads(drive.filter_criteria),
+                    'filters' : drive.filter_criteria,
                     'rounds' : [] if drive.drive_rounds==None else drive.drive_rounds, 
                 }
             )
@@ -1269,11 +1269,14 @@ def add_and_update_company_drive(request):
     description = formdata['description']
     mode = formdata['mode']
     ctc = formdata['ctc']
-    checked_students = formdata['checked_students'].split(',')
-    filters = formdata['filters']
+    filters = json.loads(formdata['filters'])
+    checked_students = filters['checked_students']
     departments = formdata['eligible_depts'].split(',')  
-    cur_round = formdata['round']
+    cur_round = filters['round']
+    cur_round_name = formdata['round_name']
     date_obj = datetime.strptime(date_str, '%Y-%m-%d').date()
+    
+    print(cur_round, cur_round_name)
     
     try:     
         if(pk==''):   
@@ -1286,8 +1289,15 @@ def add_and_update_company_drive(request):
                 departments = departments,
                 ctc = float(ctc),
                 filter_criteria = filters,
-                drive_rounds = [{'num' : 0, 'name' : 'Eligible List'}]
             )
+            drive.drive_rounds.append(
+                {
+                    'num' : 0,
+                    'name' : 'Eligible List',
+                    
+                }
+            )
+            
             print(filters)
             drive.save()
             
@@ -1308,12 +1318,8 @@ def add_and_update_company_drive(request):
         
         else:
             print('Edit Drive', pk)
-            print(filters)
+            # print(formdata)
             drive_obj = Drive.objects.get(pk=pk)
-            
-            # already_selected_students = drive_obj.attended_students.all()
-            # for student in already_selected_students:
-            #     student.attended_drives.remove(drive_obj)
             
             drive_obj.job_role = job_role
             drive_obj.date = date_obj
@@ -1321,9 +1327,39 @@ def add_and_update_company_drive(request):
             drive_obj.drive_mode = mode
             drive_obj.description = description
             drive_obj.departments = departments
-            drive_obj.filter_criteria = filters
             drive_obj.ctc = float(ctc)
             
+            if(cur_round>len(drive_obj.drive_rounds)-1):
+                print('Adding new round')
+                print(checked_students)
+                # Adding the new round to the drive_rounds field
+                drive_rounds_data = drive_obj.drive_rounds
+                drive_rounds_data.append(
+                    {'num' : cur_round, 'name' : cur_round_name}
+                )
+                print(drive_rounds_data)
+                drive_obj.drive_rounds = drive_rounds_data
+                
+                DriveSelection.objects.filter(drive = drive_obj, student__reg_no__in = checked_students).update(round = cur_round)
+
+                drive_obj.save()
+                
+                
+            else:
+                print('Updating Existing round')
+                if(cur_round==0):
+                    # the students should be removed from the attended_students field
+                    pass
+                else:
+                    # the round field of the driveselection object of corresponding drive_pk and student_reg_no should be updated 
+                    pass
+                
+            # if(cur_round==0):
+            #     pass
+            # already_selected_students = drive_obj.attended_students.all()
+            # for student in already_selected_students:
+            #     student.attended_drives.remove(drive_obj)
+            # drive_obj.filter_criteria = filters
             
             # drive_obj.save()
             
@@ -1416,7 +1452,7 @@ def get_eligible_students(request):
     
         formdata = json.loads(request.body)
         # print(formdata)
-        checked_students = formdata['checked_students']
+        # checked_students = formdata['checked_students']
         round = formdata['round']
         pk = formdata['drive_id']
         print(pk, round)
@@ -1424,7 +1460,7 @@ def get_eligible_students(request):
         eligible_students = Student.objects.all() 
         
         if(pk!=None):
-            print(f'Requesting for Drive - {pk}\nRound - {round}')
+            # print(f'Requesting for Drive - {pk}\nRound - {round}')
             # filter the students based on the round
             # If round exists in drive_rounds, then filter the students based on the round
             # else filter the students based on the previous round
@@ -1432,11 +1468,14 @@ def get_eligible_students(request):
             drive = Drive.objects.get(pk=pk)
             drive_rounds = drive.drive_rounds
             
+            # print(cur_round)
+            prev_round = cur_round-1
             if(cur_round>len(drive_rounds)-1):
-                cur_round = len(drive_rounds)-1
-                print('Round does not exist in drive_rounds, so filtering based on previous round')
-                
-            eligible_students = eligible_students.filter(attended_drives__pk=pk, driveselection__round=cur_round)
+                eligible_students = eligible_students.filter(attended_drives__pk=pk, driveselection__round =prev_round )
+                print(f'Filtering students for New Round = {cur_round}\nCount : {len(eligible_students)}')
+            else:
+                eligible_students = eligible_students.filter(attended_drives__pk=pk, driveselection__round__gt = prev_round-1)
+                print(f'Filtering students for Existing Round = {cur_round}\nCount : {len(eligible_students)}')
         
         departments = formdata['departments']
         batch = formdata['batch']
@@ -1465,12 +1504,15 @@ def get_eligible_students(request):
         
         # eligible_students = Student.objects.filter(department__in = formdata['departments'], cgpa__gte = formdata['cgpa'], arrears__lte = formdata['arrears'], placed = False)
     
-        eligible_students = Student.objects.filter(
+        eligible_students = eligible_students.filter(
             placement_interested = True, 
             dept__in = departments, 
             batch = batch,
             gender__in = ['Male', 'Female'] if gender=='All' else [gender] 
         )
+        
+        # print(f'Count : {len(eligible_students)}')
+
         
         # print(status)
         if(status[0] and (not status[1])):
@@ -1479,7 +1521,8 @@ def get_eligible_students(request):
             eligible_students = eligible_students.filter(Q(attended_drives__driveselection__selected=False) | Q(attended_drives = None))
         
         eligible_students_id = eligible_students.values_list('reg_no', flat=True).distinct().order_by('reg_no')
-        
+        # print(f'Count : {len(eligible_students)}')
+         
         eligible_students = StudentEdu.objects.filter(
             reg_no__in=eligible_students_id, 
             percent_10__range = sslc_percent,
@@ -1516,9 +1559,17 @@ def get_eligible_students(request):
         eligible_students_id = eligible_students_edu.values_list('reg_no', flat=True).distinct()
         eligible_students_personal = Student.objects.filter(reg_no__in = eligible_students_id).order_by('reg_no')
         
+        print(f'Count : {len(eligible_students_personal)}')
+        
         eligible_students = []
         
         position = 1
+        checked_students = []
+        
+        drive_selection_objs = DriveSelection.objects.filter(drive__pk=pk, round__gt=round-1).values_list('student__reg_no', flat=True)
+        checked_students = list(drive_selection_objs)
+        
+        print(checked_students)
         
         for student_personal, student_edu in zip(eligible_students_personal, eligible_students_edu):
             eligible_students.append({
@@ -1555,7 +1606,7 @@ def get_eligible_students(request):
         # for student in eligible_students.values():
         #     print(student)  
         
-        
+        print(f'Final Count : {len(eligible_students)}')
         
         data = {
             'success':True,

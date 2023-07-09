@@ -288,5 +288,6 @@ export interface filtered_student{
 
 export interface studentTableFilterResponse{
     success : boolean,
+    round_name : string,
     filtered_students : filtered_student[]
 }

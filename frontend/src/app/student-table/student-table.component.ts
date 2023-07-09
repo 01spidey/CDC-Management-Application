@@ -81,8 +81,8 @@ export class StudentTableComponent implements OnInit{
 
   ngOnInit(): void {
     this.filters = this.student_table_popup_data.filters
+    console.log(this.filters.checked_students)
     this.configureAll(this.filters)
-    console.log(this.checked_students)
     if(this.student_table_popup_data.open_as == 'eligible_lst'){      
       
       this.applyFilters(0)
@@ -157,7 +157,7 @@ export class StudentTableComponent implements OnInit{
 
     this.all_checked = false
 
-    this.appService.onlySelected(this.checked_students).subscribe(
+    this.appService.onlySelected(this.checked_students, this.cur_round, this.student_table_popup_data.drive?.id!).subscribe(
       (res:studentTableFilterResponse) => {
         this.filtered_students = res.filtered_students
 
@@ -214,7 +214,7 @@ export class StudentTableComponent implements OnInit{
         this.filtered_students = res.filtered_students
         let a=0
         // console.log(res)
-
+        this.round_name = res.round_name
         this.filtered_students.forEach(student => {
           this.updateCheckedStudents(student, false)
         })

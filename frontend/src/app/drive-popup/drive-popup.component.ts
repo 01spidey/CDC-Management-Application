@@ -213,7 +213,9 @@ export class DrivePopupComponent implements OnInit{
       let round_num = Number(value.response_for.split('^')[0])
       
       if(applied_filters.checked_students.length>0){
-        this.filters = applied_filters
+        console.log(applied_filters.checked_students)
+        this.filters.checked_students = applied_filters.checked_students
+        // this.filters = applied_filters
         if(round_num>this.rounds.length){
           this.rounds.push({
             num : round_num,

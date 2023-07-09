@@ -1448,6 +1448,8 @@ def delete_drive(request):
 @csrf_exempt
 def get_eligible_students(request):
     
+    cur_round_name = ''
+    
     if(request.method == 'POST'):
     
         formdata = json.loads(request.body)
@@ -1456,6 +1458,7 @@ def get_eligible_students(request):
         round = formdata['round']
         pk = formdata['drive_id']
         print(pk, round)
+        
         
         eligible_students = Student.objects.all() 
         
@@ -1468,12 +1471,14 @@ def get_eligible_students(request):
             drive = Drive.objects.get(pk=pk)
             drive_rounds = drive.drive_rounds
             
+            
             # print(cur_round)
             prev_round = cur_round-1
             if(cur_round>len(drive_rounds)-1):
                 eligible_students = eligible_students.filter(attended_drives__pk=pk, driveselection__round =prev_round )
                 print(f'Filtering students for New Round = {cur_round}\nCount : {len(eligible_students)}')
             else:
+                cur_round_name = drive_rounds[cur_round]['name']
                 eligible_students = eligible_students.filter(attended_drives__pk=pk, driveselection__round__gt = prev_round-1)
                 print(f'Filtering students for Existing Round = {cur_round}\nCount : {len(eligible_students)}')
         
@@ -1554,12 +1559,13 @@ def get_eligible_students(request):
             eligible_students_edu = eligible_students_edu.filter(arrear_history = 0, standing_arrears = 0)
         
         
+        print(f'Count : {len(eligible_students_edu)}')
         
         eligible_students_edu = eligible_students_edu.order_by('reg_no')
         eligible_students_id = eligible_students_edu.values_list('reg_no', flat=True).distinct()
         eligible_students_personal = Student.objects.filter(reg_no__in = eligible_students_id).order_by('reg_no')
         
-        print(f'Count : {len(eligible_students_personal)}')
+        
         
         eligible_students = []
         
@@ -1610,6 +1616,7 @@ def get_eligible_students(request):
         
         data = {
             'success':True,
+            'round_name' : cur_round_name,
             'filtered_students' : eligible_students
         }
         
@@ -1617,9 +1624,14 @@ def get_eligible_students(request):
     
     else: 
         print('Else Bruh!!')
+        pk = int(request.GET.get('drive_id'))
         checked_students = request.GET.get('checked_students').split(',')
+        cur_round = int(request.GET.get('cur_round'))
+        
         students_personal = Student.objects.filter(reg_no__in = checked_students).order_by('reg_no')
         students_edu = StudentEdu.objects.filter(reg_no__in = checked_students).order_by('reg_no')
+        
+        
         
         eligible_students = []
         
@@ -1656,9 +1668,17 @@ def get_eligible_students(request):
                 }
             })  
             position+=1  
+       
+        drive = Drive.objects.get(pk=pk)
+        drive_rounds = drive.drive_rounds 
+        prev_round = cur_round-1
+        
+        if(cur_round<=len(drive_rounds)-1):
+            cur_round_name = drive_rounds[cur_round]['name']
         
         data = {
             'success':True,
+            'round_name' : cur_round_name,
             'filtered_students' : eligible_students
         }
         

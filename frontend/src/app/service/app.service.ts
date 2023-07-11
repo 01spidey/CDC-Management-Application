@@ -163,6 +163,20 @@ export class AppService {
     return this.http.post<any>(`${this.URL}/export_as_csv`, data, options)
   }
 
+  exportStudentDataAsCsv(data : {drive_id : number, round : number}){
+    const params = {
+      drive_id : data.drive_id,
+      round : data.round
+    }
+
+    const options = { 
+      responseType: 'blob' as 'json',
+      params : params
+    };
+    
+    return this.http.get<any>(`${this.URL}/export_as_csv`, options)
+  }
+
   // ---------------------------------------------------------------------------
 
   getEligibleStudents(filters:studentTableFilterOptions){

@@ -37,6 +37,8 @@ export class DrivePopupComponent implements OnInit{
   new_round_added = false
   round_list_uploaded = false
   round_name = 'NA'
+  last_round = 0
+  drive_completed = false
 
   student_table_popup_data!:student_table_data;
 
@@ -57,6 +59,7 @@ export class DrivePopupComponent implements OnInit{
   filters : studentTableFilterOptions = {
     drive_id : null,
     round : 0,
+    final_round : false,
     checked_students: [],
     departments: [],
     batch: '2024',
@@ -117,10 +120,8 @@ export class DrivePopupComponent implements OnInit{
   ) {  }
 
   ngOnInit(): void { 
-    console.log(this.data)
     if(this.data.open_as == 'edit'){
-
-      // configuting the data from 'Drive Component'
+      this.drive_completed = this.data.drive!.completed
       this.filters = this.data.drive!.filters
       this.checked_students = this.filters.checked_students
       this.eligible_depts = this.filters.departments
@@ -130,6 +131,8 @@ export class DrivePopupComponent implements OnInit{
 
       this.rounds = [...this.data.drive!.rounds]
       this.rounds.splice(0,1)
+      this.last_round = this.rounds.length
+    
 
       this.addDriveForm.patchValue({
         job_role : this.data.drive!.job_role,
@@ -160,6 +163,7 @@ export class DrivePopupComponent implements OnInit{
       
         let pk = this.data.open_as==='edit'?(this.data.drive!.id).toString():''
 
+        console.log(this.filters)
         formData.append('pk', pk)
         formData.append('company',this.company)
         formData.append('job_role',this.addDriveForm.value.job_role!)
@@ -171,6 +175,7 @@ export class DrivePopupComponent implements OnInit{
         formData.append('filters', JSON.stringify(this.filters))
         formData.append('round_name', this.round_name)
 
+        // console.log(this.filters)
         this.service.addCompanyDrive(formData, this.data.open_as).subscribe(
           (res:serverResponse)=>{
             if(res.success){
@@ -195,6 +200,7 @@ export class DrivePopupComponent implements OnInit{
   handleStudentTable(value : { response_for : string,close:boolean, applied_filters:studentTableFilterOptions}){
     this.student_table = value.close
     const applied_filters = value.applied_filters
+    this.filters = applied_filters
     
     console.log(value)
     this.round_name = value.response_for.split('^')[1]
@@ -213,14 +219,13 @@ export class DrivePopupComponent implements OnInit{
       let round_num = Number(value.response_for.split('^')[0])
       
       if(applied_filters.checked_students.length>0){
-        console.log(applied_filters.checked_students)
         this.filters.checked_students = applied_filters.checked_students
-        // this.filters = applied_filters
         if(round_num>this.rounds.length){
           this.rounds.push({
             num : round_num,
             name : this.round_name
           })
+          this.last_round = this.rounds.length
           this.result_ready = false
         }
       }

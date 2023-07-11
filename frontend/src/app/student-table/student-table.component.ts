@@ -21,7 +21,7 @@ export class StudentTableComponent implements OnInit{
   @Output() close_student_table = new EventEmitter<{
     response_for : string,
     close:boolean,
-    applied_filters:studentTableFilterOptions,
+    applied_filters:studentTableFilterOptions
   }>();
 
   
@@ -60,9 +60,10 @@ export class StudentTableComponent implements OnInit{
   enable_diploma = false
 
   round_name:string = ''
+  round_num = 0
   
   new_round = false
-
+  final_round = false
 
   sslc_percent = [0, 100]
   hsc_percent = [0, 100 ]
@@ -70,6 +71,7 @@ export class StudentTableComponent implements OnInit{
   diploma_percent = [0, 100]
   cgpa = [0, 10]
   cur_round = 0
+  last_round = 0 
 
   backlogs = [false, false]
   status = [true, true]
@@ -81,12 +83,14 @@ export class StudentTableComponent implements OnInit{
 
   ngOnInit(): void {
     this.filters = this.student_table_popup_data.filters
-    console.log(this.filters.checked_students)
+    this.final_round = this.student_table_popup_data.drive?.completed!
+
     this.configureAll(this.filters)
     if(this.student_table_popup_data.open_as == 'eligible_lst'){      
       
       this.applyFilters(0)
       this.round_name = 'Eligible List'
+
       this.filtered_students.forEach(student => {
         if(this.checked_students.has(student.reg_no)){ 
           student.checked = true
@@ -96,11 +100,11 @@ export class StudentTableComponent implements OnInit{
     }
     else {
       this.cur_round = Number(this.student_table_popup_data.open_as)
-      let last_round = this.student_table_popup_data.drive?.rounds.length!-1
+      this.last_round = this.student_table_popup_data.drive?.rounds.length!-1
 
       this.applyFilters(this.cur_round)
       
-      if(this.cur_round>last_round){
+      if(this.cur_round>this.last_round){
         this.new_round = true
         this.toastr.info(this.student_table_popup_data.open_as)
       }else{
@@ -108,6 +112,8 @@ export class StudentTableComponent implements OnInit{
         // this.round_name = this.student_table_popup_data.drive?.rounds[this.cur_round].name!
       }
     }
+
+    // console.log(`cur_round : ${this.cur_round}\nlast_round : ${this.last_round}\nnew_round : ${this.new_round}\nstud_table_data_open_as : ${this.student_table_popup_data.open_as}`)
   }
 
   configureAll(filters : studentTableFilterOptions){
@@ -171,11 +177,32 @@ export class StudentTableComponent implements OnInit{
     )
   }
 
+  exportAsCSV(){
+    let drive_id = this.student_table_popup_data.drive?.id!
+    let round = this.cur_round
+    this.appService.exportStudentDataAsCsv({drive_id : drive_id, round : round}).subscribe(
+      (res) => {
+        // console.log(res)
+        const blob = new Blob([res], { type: 'text/csv' });
+        const downloadLink = document.createElement('a');
+        downloadLink.href = URL.createObjectURL(blob);
+        let company = this.student_table_popup_data.drive?.company!
+        downloadLink.download = `${company}_${this.round_name}.csv`;
+        downloadLink.click();
+        
+      },
+      err=>{
+        this.toastr.error('Server Not Responding!')
+      }
+    )
+  }
+
   applyFilters(round:number){
     let drive = this.student_table_popup_data.drive
     const filters:studentTableFilterOptions = {
       drive_id: drive!==null? this.student_table_popup_data.drive!.id : null,
       round : this.cur_round,
+      final_round : this.final_round,
       checked_students: [...this.checked_students],
       departments: this.depts.filter(dept => dept.value).map(dept => dept.name),
       batch: this.batch,
@@ -213,13 +240,13 @@ export class StudentTableComponent implements OnInit{
       (res:studentTableFilterResponse) => {
         this.filtered_students = res.filtered_students
         let a=0
-        // console.log(res)
-        this.round_name = res.round_name
+        console.log(res)
+        this.round_name = this.cur_round===0? 'Eligible List': this.round_name.length>0? this.round_name : res.round_name
         this.filtered_students.forEach(student => {
           this.updateCheckedStudents(student, false)
         })
 
-        console.log(this.checked_students)
+        // console.log(this.checked_students)
 
         this.toastr.success('Filter Applied!!')
       },
@@ -284,6 +311,7 @@ export class StudentTableComponent implements OnInit{
       departments: [...this.checked_depts],
       batch: this.batch,
       gender: this.gender,
+      final_round: this.final_round,
       sslc: {
         medium: this.sslc_medium,
         board: this.sslc_board,
@@ -309,22 +337,27 @@ export class StudentTableComponent implements OnInit{
 
     
     if(save_state){
-      if(this.round_name.trim().length == 0){
-        this.toastr.error('Round Name Cannot be Empty!!')
+      if(this.checked_students.size == 0){
+        this.toastr.error('No Students Selected!!')
+      }else{
+        if(this.round_name.trim().length == 0){
+          this.toastr.error('Round Name Cannot be Empty!!')
+        }
+        else{
+          this.close_student_table.emit({
+            response_for : this.student_table_popup_data.open_as+'^'+this.round_name,
+            close:false,
+            applied_filters: applied_filters
+          });
+        }
       }
-      else{
-        this.close_student_table.emit({
-          response_for : this.student_table_popup_data.open_as+'^'+this.round_name,
-          close:false,
-          applied_filters: applied_filters
-        });
-      }
+      
 
     }else{
       this.close_student_table.emit({
         response_for : ((Number(this.student_table_popup_data.open_as)-1).toString())+'^'+this.round_name,
         close:false,
-        applied_filters: this.student_table_popup_data.filters,
+        applied_filters: this.student_table_popup_data.filters
       });
     }
 

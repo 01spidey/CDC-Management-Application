@@ -290,7 +290,7 @@ def get_drive_by_status(request):
         for drive in drives:
             drive_date = datetime.strptime(str(drive.date), '%Y-%m-%d').strftime('%d-%m-%Y')
             company_obj = Company.objects.get(company=drive.company)
-            print(json.loads(drive.drive_rounds))
+            # print(json.loads(drive.drive_rounds))
             drive_lst.append(
                 {
                     'id' : drive.pk,
@@ -307,10 +307,11 @@ def get_drive_by_status(request):
                     'category' : company_obj.category,
                     'lock_hr_mail' : company_obj.lock_hr_mail,
                     'lock_hr_contact' : company_obj.lock_hr_contact,
+                    'completed' : drive.completed,
                     'departments' : drive.departments,
                     'ctc' : drive.ctc,
-                    'filters' : json.loads(drive.filter_criteria),
-                    'rounds' : [] if drive.drive_rounds==None else drive.drive_rounds,
+                    'filters' : drive.filter_criteria,
+                    'rounds' : [] if drive.drive_rounds==None else drive.drive_rounds
                 }
             )
             
@@ -389,7 +390,7 @@ def get_drive_by_dateRange(request):
                     'HR_mail' : company_obj.HR_mail,
                     'HR_contact' : company_obj.HR_contact,
                     'description' : drive.description,
-                    'completed' : True if status == 'Completed' else drive.date < today,
+                    'completed' : drive.completed,
                     'category' : company_obj.category,
                     'lock_hr_mail' : company_obj.lock_hr_mail,
                     'lock_hr_contact' : company_obj.lock_hr_contact,
@@ -1269,14 +1270,17 @@ def add_and_update_company_drive(request):
     description = formdata['description']
     mode = formdata['mode']
     ctc = formdata['ctc']
+    
     filters = json.loads(formdata['filters'])
+    # print(filters)
+    
     checked_students = filters['checked_students']
     departments = formdata['eligible_depts'].split(',')  
     cur_round = filters['round']
     cur_round_name = formdata['round_name']
     date_obj = datetime.strptime(date_str, '%Y-%m-%d').date()
     
-    print(cur_round, cur_round_name)
+    
     
     try:     
         if(pk==''):   
@@ -1298,7 +1302,6 @@ def add_and_update_company_drive(request):
                 }
             )
             
-            print(filters)
             drive.save()
             
             students = Student.objects.filter(reg_no__in=checked_students)
@@ -1319,6 +1322,9 @@ def add_and_update_company_drive(request):
         else:
             print('Edit Drive', pk)
             # print(formdata)
+            
+            final_round = filters['final_round']
+            
             drive_obj = Drive.objects.get(pk=pk)
             
             drive_obj.job_role = job_role
@@ -1329,9 +1335,12 @@ def add_and_update_company_drive(request):
             drive_obj.departments = departments
             drive_obj.ctc = float(ctc)
             
+            drive_obj.save()
+            # print(filters)
+            
             if(cur_round>len(drive_obj.drive_rounds)-1):
                 print('Adding new round')
-                print(checked_students)
+                # print(checked_students)
                 # Adding the new round to the drive_rounds field
                 drive_rounds_data = drive_obj.drive_rounds
                 drive_rounds_data.append(
@@ -1340,10 +1349,14 @@ def add_and_update_company_drive(request):
                 print(drive_rounds_data)
                 drive_obj.drive_rounds = drive_rounds_data
                 
+                if(final_round):
+                    drive_obj.completed = final_round
+                
                 DriveSelection.objects.filter(drive = drive_obj, student__reg_no__in = checked_students).update(round = cur_round)
 
                 drive_obj.save()
-                
+            
+         
                 
             else:
                 print('Updating Existing round')
@@ -1379,7 +1392,7 @@ def add_and_update_company_drive(request):
         
     except Exception as e:
         
-        print(e)
+        print('Exception : ',e)
         
         data = {
             'success':False,
@@ -1390,37 +1403,65 @@ def add_and_update_company_drive(request):
 
 @csrf_exempt
 def export_as_csv(request):
-    formdata = json.loads(request.body)
-    company = formdata['company']
-    start_date = formdata['start_date']
-    end_date = formdata['end_date']
-    staff_id = formdata['staff_id']
+    if(request.method == 'POST'):
+        formdata = json.loads(request.body)
+        company = formdata['company']
+        start_date = formdata['start_date']
+        end_date = formdata['end_date']
+        staff_id = formdata['staff_id']
+        
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = f'attachment; filename="{company}_followup.csv"'
+        
+        staff_name =  PlacementOfficer.objects.get(staff_id = staff_id).name
+        
+        try:
+            reports = Report.objects.filter(company = company, date__range = [start_date, end_date]).order_by('date')
+            
+            
+            writer = csv.writer(response)
+            writer.writerow(['S.No','Staff', 'Date','Time', 'Company', 'Message', 'Reminder Date', 'Status'])
+            
+            
+            position = 1
+            for report in reports:
+                # print(UTCtoIST(str(report.timestamp)))
+                writer.writerow([position, report.placement_officer_id, report.date, UTCtoIST(str(report.timestamp)), report.company, report.message, report.reminder_date, 'Completed' if report.completed else 'Not Completed'])
+                position+=1
+            
+            
+        except Exception as e:
+            print(e)
+        
+        return response
     
-    response = HttpResponse(content_type='text/csv')
-    response['Content-Disposition'] = f'attachment; filename="{company}_followup.csv"'
+    else:
+        drive_id = int(request.GET.get('drive_id'))
+        drive_round = int(request.GET.get('round'))
+        print(f'Drive ID : {drive_id}, Round : {drive_round}')
+        drive_obj = Drive.objects.get(pk=drive_id)
+
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = f'attachment; filename="student_data.csv"'
+        
+        try:
+            student_personal_data = drive_obj.attended_students.filter(driveselection__round__gt = drive_round-1).order_by('reg_no')
+            writer = csv.writer(response)
+            writer.writerow(['S.No','Reg No', 'Name', 'Email', 'Phone', 'Dept', 'Batch'])
+            
+            
+            position = 1
+            for student in student_personal_data:
+                # print(UTCtoIST(str(report.timestamp)))
+                writer.writerow([position, student.reg_no, student.name, student.mail, str(student.phone), student.dept, student.batch])
+                position+=1
+                
+            
     
-    staff_name =  PlacementOfficer.objects.get(staff_id = staff_id).name
-    
-    try:
-        reports = Report.objects.filter(company = company, date__range = [start_date, end_date]).order_by('date')
-        
-        
-        writer = csv.writer(response)
-        writer.writerow(['S.No','Staff', 'Date','Time', 'Company', 'Message', 'Reminder Date', 'Status'])
-        
-        
-        position = 1
-        for report in reports:
-            # print(UTCtoIST(str(report.timestamp)))
-            writer.writerow([position, report.placement_officer_id, report.date, UTCtoIST(str(report.timestamp)), report.company, report.message, report.reminder_date, 'Completed' if report.completed else 'Not Completed'])
-            position+=1
-        
-        
-    except Exception as e:
-        print(e)
-    
-    return response
-    
+        except Exception as e:
+            print(e)
+            
+        return response
 
 @csrf_exempt
 def delete_drive(request):

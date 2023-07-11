@@ -112,6 +112,7 @@ class Drive(models.Model):
     filter_criteria = models.JSONField(null=True)
     attended_students = models.ManyToManyField('Student', through='DriveSelection')
     drive_rounds = ArrayField(models.JSONField(null=True), default=list)
+    completed = models.BooleanField(default=False)
 
     class Meta:
         ordering = ['-date']

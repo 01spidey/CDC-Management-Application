@@ -229,6 +229,7 @@ export interface getReportsByCompanyResponse{
 export interface studentTableFilterOptions{
     drive_id : number|null,
     round : Number,
+    final_round : boolean,
     checked_students : string[],
     departments : string[],
     batch : string,

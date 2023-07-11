@@ -155,6 +155,7 @@ export class DriveComponent implements OnInit {
     
 
     drive.departments = drive.departments===null?[]:drive.departments
+    drive.filters.final_round = drive.completed
     this.drive_popup_data = {
       open_as : 'edit',
       drive : drive

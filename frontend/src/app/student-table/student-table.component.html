@@ -1,12 +1,27 @@
 <div class="main">
     <div class="top">
-        <div class="title" *ngIf="new_round && student_table_popup_data.open_as!=='eligible_lst'">
-            <input type="text" placeholder="Round Name" [(ngModel)]="round_name">
+        <div style="display: flex; gap:10px; align-items:center;">
+            <div class="title" *ngIf="(cur_round>=last_round) && cur_round!=0">
+                <input type="text" placeholder="Round Name" [(ngModel)]="round_name">
+            </div>
+    
+            <h1 class="title" style="border-bottom: 3px solid #152b51;" *ngIf="cur_round<last_round || cur_round===0">{{round_name}}</h1>
+            
+            <div class="toggle" *ngIf="cur_round>=last_round && cur_round!==0">
+                <p>Offer Received</p>
+                <mat-slide-toggle [(ngModel)]="final_round"></mat-slide-toggle>
+            </div>
         </div>
-        <h1 class="title" style="border-bottom: 3px solid #152b51;" *ngIf="!new_round">{{round_name}}</h1>
-        <!-- <h1 class="title" style="border-bottom: 3px solid #152b51;" *ngIf="student_table_popup_data.open_as==='eligible_lst'">Eligible List</h1> -->
+        
         
         <div class="options">
+            <div class="option" style="background-color: #1a6486" (click)="exportAsCSV()" *ngIf="!new_round">
+                <span class="material-icons">
+                    download
+                </span>
+                <p>Export as CSV</p>
+            </div>
+
             <div class="option" style="background-color: #2f96b4" (click)="viewSelected()">
                 <span class="material-icons">
                     filter_alt
@@ -19,12 +34,12 @@
                 </span>
                 <p>Clear All</p>
             </div>
-            <div class="option" style="background-color: red;" (click)="closeTable(false)">
+            <!-- <div class="option" style="background-color: red;" (click)="closeTable(false)">
                 <span class="material-icons">
                     close
                 </span>
                 <p>Close</p>
-            </div>
+            </div> -->
         </div>
     </div>
     
@@ -314,7 +329,11 @@
             </div>
             <div class="footer">
                 <p>Selected : <span>{{checked_students.size}}</span></p>
-                <button mat-raised-button (click)="closeTable(true)">Generate</button>
+                <div class="btns" style="display:flex; gap: 20px;">
+                    <button mat-raised-button style="background-color:red; color:white" (click)="closeTable(false)">Cancel</button>
+                    <button mat-raised-button (click)="closeTable(true)">Generate</button>
+                </div>
+                
             </div>
             
 

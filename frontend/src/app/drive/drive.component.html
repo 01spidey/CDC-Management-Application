@@ -143,14 +143,7 @@
             
             <div class="content">
                 
-                <div class="field">
-                    <span class="material-symbols-outlined prevent-select">
-                        badge
-                    </span>
-                    <p style="font-family: 'Poppins';font-weight:500;">Placement Officer : </p>
-                    <p>{{drive.placement_officer_id}}</p>
-                </div>
-
+                
                 <div class="field">
                     <span class="material-symbols-outlined prevent-select">
                         account_box
@@ -183,12 +176,20 @@
                     <p>{{drive.mode}}</p>
                 </div>
 
+                <div class="field">
+                    <span class="material-symbols-outlined prevent-select">
+                        currency_rupee
+                    </span>
+                    <p style="font-family: 'Poppins';font-weight:500;">CTC : </p>
+                    <p>{{drive.ctc}} LPA</p>
+                </div>
+
                 <div class="dept-grid prevent-select">
                     <p class="dept" *ngFor="let dept of drive.departments">{{dept}}</p>
                 </div>
 
                 <div class="options-box prevent-select">
-                    <span class="material-symbols-outlined" id="edit" matTooltip="edit" (click)='openDrivePopup(drive)' [ngStyle]="drive.completed?{'pointer-events':'none'} : {}" *ngIf="role==='Director' || drive.placement_officer_id === cur_staff_id">
+                    <span class="material-symbols-outlined" id="edit" matTooltip="edit" (click)='openDrivePopup(drive)'  *ngIf="role==='Director' || drive.placement_officer_id === cur_staff_id">
                         <!-- getDriveById(drive.id) -->
                         edit
                     </span>
@@ -203,7 +204,7 @@
                 <!-- <img src="../../../../backend/cdc_app/media/" alt=""> -->
             </div>
 
-            <a ><button mat-raised-button>Eligible List</button></a>
+            <a ><button mat-raised-button>Publish Mail</button></a>
             <!-- [href]="drive.file" download -->
            
             <div class="info" *ngIf="drive.placement_officer_id === cur_staff_id">

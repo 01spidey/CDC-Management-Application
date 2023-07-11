@@ -70,6 +70,18 @@
                 }
             }
         }
+
+        .toggle{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background-color: #1a6486;
+            color: white;
+            font-family: 'Nunito';
+            padding: 10px;
+            border-radius: 10px;
+        }
     }
 
     .body{

@@ -78,7 +78,9 @@
                         align-items: center;
                         justify-content: center;
                         cursor: pointer;
-                        background-color: #152b51;
+                        opacity: 1;
+                        background-color: #1a6486;
+                        color: white;
 
                         .heading{
                             font-family: 'Poppins';
@@ -95,6 +97,23 @@
                             align-self: center;
                             justify-self: center;
                             span{margin-right: 5px;}
+                        }
+                    }
+
+                    .active-round{
+                        opacity: 1;
+                        background-color: #1a6486;
+                        color: white;
+
+                    }
+
+                    .disabled-round{
+                        filter: grayscale(100%);
+                        opacity: 0.6;
+                        transition: 0.3s ease;
+
+                        &:hover{
+                            opacity: 0.7;
                         }
                     }
 
@@ -118,13 +137,12 @@
 
                     .add-round{
                         transition: 0.3s;
-                        background-color: #35363a9a;
-                        opacity:0.6;
+                        background-color: white;
+                        border: 1px dashed #1a6486;
+                        color: #1a6486;
                         height: 50px;
                         &:hover{
-                            opacity: .8;
-                            background-color: #152b51;
-                            color: white;
+                            background-color: rgba(0,0,0,0.15);
                         }
                     }
                 }
@@ -208,10 +226,10 @@
                 .disabled-gen{
                     
                     &:hover{
-                        opacity: 1;
+                        opacity: .7;
                         background-color: #35363a9a;
-                        color: white;
-                        background-color: #198754;
+                        // color: white;
+                        // background-color: #198754;
                         border-style: solid;
                     }
                 }

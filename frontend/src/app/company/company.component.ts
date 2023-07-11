@@ -334,7 +334,7 @@ export class CompanyComponent implements OnInit{
         downloadLink.click();
       },
       err=>{
-
+        this.toastr.error("Server Not Responding")
       }
     )
   }

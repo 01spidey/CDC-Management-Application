@@ -1,4 +1,5 @@
 import csv
+from email.message import EmailMessage
 import json
 import random
 from django.conf import settings
@@ -7,15 +8,14 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse, JsonResponse
 from .models import DriveSelection, PlacementDirector,PlacementOfficer,Report, Drive, Company, Student, StudentEdu
 from datetime import datetime, date, timedelta
-from django.core.files.storage import FileSystemStorage
-from django.contrib.sites.shortcuts import get_current_site
 from django.db.models import Q
 from django.core.mail import send_mail
 from random import sample
-from cryptography.fernet import Fernet
 from django.utils import timezone
 import pytz
-import pandas as pd
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
+
 
 
 # Create your views here.
@@ -93,7 +93,6 @@ def send_otp(request):
             
             otp = sample(range(0, 10), 4)
             otp = "".join(map(str, otp))
-            secret_key = Fernet.generate_key()
 
             from_email = '01srikumaran@gmail.com'
             to_email = mail_id
@@ -1732,13 +1731,46 @@ def publish_drive_mail(request):
     
     drive_id = int(request.GET.get('id'))
     
-    student_mail_ids = DriveSelection.objects.filter(drive__pk=drive_id, round__gte = 0).values_list('student__mail', flat=True)
-    print(len(student_mail_ids)) 
+    try:
+        drive_obj = Drive.objects.get(pk=drive_id)
+        company = drive_obj.company
+        
+        
+        student_mail_ids = DriveSelection.objects.filter(drive__pk=drive_id, round__gte = 0).values_list('student__mail', flat=True)
+        print(len(student_mail_ids)) 
+        
+        # recipients = list(student_mail_ids)
+        recipients = ['msabari2002@gmail.com', '20cs186@kpriet.ac.in', 'vijaymurugan0707@gmail.com']
+        
+        context = {
+            'drive': drive_obj,
+        }
+        
+        html_message = render_to_string('<h1>Vanakkam Bruh</h1>', context)
+        
+        subject = f'{company} - Upcoming Drive Notification'
+        body = strip_tags(html_message)  # Strip HTML tags for the plain text version of the email
+        from_email = 'sender@example.com'
+        email = EmailMessage(subject, body, from_email, recipients)
+        
+        email.content_subtype = 'html'
+        email.attach_alternative(html_message, 'text/html')
+        
+        email.send()
+
+        data = {
+            'success':True,
+            'message' : 'Mail Sent Successfully'
+        }
+        
+        return JsonResponse(data)
     
-    data = {
-        'success':True,
-        'message' : 'Mail Sent Successfully'
-    }
-    
-    return JsonResponse(data)
+    except Exception as e:
+        print(e)
+        data = {
+            'success':False,
+            'message' : 'Something went wrong'
+        }
+        
+        return JsonResponse(data)
     

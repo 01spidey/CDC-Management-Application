@@ -1351,6 +1351,7 @@ def add_and_update_company_drive(request):
                 
                 if(final_round):
                     drive_obj.completed = final_round
+                    DriveSelection.objects.filter(drive = drive_obj, student__reg_no__in = checked_students).update(selected = True)
                 
                 DriveSelection.objects.filter(drive = drive_obj, student__reg_no__in = checked_students).update(round = cur_round)
 

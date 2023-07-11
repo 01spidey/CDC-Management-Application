@@ -103,70 +103,9 @@
                             </span>
                             <p>{{result_ready?'Add Round' : 'Result Pending'}}</p>
                         </div>   
-                        <!-- <p class="round-name" *ngIf="add_round">
-                            <input type="text" (keydown)="onKeyDown($event)">
-                        </p> -->
                     </div>
-
-                    <!-- <div class="round" *ngIf = 'add_round'>
-                        <input type="text">
-                    </div> -->
                 </div>
             </div>
-            
-
-            <!-- <div class="input spl-btn-box" style="margin-top: 20px;">
-                <div class="spl-btn" [ngClass]="{'gen-btn' : eligible_lst_uploaded, 'disabled-gen' :  !eligible_lst_uploaded}" (click)="openStudentTable()">
-                    <span class="material-icons" *ngIf="!eligible_lst_uploaded">
-                        add_box
-                    </span>
-                    <span class="material-icons" *ngIf="eligible_lst_uploaded">
-                        task_alt
-                    </span>
-                    <p>{{eligible_lst_uploaded? 'Eligible List Added' : 'Generate Eligible List'}}</p>
-                </div> -->
-
-                <!-- <div class="spl-btn" [ngClass]="{'add-offer' : result_ready, 'disabled' : !result_ready, 'added-offer' : result_uploaded}" [ngStyle]="!result_ready?{'cursor': 'not-allowed'} : {}" (click)="addOfferDetails()">
-                    <span class="material-icons" *ngIf="!result_ready && !result_uploaded">
-                        pending_actions
-                    </span>
-                    <span class="material-icons" *ngIf="result_ready && !result_uploaded">
-                        add_box
-                    </span>
-                    <span class="material-icons" *ngIf="result_uploaded">
-                        task_alt
-                    </span>
-                    <p>{{result_uploaded?'Offer Details Added' : result_ready? 'Add Offer Details' : 'Result Pending'}}</p>
-                </div> -->
-            <!-- </div> -->
-
-            <!-- <div class="input">
-                <div style="display: flex;align-items:center;">
-                    <p>Eligible Departments</p>
-                    <mat-checkbox
-                        (change)="setAllDept($event.checked)"
-                        [checked]="allDept"
-                        color="primary">
-                    </mat-checkbox>
-                </div>
-                
-                <div class="dept-grid">
-                    <mat-checkbox 
-                        *ngFor="let item of departments" 
-                        [value]="item.name" 
-                        [(ngModel)]="item.value"
-                        [ngModelOptions]="{standalone: true}"
-                        color="primary"
-                        (ngModelChange)="updateAllDept()">
-
-                        {{item.name}}
-                    
-                    </mat-checkbox> 
-                </div>
-                
-            </div> -->
-
-            
 
             <div class="btns">
               <button mat-raised-button id="reset" (click)="closePopup()">Cancel</button>

@@ -45,5 +45,6 @@ urlpatterns = [
     path('add_and_update_company_drive', views.add_and_update_company_drive),
     
     path('get_eligible_students', views.get_eligible_students),
+    path('publish_drive_mail', views.publish_drive_mail),
         
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

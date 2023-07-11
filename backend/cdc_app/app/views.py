@@ -1726,3 +1726,19 @@ def get_eligible_students(request):
         
         return JsonResponse(data)
         # eligible_students_personal = Student.objects.filter(reg_no__in = checked_students.split(',')).order_by('reg_no')
+
+@csrf_exempt
+def publish_drive_mail(request):
+    
+    drive_id = int(request.GET.get('id'))
+    
+    student_mail_ids = DriveSelection.objects.filter(drive__pk=drive_id, round__gte = 0).values_list('student__mail', flat=True)
+    print(len(student_mail_ids)) 
+    
+    data = {
+        'success':True,
+        'message' : 'Mail Sent Successfully'
+    }
+    
+    return JsonResponse(data)
+    

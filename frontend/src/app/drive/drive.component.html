@@ -204,7 +204,7 @@
                 <!-- <img src="../../../../backend/cdc_app/media/" alt=""> -->
             </div>
 
-            <a ><button mat-raised-button>Publish Mail</button></a>
+            <button mat-raised-button (click)="publishMail(drive)">Publish Mail</button>
             <!-- [href]="drive.file" download -->
            
             <div class="info" *ngIf="drive.placement_officer_id === cur_staff_id">

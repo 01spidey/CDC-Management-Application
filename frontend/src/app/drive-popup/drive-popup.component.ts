@@ -5,6 +5,8 @@ import { DatePipe } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
 import { company, drive, serverResponse, studentTableFilterOptions } from '../models/model';
 import { student_table_data } from '../student-table/student-table.component';
+import * as moment from 'moment';
+
 
 export interface drive_popup_data{
   open_as : string,
@@ -127,7 +129,7 @@ export class DrivePopupComponent implements OnInit{
       this.eligible_depts = this.filters.departments
       
       this.eligible_lst_uploaded = true
-      this.result_ready = true
+      this.result_ready = this.driveStarted(this.data.drive!.date)
 
       this.rounds = [...this.data.drive!.rounds]
       this.rounds.splice(0,1)
@@ -277,5 +279,14 @@ export class DrivePopupComponent implements OnInit{
     return formattedDate;
   }
 
+  driveStarted(date_str: string): boolean {
+    const today = moment();
+    const date = moment(date_str, 'DD-MM-YYYY');
+
+    // Compare the dates
+    return date.isSameOrBefore(today, 'day');
+  }
 
 }
+
+

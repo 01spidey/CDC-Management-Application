@@ -55,5 +55,6 @@ urlpatterns = [
     path('export_as_csv', include('app.urls')),
     
     path('get_eligible_students', include('app.urls')),
+    path('publish_drive_mail', include('app.urls')),
     
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -163,4 +163,20 @@ export class DriveComponent implements OnInit {
     this.drive_popup = true
   }
 
+  publishMail(drive: drive) {
+    this.service.publishDriveMail(drive.id).subscribe(
+      (res: serverResponse) => {
+        if (res.success) {
+          this.toastr.success(res.message);
+        } else {
+          this.toastr.warning(res.message);
+        }
+      },
+      err => {
+        this.toastr.error('Server Not Responding!!');
+      }
+    );
+  }
+    
+
 }

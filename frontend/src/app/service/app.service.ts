@@ -7,7 +7,7 @@ import { Router } from '@angular/router';
   providedIn: 'root'
 })
 export class AppService {
-
+ 
   URL = "http://127.0.0.1:8000";
   // URL = "https://b0ad-123-63-135-33.ngrok-free.app"
 
@@ -189,5 +189,11 @@ export class AppService {
     const params = { checked_students : arr.join(','), cur_round : round , drive_id : drive_id}
     return this.http.get<studentTableFilterResponse>(`${this.URL}/get_eligible_students`, {params : params})
   }
+
+  publishDriveMail(id: number) {
+    const params = { id: id };
+    return this.http.get<serverResponse>(`${this.URL}/publish_drive_mail`, { params: params });
+  }
+
 
 }

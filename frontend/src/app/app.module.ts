@@ -29,6 +29,7 @@ import { CompanyComponent } from './company/company.component';
 import { PopupComponent } from './popup/popup.component';
 import { DrivePopupComponent } from './drive-popup/drive-popup.component';
 import { StudentTableComponent } from './student-table/student-table.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
 
 @NgModule({
   declarations: [
@@ -44,7 +45,8 @@ import { StudentTableComponent } from './student-table/student-table.component';
     CompanyComponent,
     PopupComponent,
     DrivePopupComponent,
-    StudentTableComponent
+    StudentTableComponent,
+    DashboardComponent
   ],
   imports: [
     BrowserModule,

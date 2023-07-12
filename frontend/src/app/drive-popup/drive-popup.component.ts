@@ -110,6 +110,7 @@ export class DrivePopupComponent implements OnInit{
     ctc : this.builder.control(0.0,Validators.compose([
       Validators.required,
       Validators.pattern('^[0-9]+.?[0-9]+$')])),
+    offer_type : this.builder.control('',Validators.required)
   });
 
   allDept: boolean = false;
@@ -141,7 +142,8 @@ export class DrivePopupComponent implements OnInit{
         date : this.patchDate(this.data.drive!.date),
         description : this.data.drive!.description,
         mode : this.data.drive!.mode,
-        ctc : this.data.drive!.ctc
+        ctc : this.data.drive!.ctc,
+        offer_type : this.data.drive!.offer_type,
       })
 
       for(let dept of this.departments){
@@ -176,6 +178,7 @@ export class DrivePopupComponent implements OnInit{
         formData.append('ctc',(this.addDriveForm.value.ctc!).toString())
         formData.append('filters', JSON.stringify(this.filters))
         formData.append('round_name', this.round_name)
+        formData.append('type', this.addDriveForm.value.offer_type!)
 
         // console.log(this.filters)
         this.service.addCompanyDrive(formData, this.data.open_as).subscribe(

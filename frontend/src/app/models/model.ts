@@ -40,6 +40,7 @@ export interface drive{
     departments : string[],
     filters : any,
     rounds : { num : number, name : string}[],
+    offer_type : string
     
 }
 
@@ -291,4 +292,26 @@ export interface studentTableFilterResponse{
     success : boolean,
     round_name : string,
     filtered_students : filtered_student[]
+}
+
+export interface placementStats{
+    placed_students : number[],
+    package : {
+        max : number,
+        avg : number,
+        median : number,
+        mode : number
+    },
+    offers : {
+        total : number,
+        multi_offers : number
+    },
+    companies : {
+        total : number,
+        offered : number
+    },
+    drives : {
+        total : number,
+        offered : number
+    }
 }

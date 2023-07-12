@@ -6,25 +6,14 @@
         <h1>{{company}}</h1>
         <form [formGroup]="addDriveForm">
         
-            <div class="section">
-                <div class="input">
-                    <p>Job Role</p>
-                    <mat-form-field class="input">
-                        <mat-label>SDE Intern</mat-label>
-                        <input matInput formControlName = "job_role">
-                    </mat-form-field>
-                </div>
-
-                <div class="input">
-                    <p>CTC</p>
-                    <mat-form-field class="input">
-                        <mat-label>8.0</mat-label>
-                        <input matInput formControlName = "ctc">
-                        <p style="margin-right: 10px;" matSuffix>LPA</p>
-                    </mat-form-field>
-                </div>
+            <div class="input">
+                <p>Job Role</p>
+                <mat-form-field class="input">
+                    <mat-label>SDE Intern</mat-label>
+                    <input matInput formControlName = "job_role">
+                </mat-form-field>
             </div>
-            
+
             <div class="section">
                 <div class="input">
                     <p>Drive Date</p>
@@ -47,7 +36,29 @@
                     </mat-form-field>
                 </div>
             </div>
-    
+
+            <div class="section">
+                <div class="input">
+                    <p>CTC</p>
+                    <mat-form-field class="input">
+                        <mat-label>8.0</mat-label>
+                        <input matInput formControlName = "ctc">
+                        <p style="margin-right: 10px;" matSuffix>LPA</p>
+                    </mat-form-field>
+                </div>
+
+                <div class="input">
+                    <p>Offer Type</p>
+                    <mat-form-field>
+                        <mat-label>Offer Type</mat-label>
+                        <mat-select formControlName = "offer_type">
+                            <mat-option value="Job">Job</mat-option>
+                            <mat-option value="Internship">Internship</mat-option>
+                        </mat-select>
+                    </mat-form-field> 
+                </div>
+            </div>
+
             <div class="input">
                 <p>Description</p>
                 <mat-form-field>
@@ -55,7 +66,7 @@
                     <textarea matInput formControlName="description"></textarea>
                 </mat-form-field> 
             </div>
-
+    
             <div class="section" style="align-items:flex-start">
                 <div class="input">
                     <p>Eligible Departments</p>

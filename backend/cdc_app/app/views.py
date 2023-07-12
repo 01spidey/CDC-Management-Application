@@ -310,7 +310,8 @@ def get_drive_by_status(request):
                     'departments' : drive.departments,
                     'ctc' : drive.ctc,
                     'filters' : drive.filter_criteria,
-                    'rounds' : [] if drive.drive_rounds==None else drive.drive_rounds
+                    'rounds' : [] if drive.drive_rounds==None else drive.drive_rounds,
+                    'offer_type' : drive.offer_type
                 }
             )
             
@@ -397,6 +398,7 @@ def get_drive_by_dateRange(request):
                     'ctc' : drive.ctc,
                     'filters' : drive.filter_criteria,
                     'rounds' : [] if drive.drive_rounds==None else drive.drive_rounds, 
+                    'offer_type' : drive.offer_type
                 }
             )
             
@@ -1194,12 +1196,13 @@ def add_and_update_company_report(request):
             
             print(company_obj.last_reminder_date, reminder_date_obj)
             
-            if(company_obj.last_reminder_date < reminder_date_obj):
-                company_obj.last_reminder_date = reminder_date_obj
-                company_obj.save()
-                print('reminder date changed') 
-            else:
-                print('reminder date not changed')
+            if(reminder_date_obj!=None):
+                if(company_obj.last_reminder_date < reminder_date_obj):
+                    company_obj.last_reminder_date = reminder_date_obj
+                    company_obj.save()
+                    print('reminder date changed') 
+                else:
+                    print('reminder date not changed')
             
             report_obj.save()
             
@@ -1269,6 +1272,7 @@ def add_and_update_company_drive(request):
     description = formdata['description']
     mode = formdata['mode']
     ctc = formdata['ctc']
+    offer_type = formdata['type']
     
     filters = json.loads(formdata['filters'])
     # print(filters)
@@ -1278,8 +1282,6 @@ def add_and_update_company_drive(request):
     cur_round = filters['round']
     cur_round_name = formdata['round_name']
     date_obj = datetime.strptime(date_str, '%Y-%m-%d').date()
-    
-    
     
     try:     
         if(pk==''):   
@@ -1292,6 +1294,7 @@ def add_and_update_company_drive(request):
                 departments = departments,
                 ctc = float(ctc),
                 filter_criteria = filters,
+                offer_type = offer_type
             )
             drive.drive_rounds.append(
                 {
@@ -1333,6 +1336,7 @@ def add_and_update_company_drive(request):
             drive_obj.description = description
             drive_obj.departments = departments
             drive_obj.ctc = float(ctc)
+            drive_obj.offer_type = offer_type
             
             drive_obj.save()
             # print(filters)
@@ -1355,9 +1359,7 @@ def add_and_update_company_drive(request):
                 DriveSelection.objects.filter(drive = drive_obj, student__reg_no__in = checked_students).update(round = cur_round)
 
                 drive_obj.save()
-            
-         
-                
+                   
             else:
                 print('Updating Existing round')
                 if(cur_round==0):

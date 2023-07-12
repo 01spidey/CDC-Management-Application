@@ -446,28 +446,44 @@
         margin-top: 30px;
         width: 100%;
 
+        #export{
+            &:hover{
+                width: 130px;
+            }
+        }
+
+        #reset{
+            &:hover{
+                width: 160px;
+            }
+        }
+
         .add-report{
             display: flex;
             align-items: center;
-            width: fit-content;
-            padding: 7px 15px;
+            width: 20px;
+            padding: 5px;
+            padding-left: 2px;
             border-radius: 5px;
             color: white;
             background-color:#1a6486;
             font-weight: 500;
-
+            font-size: .85rem;
             gap: 10px;
             transition: 0.3s ease;
-        cursor: pointer;
+            cursor: pointer;
+            overflow: hidden;
+            white-space: nowrap;
+            justify-content: flex-start;
+            
+            p{            
+                font-family: 'Nunito';
+            }
 
-        p{
-            font-size: 17px;
-            font-family: 'Nunito';
-        }
-
-        &:hover{
-            opacity: 0.85;
-        }
+            &:hover{
+                opacity: 0.85;
+                padding-left: 5px;
+            }
         }
 
         .container{

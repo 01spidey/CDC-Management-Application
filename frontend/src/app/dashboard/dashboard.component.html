@@ -1,0 +1,130 @@
+<div class="main" *ngIf="section==1">
+
+    <!-- <img (click) = "back()" src="../../assets/back.png" *ngIf="section==2" class="back"> -->
+
+    <div class="top">
+        <div class="title">
+            <h1>My Dashboard</h1>
+            <hr id="line" style="width: 330px;">
+        </div>
+    </div>
+
+    <div class="filter-box prevent-select" >
+        <div class="container">
+            <div class="filter-container">
+
+                <div class="status-filter" style="margin-top: 15px;">
+                    
+                    <div class="status" [ngClass]="{'active-chip-blue' : status_filter=='Batch', 'not-active-chip':status_filter!='Batch'}" (click)="changeFilter('Batch', job_type_filter)">
+                        <span class="material-symbols-outlined">
+                            communities
+                        </span>
+                        <p>Batch</p>
+                    </div>
+                
+
+                    <div class="status" [ngClass]="{'active-chip-blue' : status_filter=='Overall', 'not-active-chip':status_filter!='Overall'}" (click)="changeFilter('Overall', job_type_filter)">
+                        <span class="material-symbols-outlined">
+                            diversity_2
+                        </span>
+                        <p>Overall</p>
+                    </div>
+                
+                </div>
+
+                <div class="status-filter" style="margin-top: 15px;">
+                    
+                    <div class="status" [ngClass]="{'active-chip-orange' : job_type_filter=='All', 'not-active-chip':job_type_filter!='All'}" (click)="changeFilter(status_filter, 'All')">
+                        <span class="material-symbols-outlined">
+                            done_all
+                        </span>
+                        <p>All</p>
+                    </div>
+                
+
+                    <div class="status" [ngClass]="{'active-chip-orange' : job_type_filter=='Job', 'not-active-chip':job_type_filter!='Job'}" (click)="changeFilter(status_filter, 'Job')">
+                        <span class="material-symbols-outlined">
+                            work
+                        </span>
+                        <p>Job</p>
+                    </div>
+
+                    <div class="status" [ngClass]="{'active-chip-orange' : job_type_filter=='Internship', 'not-active-chip':job_type_filter!='Internship'}" (click)="changeFilter(status_filter, 'Internship')">
+                        <span class="material-symbols-outlined">
+                            handyman
+                        </span>
+                        <p>Internship</p>
+                    </div>
+                
+                </div>
+
+                
+            </div>
+    
+            <a>
+                <span matTooltip="Refresh" class="material-symbols-outlined" id="refresh" (click)="changeFilter(status_filter,job_type_filter)">
+                    <!-- (click)="applyFilter()" -->
+                    refresh
+                </span>
+            </a>
+            
+        </div>
+        
+        <div class="batch-filter" *ngIf="status_filter==='Batch'">
+            <mat-form-field>
+                <mat-label>Batch</mat-label>
+                <mat-select [ngModel] = 'batch_indi'>
+                  <mat-option *ngFor="let batch of batch_lst" [value]="batch">{{batch}}</mat-option>
+                </mat-select>
+            </mat-form-field>
+            <button mat-raised-button>Apply</button>
+        </div>
+
+        <div class="batch-filter" *ngIf="status_filter==='Overall'">
+            <div class="slider">
+                <div class="slider-val">
+                    <p>{{start_year}}</p>
+                    <p>{{end_year}}</p>
+                </div>
+                
+                <mat-slider [min]="cur_year-10" [max]="cur_year+2" step="1">
+                    <input [(ngModel)]="start_year" matSliderStartThumb>
+                    <input [(ngModel)]="end_year" matSliderEndThumb>
+                </mat-slider>
+            </div>
+            
+
+            <button mat-raised-button>Apply</button>
+        </div>
+    </div>
+    
+    <div class="main-container">
+
+        <div class="stats-box">
+            <div class="stats">
+                <p class="stats-val">{{placement_stats}}%</p>
+                <p class="stats-title">Placed Students</p>
+                <p class="stats-sub">180 Students Placed out of 250.</p>
+            </div>
+            
+            <div class="stats">
+
+            </div>
+            
+            <div class="stats">
+
+            </div>
+
+            <div class="stats">
+
+            </div>
+
+            <div class="stats">
+
+            </div>
+            
+        </div>
+
+    </div>
+    
+</div>

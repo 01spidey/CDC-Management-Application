@@ -238,12 +238,23 @@
                         <button mat-raised-button (click)="getReportsByCompany()" style="background-color: #35363a;">Apply</button>
                     </div>
 
-                    <div class="add-report" (click)="exportAsCsv()">
-                        <span class="material-symbols-outlined">
-                            download
-                        </span>
-                        <p>Export as CSV</p>
+                    <div class="temp" style="display: flex;align-items:center; gap:10px">
+                        <div class="add-report" (click)="exportAsCsv()" id="export">
+                            <span class="material-symbols-outlined">
+                                download
+                            </span>
+                            <p>Export as CSV</p>
+                        </div>
+
+                        <div class="add-report" style="background-color: #198754;" id="reset" (click)="openPopup('add', last_followup)" [ngStyle]="last_followup_status?{} : {'pointer-events' : 'none', 'filter' : 'grayscale(100%)'}">
+                            <span class="material-symbols-outlined">
+                                history
+                            </span>
+                            <p>Restart Follow-Up</p>
+                        </div>
+
                     </div>
+                    
                     
                 </div>
             </div>

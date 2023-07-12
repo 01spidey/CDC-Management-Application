@@ -47,7 +47,8 @@ export class CompanyComponent implements OnInit{
   report_lst : Report[] = []
   popup_message = new FormControl('',Validators.required)
   popup_date = new FormControl('',Validators.required)
-
+  last_followup!:Report;
+  last_followup_status! : boolean;
   
 
   @Output() close_section = new EventEmitter<boolean>();
@@ -251,7 +252,12 @@ export class CompanyComponent implements OnInit{
     this.service.getReportsByCompany(data).subscribe(
       (res:getReportsByCompanyResponse)=>{
         //console.log('getReportsByCompanyResponse')
-        if(res.success) this.report_lst = res.reports
+        if(res.success){ 
+          this.report_lst = res.reports
+          this.last_followup = this.report_lst[0]
+          this.last_followup_status = this.last_followup.status
+          console.log(this.last_followup)
+        }
         else this.toastr.warning('Something went wrong')
       },
       err=>{

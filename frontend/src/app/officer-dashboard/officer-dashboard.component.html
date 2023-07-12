@@ -6,19 +6,19 @@
             <h4>{{user_id}}</h4>
         </div>
 
+        <div class="nav" (click)="selectMenu('dash')" [ngClass] = "{active: cur_option =='dash'}">
+            <span class="material-icons">
+                dashboard
+            </span>
+            <p>Dashboard</p>
+        </div>
+
         <div class="nav" (click)="selectMenu('drive')" [ngClass] = "{active: cur_option =='drive'}">
             <span class="material-icons">
                 event
             </span>
             <p>Placement Drive</p>
         </div>
-
-        <!-- <div class="nav" (click)="selectMenu('reports')" [ngClass] = "{active: cur_option =='reports'}">
-            <span class="material-icons">
-                summarize
-            </span>
-            <p>Reports</p>
-        </div> -->
 
         <div class="nav" (click)="selectMenu('company')" [ngClass] = "{active: cur_option =='company'}">
             <span class="material-icons">
@@ -50,6 +50,7 @@
     </div>
 
     <div class="main">
+        <app-dashboard *ngIf="cur_option === 'dash'"></app-dashboard>
         <app-drive *ngIf="cur_option=='drive'"></app-drive>
         <app-company *ngIf="cur_option=='company'"></app-company>
         <app-profile *ngIf="cur_option=='profile'"></app-profile>

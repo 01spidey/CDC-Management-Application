@@ -102,17 +102,32 @@
 
         <div class="stats-box">
             <div class="stats">
-                <p class="stats-val">{{placement_stats}}%</p>
+                <p class="stats-val">{{((placement_stats.placed_students[0]/placement_stats.placed_students[1])*100.00).toFixed(2)}}%</p>
                 <p class="stats-title">Placed Students</p>
-                <p class="stats-sub">180 Students Placed out of 250.</p>
+                <p class="stats-sub">{{placement_stats.placed_students[0]+' Students Placed out of '+placement_stats.placed_students[1]+'.'}}</p>
             </div>
             
             <div class="stats">
-
+                <p class="stats-val">{{placement_stats.package.max}} LPA</p>
+                <p class="stats-title">Highest Package</p>
+                <p class="stats-sub">{{placement_stats.package.max_count+' Students received this Package.'}}</p>
             </div>
             
-            <div class="stats">
-
+            <div class="stats" style="padding : 5px 0px">
+                <div class="stats-sub-box" style="border-bottom: 1px solid;">
+                    <p class="stats-val">{{placement_stats.package.max}} LPA</p>
+                    <p class="stats-title">Highest Package</p>
+                </div>
+                <div class="stats-sub-box" style="display: flex;flex-direction: row;">
+                    <div style="flex:1">
+                        <p class="stats-val-sub">{{placement_stats.package.max}} LPA</p>
+                        <p class="stats-title-sub">Highest Package</p>
+                    </div>
+                    <div style="flex:1">
+                        <p class="stats-val-sub">{{placement_stats.package.max}} LPA</p>
+                        <p class="stats-title-sub">Highest Package</p>
+                    </div>
+                </div>
             </div>
 
             <div class="stats">

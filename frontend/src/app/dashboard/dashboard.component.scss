@@ -232,7 +232,6 @@
                 background-color: white;
                 border-radius: 15px;
                 border: 1px solid #aaa;
-                // box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.4);
                 flex: 1;
                 padding: 5px 15px;
                 display: flex;
@@ -243,6 +242,56 @@
                 &:hover{
                     box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.3);
                     transform: scale(1.025)
+                }
+
+                .stats-sub-box{
+                    display: flex;
+                    flex: 1;
+                    flex-direction: column;
+                    padding: 0px 15px;
+
+                    .stats-val{
+                        font-family: 'Poppins';
+                        font-size: 1.7rem;
+                        margin-top: 10px;
+                        font-weight: bold;
+                        color: white;
+                        background-color: #152b51;
+                        width: fit-content;
+                        padding: 0px 10px;
+                        border-radius: 10px;
+                    }
+
+                    .stats-title{
+                        font-family: 'Poppins';
+                        font-weight: 700;
+                        font-size: 1rem;
+                        margin-top: 10px;
+                        padding-bottom: 3px;
+                        border-bottom: 0px;
+                    }
+
+                    .stats-val-sub{
+                        font-family: 'Poppins';
+                        font-size: .75rem;
+                        margin-top: 10px;
+                        font-weight: bold;
+                        color: white;
+                        background-color: #152b51;
+                        width: fit-content;
+                        padding: 0px 10px;
+                        border-radius: 10px;
+                    }
+
+                    .stats-title-sub{
+                        font-family: 'Poppins';
+                        font-weight: 700;
+                        font-size: .75rem;
+                        margin-top: 10px;
+                        padding-bottom: 3px;
+                        border-bottom: 0px;
+                    }
+
                 }
 
                 .stats-val{
@@ -256,18 +305,20 @@
                     padding: 0px 10px;
                     border-radius: 10px;
                 }
+
                 .stats-title{
                     font-family: 'Poppins';
-                    font-weight: 500;
+                    font-weight: 700;
                     font-size: 1.2rem;
                     margin-top: 10px;
                     border-bottom: 1px dashed;
                     padding-bottom: 3px;
                 }
+
                 .stats-sub{
                     margin-top: 10px;
                     font-family: 'Nunito';
-                    color: #35363a;
+                    color: #35363a9b;
                     font-size: .85rem;
                     justify-self: flex-end;
                 }

@@ -43,6 +43,7 @@ export class DashboardComponent implements OnInit {
     placed_students: [],
     package: {
       max: 0,
+      max_count : 0,
       avg: 0,
       median: 0,
       mode: 0
@@ -71,9 +72,10 @@ export class DashboardComponent implements OnInit {
   ngOnInit(): void {
     
     this.placement_stats = {
-      placed_students: [180, 250],
+      placed_students: [173, 250],
       package: {
         max: 21,
+        max_count : 2,
         avg: 7.75,
         median: 8,
         mode: 10

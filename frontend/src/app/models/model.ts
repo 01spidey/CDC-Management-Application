@@ -298,6 +298,7 @@ export interface placementStats{
     placed_students : number[],
     package : {
         max : number,
+        max_count : number,
         avg : number,
         median : number,
         mode : number

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http'
-import { companyByIdResponse, driveByIdResponse, driveByStatusResponse, filterOptions, getCompaniesResponse, getCompanyStatsResponse, getMembersResponse, getReportsByCompanyResponse, getReportsResponse, getUserStatsResponse, loadMembersResponse, loginResponse, notificationResponse, openMemberResponse, reportByIdResponse, reportSummaryResponse, sendOTPResponse, serverResponse, studentTableFilterOptions, studentTableFilterResponse, user, userByIdResponse } from '../models/model';
+import { companyByIdResponse, driveByIdResponse, driveByStatusResponse, filterOptions, getCompaniesResponse, getCompanyStatsResponse, getMembersResponse, getReportsByCompanyResponse, getReportsResponse, getUserStatsResponse, loadMembersResponse, loginResponse, notificationResponse, openMemberResponse, placementStats, placementStatsResponse, reportByIdResponse, reportSummaryResponse, sendOTPResponse, serverResponse, studentTableFilterOptions, studentTableFilterResponse, user, userByIdResponse } from '../models/model';
 import { Router } from '@angular/router';
 
 @Injectable({
@@ -193,6 +193,10 @@ export class AppService {
   publishDriveMail(id: number) {
     const params = { id: id };
     return this.http.get<serverResponse>(`${this.URL}/publish_drive_mail`, { params: params });
+  }
+
+  getPlacementStats(data:any){
+    return this.http.get<placementStatsResponse>(`${this.URL}/get_placement_stats`, {params : data})
   }
 
 

@@ -223,6 +223,16 @@
         height: fit-content;
         width: 95%;
         
+        h1{
+            margin-top: 30px;
+            font-family: 'Poppins';
+            font-size: 1.2rem;
+            letter-spacing: 1px;
+            color: #152b51;
+            border-bottom: 1px dashed #152b51;
+            width: fit-content;
+        }
+
         .stats-box{
             display: flex;
             gap: 20px;
@@ -236,11 +246,11 @@
                 padding: 5px 15px;
                 display: flex;
                 flex-direction: column;
-                transition: 0.4s ease;
+                transition: 0.3s ease;
                 cursor: pointer;
 
                 &:hover{
-                    box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.3);
+                    // box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.3);
                     transform: scale(1.025)
                 }
 
@@ -248,7 +258,7 @@
                     display: flex;
                     flex: 1;
                     flex-direction: column;
-                    padding: 0px 15px;
+                    // padding: 0px 15px;
 
                     .stats-val{
                         font-family: 'Poppins';
@@ -256,7 +266,7 @@
                         margin-top: 10px;
                         font-weight: bold;
                         color: white;
-                        background-color: #152b51;
+                        background-color: #152b51de;
                         width: fit-content;
                         padding: 0px 10px;
                         border-radius: 10px;
@@ -273,23 +283,25 @@
 
                     .stats-val-sub{
                         font-family: 'Poppins';
-                        font-size: .75rem;
+                        font-size: .9rem;
                         margin-top: 10px;
                         font-weight: bold;
                         color: white;
-                        background-color: #152b51;
+                        background-color: #152b51de;
                         width: fit-content;
                         padding: 0px 10px;
-                        border-radius: 10px;
+                        border-radius: 5px;
+                        font-weight: 500;
                     }
 
                     .stats-title-sub{
                         font-family: 'Poppins';
-                        font-weight: 700;
-                        font-size: .75rem;
-                        margin-top: 10px;
+                        font-weight: 500;
+                        font-size: .85rem;
+                        margin-top: 5px;
                         padding-bottom: 3px;
                         border-bottom: 0px;
+                        white-space: nowrap;
                     }
 
                 }
@@ -300,7 +312,7 @@
                     margin-top: 10px;
                     font-weight: bold;
                     color: white;
-                    background-color: #152b51;
+                    background-color: #152b51de;
                     width: fit-content;
                     padding: 0px 10px;
                     border-radius: 10px;
@@ -313,6 +325,7 @@
                     margin-top: 10px;
                     border-bottom: 1px dashed;
                     padding-bottom: 3px;
+                    white-space: nowrap;
                 }
 
                 .stats-sub{
@@ -323,7 +336,168 @@
                     justify-self: flex-end;
                 }
             }
+
+            .cat-stats{
+                margin-top: 10px;
+                flex: 1;
+                border-radius: 20px 0px 20px 0px;
+                height: 200px;
+                display: flex;
+                flex-direction: column;
+                // border: 1px solid black;
+                box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.3);
+                background-color: white;
+                transition: 0.3s ease;
+
+                &:hover{
+                    box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.3);
+                    transform: scale(1.025)
+                }
+
+                span{
+                    font-size: .85rem;
+                    font-family: 'Nunito';
+                    margin-left: 3px;
+                }
+
+                .cat-top{
+                    flex: 1;
+                    border-radius: 20px 0px 0px 0px;
+                    display: flex;
+                    flex-direction: column;
+                    border-bottom: 1px dashed;
+                    
+                    .cat-title{
+                        align-self: start;
+                        font-family: 'Poppins';
+                        font-size: 1rem;
+                        background-color: #198754;
+                        border-radius: 20px 0px 20px 0px;
+                        padding: 3px 10px;  
+                        color: white; 
+                    }
+                    .cat-val{
+                        flex: 1;
+                        align-self: center;
+                        font-family: 'Poppins';
+                        font-size: 2.3rem;
+                        font-weight: bold;
+                        margin-top: 10px;
+                    }
+                }
+
+                .cat-btm{
+                    flex: 1;
+                    border-radius: 0px 0px 20px 0px;
+                    display: flex;                 
+
+                    .cat-btm-sub{
+                        flex: 1;
+                        border-radius: 0px 0px 20px 0px;
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                        justify-content: center;
+                        padding: 3px;
+                        position: relative;
+
+                        .cat-btm-val{
+                            font-family: 'Poppins';
+                            font-size: 1.7rem;
+                        }
+                        .cat-btm-title{
+                            justify-self: flex-end;
+                            font-size: .75rem;
+                            // margin-top: 5px;
+                            font-family: 'Nunito';
+                            color: #35363A9B;
+                            font-weight: bold;
+                        }
+
+                        .btm-design{
+                            padding: 6px 20px;
+                            position: absolute;
+                            bottom: 0;
+                            z-index: 10;
+                        }
+                        #btm-design-lt{
+                            right: 0;
+                            border-radius: 10px 0px 0px 0px;
+                            margin-right: -2px;
+                        }
+
+                        #btm-design-rt{
+                            left: 0;
+                            border-radius: 0px 10px 0px 0px;
+                            margin-left: -2px;
+                        }
+                    }
+                }
+            }
         }
+
+        .box{
+            display: flex;
+            align-items: center;
+            gap: 20px;
+
+            .chart-box{
+                display: flex;
+                flex-direction: column;
+                margin-top: 20px;
+                gap: 15px;
+                flex: 1;
+    
+                .chart-title{
+                    display: flex;
+                    align-items: flex-end;
+                    justify-content: space-between;
+                    // background-color: #152b51;
+                    h1{
+                        margin-top: 30px;
+                        font-family: 'Poppins';
+                        font-size: 1.2rem;
+                        letter-spacing: 2px;
+                        color: #152b51ff;
+                    }
+
+                    .action-btn{
+                        display: flex;
+                        align-items: center;
+                        gap: 10px;
+                        background-color: #1a6486;
+                        color: white;
+                        padding: 5px 15px;
+                        border-radius: 10px;
+                        cursor: pointer;
+                        transition: 0.3s ease;
+                        margin-right: 20px;
+    
+                        p{
+                            font-family: 'Nunito';
+                            font-size: .85rem;
+                        }
+                        span{
+                            font-size: 1.2rem;
+                        }
+    
+                        &:hover{
+                            opacity: .8;
+                        }
+                        &:active{
+                            transform: scale(.9);
+                        }
+                    }
+                     
+                }
+                .chart-canvas{
+                    height: 400px;
+                    background-color: #198754;
+                    border-radius: 15px;
+                }
+            }
+        }
+        
     }
 
     .active-chip-blue{

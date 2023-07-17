@@ -73,11 +73,10 @@
         <div class="batch-filter" *ngIf="status_filter==='Batch'">
             <mat-form-field>
                 <mat-label>Batch</mat-label>
-                <mat-select [ngModel] = 'batch_indi'>
+                <mat-select [ngModel] = 'batch_indi' (ngModelChange)="onBatchChange($event)">
                   <mat-option *ngFor="let batch of batch_lst" [value]="batch">{{batch}}</mat-option>
                 </mat-select>
             </mat-form-field>
-            <button mat-raised-button>Apply</button>
         </div>
 
         <div class="batch-filter" *ngIf="status_filter==='Overall'">
@@ -113,32 +112,191 @@
                 <p class="stats-sub">{{placement_stats.package.max_count+' Students received this Package.'}}</p>
             </div>
             
-            <div class="stats" style="padding : 5px 0px">
-                <div class="stats-sub-box" style="border-bottom: 1px solid;">
-                    <p class="stats-val">{{placement_stats.package.max}} LPA</p>
-                    <p class="stats-title">Highest Package</p>
+            <div class="stats">
+                <div class="stats-sub-box" style="border-bottom: 1px solid">
+                    <p class="stats-val">{{placement_stats.package.avg}} LPA</p>
+                    <p class="stats-title">Average</p>
                 </div>
+
                 <div class="stats-sub-box" style="display: flex;flex-direction: row;">
-                    <div style="flex:1">
+                    <div style="flex:1; border-right:1px solid;">
                         <p class="stats-val-sub">{{placement_stats.package.max}} LPA</p>
-                        <p class="stats-title-sub">Highest Package</p>
+                        <p class="stats-title-sub">Median</p>
                     </div>
-                    <div style="flex:1">
+                    <div style="flex:1;margin-left : 10px">
                         <p class="stats-val-sub">{{placement_stats.package.max}} LPA</p>
-                        <p class="stats-title-sub">Highest Package</p>
+                        <p class="stats-title-sub">Mode</p>
                     </div>
                 </div>
             </div>
 
             <div class="stats">
-
+                <p class="stats-val">{{placement_stats.offers.total}}</p>
+                <p class="stats-title">Total Offers</p>
+                <p class="stats-sub">{{placement_stats.offers.multi_offers+' Students received multiple Package.'}}</p>
             </div>
 
             <div class="stats">
-
+                <p class="stats-val">{{placement_stats.drives.total}}</p>
+                <p class="stats-title">Drives Conducted</p>
+                <p class="stats-sub">{{'Offers received from '+placement_stats.drives.offered+' Drives.'}}</p>
             </div>
+
+            <!-- <div class="stats">
+                <p class="stats-val">{{placement_stats.companies.offered}}</p>
+                <p class="stats-title">Companies Offered</p>
+                <p class="stats-sub">{{placement_stats.companies.total+' Companies visited.'}}</p>
+            </div> -->
             
         </div>
+
+        <h1>Category-Wise Offers</h1>
+        <div class="stats-box">
+            <div class="cat-stats" *ngFor="let cat of category_lst">
+                <div class="cat-top">
+                    <p class="cat-title" [ngStyle]="true?{'background-color': cat.color} : {}">{{cat.name}}</p>
+                    <p class="cat-val">{{cat.tot_offers}}<span>Offers</span> </p>
+                </div>
+                <div class="cat-btm">
+                    <div class="cat-btm-sub" style="border-radius: 0px;border-right:1px dashed">
+                        <p class="cat-btm-val">{{cat.max_ctc}}<span>LPA</span> </p>
+                        <p class="cat-btm-title">Max. CTC</p>
+                        <div id="btm-design-lt" class="btm-design" [ngStyle]="true?{'background-color': cat.color} : {}"></div>
+                    </div>
+                    <div class="cat-btm-sub">
+                        <p class="cat-btm-val">{{cat.avg_ctc}}<span>LPA</span> </p>
+                        <p class="cat-btm-title">Avg. CTC</p>
+                        <div id="btm-design-rt" class="btm-design" [ngStyle]="true?{'background-color': cat.color} : {}"></div>
+                    </div>
+                </div>
+            </div>
+           
+           
+        </div>
+
+        <div class="box">
+            <div class="chart-box">
+                <div class="chart-title">
+                    <h1>By Department</h1>
+                    <div class="action-btn" *ngIf="charts.dept_chart" (click)="charts.dept_chart = !charts.dept_chart">
+                        <span class="material-icons">
+                            table_chart
+                        </span>
+                        <p>Table</p>
+                    </div>
+    
+                    <div class="action-btn" *ngIf="!charts.dept_chart" (click)="charts.dept_chart = !charts.dept_chart">
+                        <span class="material-icons">
+                            bar_chart
+                        </span>
+                        <p>Chart</p>
+                    </div>
+                    
+                </div>
+                <div class="chart-canvas">
+    
+                </div>
+            </div>
+
+            <div class="chart-box">
+                <div class="chart-title">
+                    <h1>By CTC</h1>
+                    <div class="action-btn" *ngIf="charts.ctc_chart" (click)="charts.ctc_chart = !charts.ctc_chart">
+                        <span class="material-icons">
+                            table_chart
+                        </span>
+                        <p>Table</p>
+                    </div>
+    
+                    <div class="action-btn" *ngIf="!charts.ctc_chart" (click)="charts.ctc_chart = !charts.ctc_chart">
+                        <span class="material-icons">
+                            bar_chart
+                        </span>
+                        <p>Chart</p>
+                    </div>
+                    
+                </div>
+                <div class="chart-canvas">
+    
+                </div>
+            </div>
+        </div>
+
+        <div class="box">
+            <div class="chart-box">
+                <div class="chart-title">
+                    <h1>By CGPA</h1>
+                    <div class="action-btn" *ngIf="charts.cgpa_chart" (click)="charts.cgpa_chart = !charts.cgpa_chart">
+                        <span class="material-icons">
+                            table_chart
+                        </span>
+                        <p>Table</p>
+                    </div>
+    
+                    <div class="action-btn" *ngIf="!charts.cgpa_chart" (click)="charts.cgpa_chart = !charts.cgpa_chart">
+                        <span class="material-icons">
+                            bar_chart
+                        </span>
+                        <p>Chart</p>
+                    </div>
+                    
+                </div>
+                <div class="chart-canvas">
+    
+                </div>
+            </div>
+
+            <div class="chart-box">
+                <div class="chart-title">
+                    <h1>By Gender</h1>
+                    <div class="action-btn" *ngIf="charts.gender_chart" (click)="charts.gender_chart = !charts.gender_chart">
+                        <span class="material-icons">
+                            table_chart
+                        </span>
+                        <p>Table</p>
+                    </div>
+    
+                    <div class="action-btn" *ngIf="!charts.gender_chart" (click)="charts.gender_chart = !charts.gender_chart">
+                        <span class="material-icons">
+                            bar_chart
+                        </span>
+                        <p>Chart</p>
+                    </div>
+                    
+                </div>
+                <div class="chart-canvas">
+    
+                </div>
+            </div>
+
+
+        </div>
+
+        <div class="box">
+            <div class="chart-box">
+                <div class="chart-title">
+                    <h1>Overall Placement Performance</h1>
+                    <div class="action-btn" *ngIf="charts.overall_chart" (click)="charts.overall_chart = !charts.overall_chart">
+                        <span class="material-icons">
+                            table_chart
+                        </span>
+                        <p>Table</p>
+                    </div>
+    
+                    <div class="action-btn" *ngIf="!charts.overall_chart" (click)="charts.overall_chart = !charts.overall_chart">
+                        <span class="material-icons">
+                            bar_chart
+                        </span>
+                        <p>Chart</p>
+                    </div>
+                    
+                </div>
+                <div class="chart-canvas">
+    
+                </div>
+            </div>
+        </div>
+        
 
     </div>
     

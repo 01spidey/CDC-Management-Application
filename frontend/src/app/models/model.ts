@@ -294,6 +294,11 @@ export interface studentTableFilterResponse{
     filtered_students : filtered_student[]
 }
 
+export interface placementStatsResponse{
+    success : boolean,
+    stats : placementStats
+}
+
 export interface placementStats{
     placed_students : number[],
     package : {

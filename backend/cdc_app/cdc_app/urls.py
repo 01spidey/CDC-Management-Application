@@ -21,40 +21,5 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('app.urls')),
-    path('add_admin', include('app.urls')),
-    path('login', include('app.urls')),
-    path('add_member', include('app.urls')),
-    path('load_members', include('app.urls')),
-    
-    path('get_drive_by_status', include('app.urls')),
-    path('get_drive_by_dateRange', include('app.urls')),
-    path('delete_drive', include('app.urls')),
-    
-    path('get_report_summary', include('app.urls')),
-    path('get_notifications', include('app.urls')),
-    path('get_member_by_id', include('app.urls')),
-    path('update_member', include('app.urls')),
-    path('delete_member', include('app.urls')),
-    path('get_user_stats', include('app.urls')),
-    
-    path('send_otp', include('app.urls')),
-    path('update_credentials', include('app.urls')),
-    path('get_company_stats', include('app.urls')),
-    
-    
-    path('add_company', include('app.urls')),
-    path('get_company_by_id', include('app.urls')),
-    path('update_company', include('app.urls')),
-    path('delete_company', include('app.urls')),
-    path('get_companies', include('app.urls')),
-    path('get_reports_by_company', include('app.urls')),
-    path('add_and_update_company_report', include('app.urls')),
-    path('delete_company_report', include('app.urls')),
-    path('add_and_update_company_drive', include('app.urls')),
-    path('export_as_csv', include('app.urls')),
-    
-    path('get_eligible_students', include('app.urls')),
-    path('publish_drive_mail', include('app.urls')),
-    
+    path('', include('app.urls'))
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

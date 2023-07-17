@@ -47,4 +47,6 @@ urlpatterns = [
     path('get_eligible_students', views.get_eligible_students),
     path('publish_drive_mail', views.publish_drive_mail),
         
+    path('get_placement_stats', views.get_placement_stats),
+        
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

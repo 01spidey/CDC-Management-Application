@@ -1,7 +1,9 @@
 import csv
 from email.message import EmailMessage
 import json
+import math
 import random
+from statistics import mode
 from django.conf import settings
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
@@ -435,7 +437,7 @@ def get_report_summary_by_id(staff_id, filter, start_date, end_date):
     response_data = {
         'staff_id': staff_id, # staff id of the placement officer
         'name': name, # name of the placement officer
-        'total_reports': len(report_data), # total number of reports
+        'total_reports': len(report_data), # 'total' number of reports
         'companies': list(set(companies)) # list of companies contacted by the placement officer
     }
     
@@ -1775,4 +1777,92 @@ def publish_drive_mail(request):
         }
         
         return JsonResponse(data)
+ 
+@csrf_exempt
+def get_placement_stats(request) :
     
+    #  status_filter: status_filter,
+    #   job_type_filter: job_type_filter,
+    #   start_year: this.start_year,
+    #   end_year: this.end_year,
+    #   batch : this.batch_indi
+    
+    status_filter = request.GET.get('status_filter')
+    job_type_filter = request.GET.get('job_type_filter')
+    start_year = request.GET.get('start_year')
+    end_year = request.GET.get('end_year')
+    batch = request.GET.get('batch')
+    
+    print(f'status_filter : {status_filter}\njob_type_filter : {job_type_filter}\nstart_year : {start_year}\nend_year : {end_year}\nbatch : {batch}')
+    
+    max_pkg = 0
+    max_pkg_count = 0
+    avg_pkg = 0
+    median_pkg = 0
+    mode_pkg = 0
+    placed_students = [0,10]
+    
+    tot_offers = 0
+    multi_offers = 0
+    tot_companies = 0
+    offered_companies = 0
+    tot_drives = 0
+    offered_drives = 0
+    
+    # Filtering based on individual batch
+    if(status_filter=='Batch'):
+        # calculating placed students count
+        placed_students_count = (DriveSelection.objects.filter(student__batch=batch, selected=True).distinct('student_id').count())
+        tot_students_count = (Student.objects.filter(batch=batch).count())
+        placed_students = [placed_students_count, tot_students_count]
+        
+        # calculating maximum package and its count
+        placed_student_objs = (DriveSelection.objects.filter(student__batch=batch, selected=True))
+
+        for driveSelection in placed_student_objs:
+            if(driveSelection.drive.ctc>=max_pkg):
+                max_pkg = driveSelection.drive.ctc
+                max_pkg_count+= 1
+        
+        # calculating average package, median package and mode package
+        for driveSelection in placed_student_objs:
+            avg_pkg+= driveSelection.drive.ctc
+        
+        avg_pkg = avg_pkg/len(placed_student_objs)
+        
+        median_pkg = placed_student_objs[int(len(placed_student_objs)/2)].drive.ctc
+        
+        mode_pkg = mode([driveSelection.drive.ctc for driveSelection in placed_student_objs])
+        
+    # Filtering based on range of years  
+    else:
+        pass
+    
+    data = {
+        'success':True,
+        'stats' : {
+            'placed_students' : placed_students,
+            'package' : {
+                'max' : max_pkg,
+                'max_count' : max_pkg_count,
+                'avg' : avg_pkg,
+                'median' : median_pkg,
+                'mode' : mode_pkg
+            },
+            'offers' : {
+                'total' : tot_offers,
+                'multi_offers' : multi_offers
+            },
+            'companies' : {
+                'total' : tot_companies,
+                'offered' : offered_companies
+            },
+            'drives' : {
+                'total' : tot_drives,
+                'offered' : offered_drives
+            }
+        }
+    }   
+    
+    
+    return JsonResponse(data)

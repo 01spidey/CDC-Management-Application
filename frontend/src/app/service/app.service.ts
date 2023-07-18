@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http'
 import { companyByIdResponse, driveByIdResponse, driveByStatusResponse, filterOptions, getCompaniesResponse, getCompanyStatsResponse, getMembersResponse, getReportsByCompanyResponse, getReportsResponse, getUserStatsResponse, loadMembersResponse, loginResponse, notificationResponse, openMemberResponse, placementStats, placementStatsResponse, reportByIdResponse, reportSummaryResponse, sendOTPResponse, serverResponse, studentTableFilterOptions, studentTableFilterResponse, user, userByIdResponse } from '../models/model';
 import { Router } from '@angular/router';
+import { categoryStats } from '../dashboard/dashboard.component';
 
 @Injectable({
   providedIn: 'root'
@@ -197,6 +198,13 @@ export class AppService {
 
   getPlacementStats(data:any){
     return this.http.get<placementStatsResponse>(`${this.URL}/get_placement_stats`, {params : data})
+  }
+
+  getCompanyCategoryStats(data:any){
+    return this.http.get<{
+      success : boolean,
+      stats : categoryStats[]
+    }>(`${this.URL}/get_company_category_stats`, {params : data})
   }
 
 

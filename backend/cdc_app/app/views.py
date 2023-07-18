@@ -1780,13 +1780,6 @@ def publish_drive_mail(request):
  
 @csrf_exempt
 def get_placement_stats(request) :
-    
-    #  status_filter: status_filter,
-    #   job_type_filter: job_type_filter,
-    #   start_year: this.start_year,
-    #   end_year: this.end_year,
-    #   batch : this.batch_indi
-    
     status_filter = request.GET.get('status_filter')
     job_type_filter = request.GET.get('job_type_filter')
     start_year = request.GET.get('start_year')
@@ -1809,34 +1802,54 @@ def get_placement_stats(request) :
     tot_drives = 0
     offered_drives = 0
     
-    # Filtering based on individual batch
-    if(status_filter=='Batch'):
-        # calculating placed students count
-        placed_students_count = (DriveSelection.objects.filter(student__batch=batch, selected=True).distinct('student_id').count())
-        tot_students_count = (Student.objects.filter(batch=batch).count())
-        placed_students = [placed_students_count, tot_students_count]
-        
-        # calculating maximum package and its count
-        placed_student_objs = (DriveSelection.objects.filter(student__batch=batch, selected=True))
-
-        for driveSelection in placed_student_objs:
-            if(driveSelection.drive.ctc>=max_pkg):
-                max_pkg = driveSelection.drive.ctc
-                max_pkg_count+= 1
-        
-        # calculating average package, median package and mode package
-        for driveSelection in placed_student_objs:
-            avg_pkg+= driveSelection.drive.ctc
-        
-        avg_pkg = avg_pkg/len(placed_student_objs)
-        
-        median_pkg = placed_student_objs[int(len(placed_student_objs)/2)].drive.ctc
-        
-        mode_pkg = mode([driveSelection.drive.ctc for driveSelection in placed_student_objs])
-        
-    # Filtering based on range of years  
+    
+    if(status_filter=='Batch'):    
+        placed_student_objs_all = DriveSelection.objects.filter(student__batch=batch, drive__offer_type__in = [job_type_filter] if job_type_filter!='All' else ['Job', 'Internship'], selected=True)
+        placed_student_objs = DriveSelection.objects.filter(student__batch=batch, drive__offer_type__in = [job_type_filter] if job_type_filter!='All' else ['Job', 'Internship'], selected=True).distinct('student_id') 
     else:
-        pass
+        placed_student_objs_all = DriveSelection.objects.filter(student__batch__range=[start_year, end_year], drive__offer_type__in = [job_type_filter] if job_type_filter!='All' else ['Job', 'Internship'], selected=True)
+        placed_student_objs = DriveSelection.objects.filter(student__batch__range=[start_year, end_year], drive__offer_type__in = [job_type_filter] if job_type_filter!='All' else ['Job', 'Internship'], selected=True).distinct('student_id') 
+
+    
+    # calculating placed students count
+    placed_students_count = len(placed_student_objs)
+    
+    tot_students_count = (Student.objects.filter(batch=batch).count()) if status_filter=='Batch' else (Student.objects.filter(batch__range=[start_year, end_year]).count())
+    
+    placed_students = [placed_students_count, tot_students_count if tot_students_count>0 else 1]
+    
+    # calculating maximum package and its count
+    for driveSelection in placed_student_objs:
+        if(driveSelection.drive.ctc>=max_pkg):
+            max_pkg = driveSelection.drive.ctc
+            max_pkg_count+= 1
+    
+    # calculating average package, median package and mode package
+    for driveSelection in placed_student_objs:
+        avg_pkg+= driveSelection.drive.ctc
+    
+    try:
+        avg_pkg = avg_pkg/len(placed_student_objs)
+    except ZeroDivisionError:
+        avg_pkg = 0
+    
+    print('Placed_student_objs', len(placed_student_objs))
+    if len(placed_student_objs)>0:
+        median_pkg = placed_student_objs[int(len(placed_student_objs)/2)].drive.ctc
+        mode_pkg = mode([driveSelection.drive.ctc for driveSelection in placed_student_objs])
+    
+    # calculating total offers and multiple offers
+    tot_offers = len(placed_student_objs_all)
+    multi_offers = tot_offers - placed_students_count
+    
+    # calculating total drives and offered drives
+    if status_filter=='Batch':
+        tot_drives = DriveSelection.objects.filter(student__batch=batch).distinct('drive_id').count()
+        offered_drives = DriveSelection.objects.filter(student__batch=batch, selected=True).distinct('drive_id').count()
+    else:
+        tot_drives = DriveSelection.objects.filter(student__batch__range=[start_year, end_year]).distinct('drive_id').count()
+        offered_drives = DriveSelection.objects.filter(student__batch__range=[start_year, end_year], selected=True).distinct('drive_id').count()
+    
     
     data = {
         'success':True,
@@ -1864,5 +1877,68 @@ def get_placement_stats(request) :
         }
     }   
     
+    
+    return JsonResponse(data)
+
+
+@csrf_exempt
+def get_company_category_stats(request):
+    status_filter = request.GET.get('status_filter')
+    job_type_filter = request.GET.get('job_type_filter')
+    start_year = request.GET.get('start_year')
+    end_year = request.GET.get('end_year')
+    batch = request.GET.get('batch')
+    
+    category_stats = []
+    
+#     name:string,
+#   tot_offers:number,
+#   avg_ctc:number,
+#   max_ctc:number,
+#   color?:string
+
+    category = ['IT - Product', 'IT - Service', 'Core', 'Marketing', 'Others']
+    colors = ['#36A2EB', '#FF6384', '#FFCE56', '#4BC0C0', '#FF8C00']
+    
+    for i,j in zip(category,colors):
+        
+        drive_selection_objs = []
+        companies = list(Company.objects.filter(category=i).values_list('company', flat=True))
+        
+        if(status_filter=='Batch'):
+            drive_selection_objs = DriveSelection.objects.filter(student__batch=batch, drive__offer_type__in = [job_type_filter] if job_type_filter!='All' else ['Job', 'Internship'], selected=True, drive__company__in = companies).select_related('drive')
+        else:
+            drive_selection_objs = DriveSelection.objects.filter(student__batch__range=[start_year, end_year], drive__offer_type__in = [job_type_filter] if job_type_filter!='All' else ['Job', 'Internship'], selected=True, drive__company__in = companies).select_related('drive')
+        
+        # drive_selection_objs = DriveSelection.objects.filter(drive__offer_type__in = [job_type_filter] if job_type_filter!='All' else ['Job', 'Internship'], selected=True)
+        
+        tot_offers = len(drive_selection_objs)
+               
+        tot_ctc = 0
+        max_ctc = 0
+        
+        for k in drive_selection_objs:
+            tot_ctc+= k.drive.ctc
+            if(k.drive.ctc>max_ctc):
+                max_ctc = k.drive.ctc
+            
+        avg_ctc = tot_ctc/tot_offers if tot_offers>0 else 0
+           
+        print(f'{i} : {tot_offers} : {avg_ctc} : {max_ctc}') 
+          
+        category_data = {
+            'name' : i,
+            'tot_offers' : tot_offers,
+            'avg_ctc' : avg_ctc,
+            'max_ctc' : max_ctc,
+            'color' : j
+        }
+        
+        category_stats.append(category_data)
+    
+    data = {
+        'success':True,
+        'stats' : category_stats
+    }
     
     return JsonResponse(data)

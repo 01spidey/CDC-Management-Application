@@ -48,5 +48,6 @@ urlpatterns = [
     path('publish_drive_mail', views.publish_drive_mail),
         
     path('get_placement_stats', views.get_placement_stats),
+    path('get_company_category_stats', views.get_company_category_stats),
         
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

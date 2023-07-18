@@ -93,7 +93,7 @@
             </div>
             
 
-            <button mat-raised-button>Apply</button>
+            <button mat-raised-button (click)="applyFilter(status_filter, job_type_filter)">Apply</button>
         </div>
     </div>
     
@@ -157,6 +157,7 @@
                     <p class="cat-title" [ngStyle]="true?{'background-color': cat.color} : {}">{{cat.name}}</p>
                     <p class="cat-val">{{cat.tot_offers}}<span>Offers</span> </p>
                 </div>
+                
                 <div class="cat-btm">
                     <div class="cat-btm-sub" style="border-radius: 0px;border-right:1px dashed">
                         <p class="cat-btm-val">{{cat.max_ctc}}<span>LPA</span> </p>
@@ -170,8 +171,6 @@
                     </div>
                 </div>
             </div>
-           
-           
         </div>
 
         <div class="box">

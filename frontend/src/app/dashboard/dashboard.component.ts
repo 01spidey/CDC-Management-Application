@@ -5,6 +5,14 @@ import { FormBuilder, FormControl, FormControlName } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
 
+export interface categoryStats{
+  name:string,
+  tot_offers:number,
+  avg_ctc:number,
+  max_ctc:number,
+  color?:string
+}
+
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
@@ -31,13 +39,7 @@ export class DashboardComponent implements OnInit {
   threeMonthsAgo = new Date(this.today.getFullYear(), this.today.getMonth() - 3, this.today.getDate());
 
   report_summary:summaryObject[] = []
-  category_lst:{
-    name:string,
-    tot_offers:number,
-    avg_ctc:number,
-    max_ctc:number,
-    color?:string
-  }[] = []
+  category_lst:categoryStats[] = []
 
   batch_indi:number = 0
   cur_year = 0
@@ -59,8 +61,19 @@ export class DashboardComponent implements OnInit {
     overall_chart: true
   }
 
-  placement_stats : placementStats = {
-    placed_students: [],
+  placement_stats! : placementStats;
+
+  constructor(
+    private service : AppService,
+    private builder : FormBuilder,
+    private datePipe : DatePipe,
+    private toastr:ToastrService
+  ) { }
+
+  ngOnInit(): void {
+    
+    this.placement_stats = {
+      placed_students: [],
     package: {
       max: 0,
       max_count : 0,
@@ -80,38 +93,6 @@ export class DashboardComponent implements OnInit {
       total: 0,
       offered: 0
     }
-  }
-
-  constructor(
-    private service : AppService,
-    private builder : FormBuilder,
-    private datePipe : DatePipe,
-    private toastr:ToastrService
-  ) { }
-
-  ngOnInit(): void {
-    
-    this.placement_stats = {
-      placed_students: [173, 250],
-      package: {
-        max: 21,
-        max_count : 2,
-        avg: 7.75,
-        median: 8,
-        mode: 10
-      },
-      offers: {
-        total: 106,
-        multi_offers: 21
-      },
-      companies: {
-        total: 29,
-        offered: 38
-      },
-      drives: {
-        total: 10,
-        offered: 5
-      } 
     }
 
     this.category_lst = [
@@ -187,14 +168,24 @@ export class DashboardComponent implements OnInit {
         this.toastr.error(err.error.message, 'Error')
       }
     )
-
-    // this.service.getReportSummary(data).subscribe((res:reportSummaryResponse)=>{
-
-    // }).add(()=>{
-    //   this.service.getPlacementStats(data).subscribe((res:placementStats)=>{
-    //     this.placement_stats = res
-    //   })
-    // })
+    .add(()=>{
+      this.service.getCompanyCategoryStats(data).subscribe(
+        (res:{
+          success:boolean, 
+          stats:categoryStats[]
+        })=>{
+            if(res.success){
+              this.category_lst = res.stats
+              console.log(res.stats)
+            }
+            else this.toastr.error('Error', 'Error')
+          },
+          (err)=>{
+            this.toastr.error(err.error.message, 'Error')
+          }
+        )
+      },
+    )
   }
 
   onBatchChange(selectedBatch:string){

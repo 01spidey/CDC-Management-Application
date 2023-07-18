@@ -1,9 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
 import { placementStats, placementStatsResponse, reportSummaryResponse, summaryObject } from '../models/model';
 import { AppService } from '../service/app.service';
 import { FormBuilder, FormControl, FormControlName } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
+import { Chart, registerables } from 'chart.js';
+Chart.register(...registerables);
 
 export interface categoryStats{
   name:string,
@@ -18,7 +20,7 @@ export interface categoryStats{
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss']
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent implements OnInit, AfterViewInit {
 
 
   section = 1
@@ -62,6 +64,10 @@ export class DashboardComponent implements OnInit {
   }
 
   placement_stats! : placementStats;
+  private dept_chart!: any;
+  private ctc_chart!: any;
+  private gender_chart!:any;
+  private overall_chart!:any;
 
   constructor(
     private service : AppService,
@@ -69,6 +75,11 @@ export class DashboardComponent implements OnInit {
     private datePipe : DatePipe,
     private toastr:ToastrService
   ) { }
+
+
+  ngAfterViewInit(): void {
+    this.initializeCharts('dept_chart');  
+  }
 
   ngOnInit(): void {
     
@@ -95,42 +106,10 @@ export class DashboardComponent implements OnInit {
     }
     }
 
-    this.category_lst = [
-    {
-      name: 'IT - Product',
-      tot_offers: 10,
-      avg_ctc: 15,
-      max_ctc: 30,
-      color: '#fb840c'
-    },
-    {
-      name: 'IT - Service',
-      tot_offers: 20,
-      avg_ctc: 10,
-      max_ctc: 15,
-      color: '#873e34ff'
-    },
-    {
-      name: 'Core',
-      tot_offers: 30,
-      avg_ctc: 5,
-      max_ctc: 27.5,
-      color: '#fa0001'
-    },
-    {
-      name: 'Marketing',
-      tot_offers: 40,
-      avg_ctc: 20,
-      max_ctc: 10,
-      color: '#2dd8bb'
-    },
-    {
-      name: 'Others',
-      tot_offers: 50,
-      avg_ctc: 25,
-      max_ctc: 7,
-      color: '#3b8dfe'
-    }]
+    
+    // this.initializeCharts('ctc_chart');
+    // this.initializeCharts('cgpa_chart');
+    // this.initializeCharts('gender_chart');
 
     this.cur_year= new Date().getFullYear();
     for(let i=this.cur_year-10; i<=this.cur_year+5; i++) this.batch_lst.push(i);
@@ -193,4 +172,28 @@ export class DashboardComponent implements OnInit {
     this.applyFilter(this.status_filter, this.job_type_filter)
   }
 
+  initializeCharts(chart:string){
+    
+    this.dept_chart = new Chart('dept_bar_chart', {
+      type: 'bar',
+      data: {
+        labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+        datasets: [{
+          label: '# of Votes',
+          data: [12, 19, 3, 5, 2, 3],
+          borderWidth: 1
+        }]
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
+  
+  }
+
 }
+

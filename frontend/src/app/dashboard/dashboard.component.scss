@@ -437,7 +437,7 @@
         .box{
             display: flex;
             align-items: center;
-            gap: 20px;
+            gap: 30px;
             margin-top: 30px;
 
             .chart-box{
@@ -446,6 +446,8 @@
                 // margin-top: 20px;
                 gap: 15px;
                 flex: 1;
+                height: 400px;
+                // background-color: #198754;
     
                 .chart-title{
                     display: flex;
@@ -492,7 +494,36 @@
                 .chart-canvas{
                     height: 400px;
                     border-radius: 15px;
+                    background-color: white;
+                    box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.3);
+                    padding: 10px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    width: 90%;
+                    align-self: center;
+                }
+
+                .area-chart{
+                    height: 400px;
+                    display: flex;
+                    width: 90%;
+                    background-color: white;
+                    canvas{
+                        width: 50%;
+                    }
+                }
+
+                .temp-div{
+                    height: 305px;
+                    border-radius: 15px;
                     width: 100%;
+                    background-color: white;
+                    box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.3);
+                    padding: 10px;
+                    display: flex;
+                    justify-content: center;
+                    
                 }
             }
         }

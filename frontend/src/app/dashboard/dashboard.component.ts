@@ -66,9 +66,19 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   placement_stats! : placementStats;
   private dept_chart!: any;
   private ctc_chart!: any;
+  private cgpa_chart!: any;
   private gender_chart!:any;
   private overall_chart!:any;
 
+
+  // ---------------------------------------------------------
+  dropdown = 0
+  // ---------------------------------------------------------
+
+
+
+
+  
   constructor(
     private service : AppService,
     private builder : FormBuilder,
@@ -176,22 +186,272 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     
     this.dept_chart = new Chart('dept_bar_chart', {
       type: 'bar',
+      
       data: {
-        labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+        labels: ['AI-DS', 'CSE', 'ECE', 'EEE', 'BME', 'MECH', 'CIVIL', 'CHEM'],
         datasets: [{
-          label: '# of Votes',
-          data: [12, 19, 3, 5, 2, 3],
-          borderWidth: 1
-        }]
+          label: 'placement %',
+          data: [70, 80, 70, 80, 54, 42.1, 35.3, 20],
+          borderWidth: 0,
+          backgroundColor: '#2196f3',
+          hoverBackgroundColor: '#2196f3de',
+          borderRadius: 7
+        }],
+        
       },
       options: {
+        indexAxis: 'y',
+        responsive: true,
         scales: {
+          x: {
+            display: true,
+            ticks: {
+              color: '#35363a',
+              font: {
+                family: 'Nunito',
+                size: 10,
+                weight: 'bold',
+                lineHeight: 1.2,
+              }
+            },
+            title: {
+              display: true,
+              text: 'Placement %',
+              color: '#35363a',
+              font: {
+                family: 'Nunito',
+                size: 15,
+                weight: 'bold',
+                lineHeight: 1.2,
+              },
+            }
+          },
+
           y: {
-            beginAtZero: true
-          }
+            beginAtZero: true,
+            ticks: {
+              color: '#35363a',
+              font: {
+                family: 'Nunito',
+                size: 10,
+                weight: 'bold',
+                lineHeight: 1.2,
+              }
+            }
+            
+          },
+          
         }
       }
     });
+
+    this.ctc_chart = new Chart('ctc_bar_chart', {
+      type: 'bar',
+      
+      data: {
+        labels: ['AI-DS', 'CSE', 'ECE', 'EEE', 'BME', 'MECH', 'CIVIL', 'CHEM'],
+        datasets: [{
+          label: 'placement %',
+          data: [70, 80, 70, 80, 54, 42.1, 35.3, 20],
+          borderWidth: 0,
+          backgroundColor: '#fc8019',
+          hoverBackgroundColor: '#fc8019de',
+          borderRadius: 7
+        }],
+        
+      },
+      options: {
+        responsive: true,
+        scales: {
+          x: {
+            display: true,
+            ticks: {
+              color: '#35363a',
+              font: {
+                family: 'Nunito',
+                size: 10,
+                weight: 'bold',
+                lineHeight: 1.2,
+              }
+            }
+          },
+
+          y: {
+            beginAtZero: true,
+            ticks: {
+              color: '#35363a',
+              font: {
+                family: 'Nunito',
+                size: 10,
+                weight: 'bold',
+                lineHeight: 1.2,
+              }
+            },
+            title: {
+              display: true,
+              text: 'CTC (LPA)',
+              color: '#35363a',
+              font: {
+                family: 'Nunito',
+                size: 15,
+                weight: 'bold',
+                lineHeight: 1.2,
+              },
+            }
+          },
+          
+        }
+      }
+    });
+
+    this.cgpa_chart = new Chart('cgpa_bar_chart', {
+      type: 'bar',
+      
+      data: {
+        labels: ['AI-DS', 'CSE', 'ECE', 'EEE', 'BME', 'MECH', 'CIVIL', 'CHEM'],
+        datasets: [{
+          label: 'placement %',
+          data: [70, 80, 70, 80, 54, 42.1, 35.3, 20],
+          borderWidth: 0,
+          backgroundColor: '#43dd88',
+          hoverBackgroundColor: '#43dd88de',
+          borderRadius: 7
+        }],
+        
+      },
+      options: {
+        responsive: true,
+        scales: {
+          x: {
+            display: true,
+            ticks: {
+              color: '#35363a',
+              font: {
+                family: 'Nunito',
+                size: 10,
+                weight: 'bold',
+                lineHeight: 1.2,
+              }
+            }
+          },
+
+          y: {
+            beginAtZero: true,
+            ticks: {
+              color: '#35363a',
+              font: {
+                family: 'Nunito',
+                size: 10,
+                weight: 'bold',
+                lineHeight: 1.2,
+              }
+            },
+            title: {
+              display: true,
+              text: 'CTC (LPA)',
+              color: '#35363a',
+              font: {
+                family: 'Nunito',
+                size: 15,
+                weight: 'bold',
+                lineHeight: 1.2,
+              },
+            }
+          },
+          
+        }
+      }
+    });
+
+    this.gender_chart = new Chart('gender_pie_chart',
+    {
+      type: 'pie',
+      data: {
+        labels: ['Male', 'Female', 'Others'],
+        datasets: [
+          {
+            hoverOffset: 10,
+            label: 'Placement %',
+            data: [54, 42.1, 3.9],
+            backgroundColor: ['#2196f3', '#fc8019', '#43dd88'],
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        
+        plugins: {
+          legend: {
+            position: 'top',
+          },
+          title: {
+            display: true,
+            text: 'Placement By Gender'
+          }
+        }
+      },
+    });
+
+    this.overall_chart = new Chart('overall_line_chart', {
+      type: 'line',
+      data: {
+          labels: ['Januray', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+          datasets: [{
+              label: 'Series 1', // Name the series
+              data: [24, 36, 45, 76, 23, 45, 95, 67, 34, 52, 31, 24], // Specify the data values array
+              fill: true,
+              borderColor: '#2196f3', // Add custom color border (Line)
+              backgroundColor: '#2196f3', // Add custom color background (Points and Fill)
+              borderWidth: 1 // Specify bar border width
+          }]
+      },
+      options: {
+        responsive: true, // Instruct chart js to respond nicely.
+        maintainAspectRatio: false, // Add to prevent default behaviour of full-width/height 
+        scales: {
+          x: {
+            display: true,
+            ticks: {
+              color: '#35363a',
+              font: {
+                family: 'Nunito',
+                size: 10,
+                weight: 'bold',
+                lineHeight: 1.2,
+              }
+            }
+          },
+
+          y: {
+            beginAtZero: true,
+            ticks: {
+              color: '#35363a',
+              font: {
+                family: 'Nunito',
+                size: 10,
+                weight: 'bold',
+                lineHeight: 1.2,
+              }
+            },
+            title: {
+              display: true,
+              text: 'Plcament %',
+              color: '#35363a',
+              font: {
+                family: 'Nunito',
+                size: 15,
+                weight: 'bold',
+                lineHeight: 1.2,
+              },
+            }
+          },
+          
+        }
+      }
+  });
+
+
+
   
   }
 

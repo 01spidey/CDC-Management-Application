@@ -321,3 +321,27 @@ export interface placementStats{
         offered : number
     }
 }
+
+export interface getChartsDataResponse{
+    success : boolean,
+    charts_data : {
+        dept_chart : {
+            dept_chart_data : number[]
+        },
+        ctc_chart : {
+            ctc_chart_data : number[],
+            ctc_chart_labels : any[]
+        },
+        cgpa_chart : {
+            cgpa_chart_data : number[],
+        },
+        gender_chart : {
+            gender_chart_data : number[]
+        },
+        overall_chart : {
+            overall_chart_data : number[],
+            overall_chart_labels : any[]
+        }
+
+    }
+}

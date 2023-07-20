@@ -192,7 +192,7 @@
                     </div>
                     
                 </div>
-                <div class="chart-canvas">
+                <div (click)="full_screen_chart = 'dept_chart'" [ngClass]="{'full-screen-chart' : full_screen_chart==='dept_chart', 'chart-canvas':full_screen_chart!=='dept_chart'}">
                     <canvas id="dept_bar_chart">
     
                     </canvas>
@@ -219,7 +219,7 @@
                     
                 </div>
                 <div class="chart-canvas">
-                    <canvas id="ctc_bar_chart">
+                    <canvas id="ctc_line_chart">
 
                     </canvas>
                 </div>
@@ -316,3 +316,8 @@
     </div>
     
 </div>
+
+<!-- <div class="full-screen-chart" *ngIf="full_screen_chart ==='dept_chart'">
+    <canvas id="dept_bar_chart"></canvas>
+</div> -->
+

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http'
-import { companyByIdResponse, driveByIdResponse, driveByStatusResponse, filterOptions, getCompaniesResponse, getCompanyStatsResponse, getMembersResponse, getReportsByCompanyResponse, getReportsResponse, getUserStatsResponse, loadMembersResponse, loginResponse, notificationResponse, openMemberResponse, placementStats, placementStatsResponse, reportByIdResponse, reportSummaryResponse, sendOTPResponse, serverResponse, studentTableFilterOptions, studentTableFilterResponse, user, userByIdResponse } from '../models/model';
+import { companyByIdResponse, driveByIdResponse, driveByStatusResponse, filterOptions, getChartsDataResponse, getCompaniesResponse, getCompanyStatsResponse, getMembersResponse, getReportsByCompanyResponse, getReportsResponse, getUserStatsResponse, loadMembersResponse, loginResponse, notificationResponse, openMemberResponse, placementStats, placementStatsResponse, reportByIdResponse, reportSummaryResponse, sendOTPResponse, serverResponse, studentTableFilterOptions, studentTableFilterResponse, user, userByIdResponse } from '../models/model';
 import { Router } from '@angular/router';
 import { categoryStats } from '../dashboard/dashboard.component';
 
@@ -205,6 +205,10 @@ export class AppService {
       success : boolean,
       stats : categoryStats[]
     }>(`${this.URL}/get_company_category_stats`, {params : data})
+  }
+
+  getChartsData(data:any){
+    return this.http.get<getChartsDataResponse>(`${this.URL}/get_charts_data`, {params : data})
   }
 
 

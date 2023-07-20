@@ -1,5 +1,5 @@
 import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
-import { placementStats, placementStatsResponse, reportSummaryResponse, summaryObject } from '../models/model';
+import { getChartsDataResponse, placementStats, placementStatsResponse, reportSummaryResponse, summaryObject } from '../models/model';
 import { AppService } from '../service/app.service';
 import { FormBuilder, FormControl, FormControlName } from '@angular/forms';
 import { DatePipe } from '@angular/common';
@@ -73,12 +73,17 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 
   // ---------------------------------------------------------
   dropdown = 0
+  dept_chart_data!: number[];
+  ctc_chart_labels!: any[];
+  ctc_chart_data!: any[];
+  cgpa_chart_data!: any[];
+  gender_chart_data!: any[];
+  overall_chart_data!: any[];
+  overall_chart_labels!: any[];
+
+  full_screen_chart:string = ''
   // ---------------------------------------------------------
 
-
-
-
-  
   constructor(
     private service : AppService,
     private builder : FormBuilder,
@@ -88,32 +93,32 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 
 
   ngAfterViewInit(): void {
-    this.initializeCharts('dept_chart');  
+    this.getChartsData();  
   }
 
   ngOnInit(): void {
     
     this.placement_stats = {
       placed_students: [],
-    package: {
-      max: 0,
-      max_count : 0,
-      avg: 0,
-      median: 0,
-      mode: 0
-    },
-    offers: {
-      total: 0,
-      multi_offers: 0
-    },
-    companies: {
-      total: 0,
-      offered: 0
-    },
-    drives: {
-      total: 0,
-      offered: 0
-    }
+      package: {
+        max: 0,
+        max_count : 0,
+        avg: 0,
+        median: 0,
+        mode: 0
+      },
+      offers: {
+        total: 0,
+        multi_offers: 0
+      },
+      companies: {
+        total: 0,
+        offered: 0
+      },
+      drives: {
+        total: 0,
+        offered: 0
+      }
     }
 
     
@@ -173,8 +178,51 @@ export class DashboardComponent implements OnInit, AfterViewInit {
             this.toastr.error(err.error.message, 'Error')
           }
         )
+        .add(()=>{
+          this.getChartsData();
+        })
       },
     )
+    
+  }
+
+  makeFullScreenChart(chart:string){
+    this.full_screen_chart =chart
+    this.initializeCharts()
+  }
+
+  getChartsData(){
+    
+    let data = {
+      status_filter: this.status_filter,
+      job_type_filter: this.job_type_filter,
+      start_year: this.start_year,
+      end_year: this.end_year,
+      batch : this.batch_indi
+    }
+
+    this.service.getChartsData(data).subscribe(
+      (res:getChartsDataResponse)=>{
+        if(res.success){
+          console.log(res)
+          let charts_data = res.charts_data
+          this.dept_chart_data = charts_data.dept_chart.dept_chart_data
+          this.ctc_chart_labels = charts_data.ctc_chart.ctc_chart_labels
+          this.ctc_chart_data = charts_data.ctc_chart.ctc_chart_data
+          this.cgpa_chart_data = charts_data.cgpa_chart.cgpa_chart_data
+          this.gender_chart_data = charts_data.gender_chart.gender_chart_data
+          this.overall_chart_data = charts_data.overall_chart.overall_chart_data
+          this.overall_chart_labels = charts_data.overall_chart.overall_chart_labels
+
+          this.initializeCharts()
+
+        }else this.toastr.error('Something went wrong')
+      },
+      (err)=>{
+        this.toastr.error('Server Not Responding')
+      }
+    )
+
   }
 
   onBatchChange(selectedBatch:string){
@@ -182,20 +230,27 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     this.applyFilter(this.status_filter, this.job_type_filter)
   }
 
-  initializeCharts(chart:string){
-    
+  initializeCharts(){
+    if(this.dept_chart) this.dept_chart.destroy()
+    if(this.ctc_chart) this.ctc_chart.destroy()
+    if(this.cgpa_chart) this.cgpa_chart.destroy()
+    if(this.gender_chart) this.gender_chart.destroy()
+    if(this.overall_chart) this.overall_chart.destroy()
+
+    // Initialize Department Chart
     this.dept_chart = new Chart('dept_bar_chart', {
       type: 'bar',
       
       data: {
-        labels: ['AI-DS', 'CSE', 'ECE', 'EEE', 'BME', 'MECH', 'CIVIL', 'CHEM'],
+        labels: ['', 'AI - DS', 'BME', 'CHEM', 'CIVIL', 'CSE', 'ECE', 'EEE', 'MECH', ''],
         datasets: [{
-          label: 'placement %',
-          data: [70, 80, 70, 80, 54, 42.1, 35.3, 20],
+          label: 'Offers',
+          data: this.dept_chart_data,
           borderWidth: 0,
           backgroundColor: '#2196f3',
           hoverBackgroundColor: '#2196f3de',
-          borderRadius: 7
+          borderRadius: 7,
+          barPercentage: 1,
         }],
         
       },
@@ -205,6 +260,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
         scales: {
           x: {
             display: true,
+            
             ticks: {
               color: '#35363a',
               font: {
@@ -216,7 +272,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
             },
             title: {
               display: true,
-              text: 'Placement %',
+              text: 'Offers',
               color: '#35363a',
               font: {
                 family: 'Nunito',
@@ -228,6 +284,9 @@ export class DashboardComponent implements OnInit, AfterViewInit {
           },
 
           y: {
+            grid: {
+              display: false
+            },
             beginAtZero: true,
             ticks: {
               color: '#35363a',
@@ -245,14 +304,15 @@ export class DashboardComponent implements OnInit, AfterViewInit {
       }
     });
 
-    this.ctc_chart = new Chart('ctc_bar_chart', {
+    // Initialize CTC Chart
+    this.ctc_chart = new Chart('ctc_line_chart', {
       type: 'bar',
       
       data: {
-        labels: ['AI-DS', 'CSE', 'ECE', 'EEE', 'BME', 'MECH', 'CIVIL', 'CHEM'],
+        labels: this.ctc_chart_labels,
         datasets: [{
           label: 'placement %',
-          data: [70, 80, 70, 80, 54, 42.1, 35.3, 20],
+          data: this.ctc_chart_data,
           borderWidth: 0,
           backgroundColor: '#fc8019',
           hoverBackgroundColor: '#fc8019de',
@@ -273,6 +333,17 @@ export class DashboardComponent implements OnInit, AfterViewInit {
                 weight: 'bold',
                 lineHeight: 1.2,
               }
+            },
+            title: {
+              display: true,
+              text: 'CTC (LPA)',
+              color: '#35363a',
+              font: {
+                family: 'Nunito',
+                size: 15,
+                weight: 'bold',
+                lineHeight: 1.2,
+              },
             }
           },
 
@@ -289,7 +360,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
             },
             title: {
               display: true,
-              text: 'CTC (LPA)',
+              text: 'Offers',
               color: '#35363a',
               font: {
                 family: 'Nunito',
@@ -302,20 +373,22 @@ export class DashboardComponent implements OnInit, AfterViewInit {
           
         }
       }
-    });
+    }); 
 
+    // Initialize CGPA Chart
     this.cgpa_chart = new Chart('cgpa_bar_chart', {
       type: 'bar',
       
       data: {
-        labels: ['AI-DS', 'CSE', 'ECE', 'EEE', 'BME', 'MECH', 'CIVIL', 'CHEM'],
+        labels: ['0.0-2.0', '2.0-3.0', '3.0-4.0', '4.0-5.0', '5.0-6.0', '6.0-7.0', '7.0-8.0', '8.0-10.0'],
+        
         datasets: [{
           label: 'placement %',
-          data: [70, 80, 70, 80, 54, 42.1, 35.3, 20],
+          data: this.cgpa_chart_data,
           borderWidth: 0,
           backgroundColor: '#43dd88',
           hoverBackgroundColor: '#43dd88de',
-          borderRadius: 7
+          borderRadius: 7,
         }],
         
       },
@@ -331,7 +404,18 @@ export class DashboardComponent implements OnInit, AfterViewInit {
                 size: 10,
                 weight: 'bold',
                 lineHeight: 1.2,
-              }
+              },
+            },
+            title: {
+              display: true,
+              text: 'CGPA',
+              color: '#35363a',
+              font: {
+                family: 'Nunito',
+                size: 15,
+                weight: 'bold',
+                lineHeight: 1.2,
+              },
             }
           },
 
@@ -348,7 +432,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
             },
             title: {
               display: true,
-              text: 'CTC (LPA)',
+              text: 'Offers',
               color: '#35363a',
               font: {
                 family: 'Nunito',
@@ -363,52 +447,62 @@ export class DashboardComponent implements OnInit, AfterViewInit {
       }
     });
 
+    console.log(this.gender_chart_data)
+    // Intialize Gender Chart
     this.gender_chart = new Chart('gender_pie_chart',
-    {
-      type: 'pie',
-      data: {
-        labels: ['Male', 'Female', 'Others'],
-        datasets: [
-          {
-            hoverOffset: 10,
-            label: 'Placement %',
-            data: [54, 42.1, 3.9],
-            backgroundColor: ['#2196f3', '#fc8019', '#43dd88'],
-          }
-        ]
-      },
-      options: {
-        responsive: true,
-        
-        plugins: {
-          legend: {
-            position: 'top',
+        {
+          type: 'pie',
+          data: {
+            labels: ['Male', 'Female', 'Others'],
+            datasets: [
+              {
+                hoverOffset: 10,
+                label: 'Placement %',
+                data: this.gender_chart_data,
+                backgroundColor: ['#2196f3', '#fc8019', '#43dd88'],
+              }
+            ]
           },
-          title: {
-            display: true,
-            text: 'Placement By Gender'
-          }
-        }
-      },
+          options: {
+            responsive: true,
+            
+            plugins: {
+              legend: {
+                position: 'top',
+              },
+              title: {
+                display: true,
+                text: 'Placement By Gender'
+              }
+            }
+          },
     });
-
+    
+    // Initialize Overall Chart
     this.overall_chart = new Chart('overall_line_chart', {
       type: 'line',
       data: {
-          labels: ['Januray', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+          labels: this.overall_chart_labels,
+          
           datasets: [{
-              label: 'Series 1', // Name the series
-              data: [24, 36, 45, 76, 23, 45, 95, 67, 34, 52, 31, 24], // Specify the data values array
+              label: 'Offers', // Name the series
+              data: this.overall_chart_data, // Specify the data values array
               fill: true,
-              borderColor: '#2196f3', // Add custom color border (Line)
-              backgroundColor: '#2196f3', // Add custom color background (Points and Fill)
-              borderWidth: 1 // Specify bar border width
+              borderColor: '#35363a', // Add custom color border (Line)
+              // Add gradient backgroud color
+              backgroundColor: '#7c5cfc',
+              hoverBackgroundColor: '#ffffff',
+              borderWidth: 2, // Specify bar border width,
+              pointBackgroundColor: '#ffffff',
+              pointBorderColor: 'black',
+              pointBorderWidth: 1.5,
           }]
       },
       options: {
         responsive: true, // Instruct chart js to respond nicely.
         maintainAspectRatio: false, // Add to prevent default behaviour of full-width/height 
         scales: {
+
           x: {
             display: true,
             ticks: {
@@ -435,7 +529,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
             },
             title: {
               display: true,
-              text: 'Plcament %',
+              text: 'Offers',
               color: '#35363a',
               font: {
                 family: 'Nunito',
@@ -448,10 +542,9 @@ export class DashboardComponent implements OnInit, AfterViewInit {
           
         }
       }
-  });
+    }); 
 
-
-
+    
   
   }
 

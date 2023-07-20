@@ -1786,7 +1786,7 @@ def get_placement_stats(request) :
     end_year = request.GET.get('end_year')
     batch = request.GET.get('batch')
     
-    print(f'status_filter : {status_filter}\njob_type_filter : {job_type_filter}\nstart_year : {start_year}\nend_year : {end_year}\nbatch : {batch}')
+    # print(f'status_filter : {status_filter}\njob_type_filter : {job_type_filter}\nstart_year : {start_year}\nend_year : {end_year}\nbatch : {batch}')
     
     max_pkg = 0
     max_pkg_count = 0
@@ -1924,7 +1924,7 @@ def get_company_category_stats(request):
             
         avg_ctc = tot_ctc/tot_offers if tot_offers>0 else 0
            
-        print(f'{i} : {tot_offers} : {avg_ctc} : {max_ctc}') 
+        # print(f'{i} : {tot_offers} : {avg_ctc} : {max_ctc}') 
           
         category_data = {
             'name' : i,
@@ -1942,3 +1942,134 @@ def get_company_category_stats(request):
     }
     
     return JsonResponse(data)
+
+@csrf_exempt
+def get_charts_data(request):
+    status_filter = request.GET.get('status_filter')
+    job_type_filter = request.GET.get('job_type_filter')
+    start_year = request.GET.get('start_year')
+    end_year = request.GET.get('end_year')
+    batch = request.GET.get('batch')
+    
+    dept_chart_data = []
+    ctc_chart_data = []
+    ctc_chart_labels = []
+    cgpa_chart_data = []
+    gender_chart_data = []
+    overall_chart_data = []
+    overall_chart_labels = []
+    
+    try:
+        
+        placed_student_objs_all = []
+        placed_student_objs = []
+        
+        if(status_filter=='Batch'):    
+            placed_student_objs_all = DriveSelection.objects.filter(student__batch=batch, drive__offer_type__in = [job_type_filter] if job_type_filter!='All' else ['Job', 'Internship'], selected=True)
+            placed_student_objs = DriveSelection.objects.filter(student__batch=batch, drive__offer_type__in = [job_type_filter] if job_type_filter!='All' else ['Job', 'Internship'], selected=True).distinct('student_id') 
+        else:
+            placed_student_objs_all = DriveSelection.objects.filter(student__batch__range=[start_year, end_year], drive__offer_type__in = [job_type_filter] if job_type_filter!='All' else ['Job', 'Internship'], selected=True)
+            placed_student_objs = DriveSelection.objects.filter(student__batch__range=[start_year, end_year], drive__offer_type__in = [job_type_filter] if job_type_filter!='All' else ['Job', 'Internship'], selected=True).distinct('student_id')
+       
+        # fetching Dept wise data
+        
+        dept_wise_data = {'AI-DS':0, 'BME':0, 'CHEM':0, 'CIVIL':0, 'CSE':0, 'ECE':0, 'EEE':0, 'MECH':0}
+        cgpa_wise_data = {'0.0-2.0':0, '2.0-4.0':0, '4.0-6.0':0, '6.0-8.0':0, '8.0-10.0':0}
+        gender_wise_data = {'Male' : 0, 'Female':0, 'Others':0}         
+        ctc_wise_data = {}
+        
+          
+        # print(placed_student_objs)
+        for i in placed_student_objs:
+            dept_wise_data[i.student.dept]+=1
+            studentEdu = StudentEdu.objects.get(reg_no=i.student.reg_no)
+            cgpa = studentEdu.ug_cgpa
+            
+            if(cgpa>=0 and cgpa<2):
+                cgpa_wise_data['0.0-2.0']+=1
+            
+            elif (cgpa>=2 and cgpa<4):
+                cgpa_wise_data['2.0-4.0']+=1
+            
+            elif (cgpa>=4 and cgpa<6):
+                cgpa_wise_data['4.0-6.0']+=1
+                
+            elif (cgpa>=6 and cgpa<8):
+                cgpa_wise_data['6.0-8.0']+=1
+
+            else:
+                cgpa_wise_data['8.0-10.0']+=1
+        
+
+            gender_wise_data[i.student.gender]+=1
+            # print(i.student.gender)
+            
+            if(i.drive.ctc in ctc_wise_data.keys()):
+                ctc_wise_data[i.drive.ctc]+=1
+            else:
+                ctc_wise_data[i.drive.ctc]=1
+                
+        
+        print(gender_wise_data)        
+        
+        ctc_chart_labels = list(ctc_wise_data.keys())
+        ctc_chart_data = list(ctc_wise_data[i] for i in ctc_chart_labels )
+        dept_chart_data = [dept_wise_data['AI-DS'], dept_wise_data['BME'], dept_wise_data['CHEM'], dept_wise_data['CIVIL'], dept_wise_data['CSE'], dept_wise_data['ECE'], dept_wise_data['EEE'], dept_wise_data['MECH']]
+        cgpa_chart_data = [cgpa_wise_data['0.0-2.0'], cgpa_wise_data['2.0-4.0'], cgpa_wise_data['4.0-6.0'], cgpa_wise_data['6.0-8.0'], cgpa_wise_data['8.0-10.0']]
+        gender_chart_data = [gender_wise_data['Male'], gender_wise_data['Female'], gender_wise_data['Others']]
+        
+        print(gender_chart_data)
+        
+        data = {
+            'success' : True,
+            'charts_data' : {
+                'dept_chart' : {
+                    'dept_chart_data' : dept_chart_data
+                    # 'dept_chart_data' : [0, 83, 74, 58, 62, 34, 59, 73, 63, 0]
+                },
+                'ctc_chart' : {
+                    'ctc_chart_data' : ctc_chart_data,
+                    'ctc_chart_labels' : ctc_chart_labels
+                },
+                'cgpa_chart' : {
+                    'cgpa_chart_data' : cgpa_chart_data,
+                },
+                'gender_chart' : {
+                    'gender_chart_data' : gender_chart_data
+                },
+                'overall_chart' : {
+                    'overall_chart_data' : overall_chart_data,
+                    'overall_chart_labels' : overall_chart_data
+                }
+            }
+        }
+        
+        return JsonResponse(data)
+    
+    except Exception as e:
+        print(e)
+        data = {
+            'success' : False,
+            'charts_data' : {
+                'dept_chart' : {
+                    'dept_chart_data' : []
+                },
+                'ctc_chart' : {
+                    'ctc_chart_data' : [],
+                    'ctc_chart_labels' : []
+                },
+                'cgpa_chart' : {
+                    'cgpa_chart_data' : [],
+                },
+                'gender_chart' : {
+                    'gender_chart_data' : []
+                },
+                'overall_chart' : {
+                    'overall_chart_data' : [],
+                    'overall_chart_labels' : []
+                }
+            }
+        }
+        
+        return JsonResponse(data)
+    

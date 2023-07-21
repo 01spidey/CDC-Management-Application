@@ -70,6 +70,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   private gender_chart!:any;
   private overall_chart!:any;
 
+  
 
   // ---------------------------------------------------------
   dropdown = 0

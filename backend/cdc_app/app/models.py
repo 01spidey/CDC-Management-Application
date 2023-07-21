@@ -88,6 +88,7 @@ class DriveSelection(models.Model):
     student = models.ForeignKey('Student', on_delete=models.CASCADE)
     selected = models.BooleanField(default=False)
     round = models.IntegerField(default=0)
+    date = models.DateField(default=now, null=False)
 
 class Student(models.Model):
     reg_no = models.CharField(max_length=50, null=False, primary_key=True)

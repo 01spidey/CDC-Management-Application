@@ -21,7 +21,7 @@ export class DriveComponent implements OnInit {
   drive_lst:drive[] = []
   selectedFile: File | null = null;
   filter = 'All'
-  show_desc = ''
+  // show_desc = ''
   show_delete = ''
   action = 'add'
 
@@ -29,9 +29,12 @@ export class DriveComponent implements OnInit {
   drive_popup = false
   drive_popup_data!:drive_popup_data;
   student_table = false
+  desc_popup = false
 
   startDate!: string;
   endDate!: string;
+
+  cur_desc_drive!:drive;
 
   addDriveForm = this.builder.group({
     company:this.builder.control('',Validators.required),
@@ -161,6 +164,11 @@ export class DriveComponent implements OnInit {
       drive : drive
     }
     this.drive_popup = true
+  }
+
+  openDriveDesc(drive:drive){
+    this.cur_desc_drive = drive
+    this.desc_popup = true
   }
 
   publishMail(drive: drive) {

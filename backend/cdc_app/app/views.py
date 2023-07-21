@@ -377,7 +377,7 @@ def get_drive_by_dateRange(request):
         for drive in drives:
             drive_date = datetime.strptime(str(drive.date), '%Y-%m-%d').strftime('%d-%m-%Y')
             company_obj = Company.objects.get(company=drive.company)
-            print(drive.drive_rounds)
+            # print(drive.drive_rounds)
             
             drive_lst.append(
                 {
@@ -1366,7 +1366,7 @@ def add_and_update_company_drive(request):
                 print('Updating Existing round')
                 if(cur_round==0):
                     # the students should be removed from the attended_students field
-                    pass
+                    print(drive_obj.attended_students.all())
                 else:
                     # the round field of the driveselection object of corresponding drive_pk and student_reg_no should be updated 
                     pass
@@ -1819,17 +1819,20 @@ def get_placement_stats(request) :
     placed_students = [placed_students_count, tot_students_count if tot_students_count>0 else 1]
     
     # calculating maximum package and its count
-    for driveSelection in placed_student_objs:
+    for driveSelection in placed_student_objs_all:
         if(driveSelection.drive.ctc>=max_pkg):
             max_pkg = driveSelection.drive.ctc
-            max_pkg_count+= 1
+    
+    for driveSelection in placed_student_objs_all:
+        if(driveSelection.drive.ctc==max_pkg):
+            max_pkg_count+=1    
     
     # calculating average package, median package and mode package
     for driveSelection in placed_student_objs:
         avg_pkg+= driveSelection.drive.ctc
-    
+
     try:
-        avg_pkg = avg_pkg/len(placed_student_objs)
+        avg_pkg = avg_pkg//len(placed_student_objs)
     except ZeroDivisionError:
         avg_pkg = 0
     
@@ -1922,7 +1925,7 @@ def get_company_category_stats(request):
             if(k.drive.ctc>max_ctc):
                 max_ctc = k.drive.ctc
             
-        avg_ctc = tot_ctc/tot_offers if tot_offers>0 else 0
+        avg_ctc = tot_ctc//tot_offers if tot_offers>0 else 0
            
         # print(f'{i} : {tot_offers} : {avg_ctc} : {max_ctc}') 
           
@@ -1977,6 +1980,7 @@ def get_charts_data(request):
         cgpa_wise_data = {'0.0-2.0':0, '2.0-4.0':0, '4.0-6.0':0, '6.0-8.0':0, '8.0-10.0':0}
         gender_wise_data = {'Male' : 0, 'Female':0, 'Others':0}         
         ctc_wise_data = {}
+        date_wise_data = {}
         
           
         # print(placed_student_objs)
@@ -2008,17 +2012,33 @@ def get_charts_data(request):
                 ctc_wise_data[i.drive.ctc]+=1
             else:
                 ctc_wise_data[i.drive.ctc]=1
+            
+            # if(i.drive.date in date_wise_data.keys()):
+            #     date_wise_data[i.drive.date]+=1
+            # else:
+            #     date_wise_data[i.drive.date]=1
+            
+            if(i.selected):
+                if(i.date in date_wise_data.keys()):
+                    date_wise_data[i.date]+=1
+                else:
+                    date_wise_data[i.date]=1
                 
         
         print(gender_wise_data)        
         
         ctc_chart_labels = list(ctc_wise_data.keys())
         ctc_chart_data = list(ctc_wise_data[i] for i in ctc_chart_labels )
-        dept_chart_data = [dept_wise_data['AI-DS'], dept_wise_data['BME'], dept_wise_data['CHEM'], dept_wise_data['CIVIL'], dept_wise_data['CSE'], dept_wise_data['ECE'], dept_wise_data['EEE'], dept_wise_data['MECH']]
+        dept_chart_data = [0, dept_wise_data['AI-DS'], dept_wise_data['BME'], dept_wise_data['CHEM'], dept_wise_data['CIVIL'], dept_wise_data['CSE'], dept_wise_data['ECE'], dept_wise_data['EEE'], dept_wise_data['MECH'], 0]
         cgpa_chart_data = [cgpa_wise_data['0.0-2.0'], cgpa_wise_data['2.0-4.0'], cgpa_wise_data['4.0-6.0'], cgpa_wise_data['6.0-8.0'], cgpa_wise_data['8.0-10.0']]
         gender_chart_data = [gender_wise_data['Male'], gender_wise_data['Female'], gender_wise_data['Others']]
         
-        print(gender_chart_data)
+        overall_chart_labels = list(date_wise_data.keys())
+        overall_chart_labels_strip = [i.strftime('%d %b, %Y') for i in overall_chart_labels]
+        overall_chart_data = list(date_wise_data[i] for i in overall_chart_labels )
+        
+        print(overall_chart_data)
+        print(overall_chart_labels_strip)
         
         data = {
             'success' : True,
@@ -2039,7 +2059,7 @@ def get_charts_data(request):
                 },
                 'overall_chart' : {
                     'overall_chart_data' : overall_chart_data,
-                    'overall_chart_labels' : overall_chart_data
+                    'overall_chart_labels' : overall_chart_labels_strip
                 }
             }
         }

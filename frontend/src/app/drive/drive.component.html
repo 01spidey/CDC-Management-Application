@@ -86,6 +86,7 @@
     </div>
 
     <div class="grid-container" *ngIf="section==1">
+        
         <div class="drive-info-box"  [ngClass]="{'inactive-box': drive.completed}" *ngFor="let drive of drive_lst">
             
             <!--  -->
@@ -101,23 +102,6 @@
                     </div>
                 </div>
 
-            </div>
-
-            <div class="desc-box" *ngIf="show_desc === (drive.id.toString())">
-                
-                <div class="desc-title prevent-select">
-                    <span class="material-symbols-outlined" (click)="show_desc = ''">
-                        close
-                    </span>
-                    <h2>Description</h2>
-                </div>
-                <div class="desc-content">
-                    <p>{{drive.description}}</p>
-                </div>
-                <!-- <div class="center-content">
-                    
-                    
-                </div> -->
             </div>
 
             <div class="title-box prevent-select">
@@ -141,33 +125,36 @@
                 </div>
             </div>
             
-            <div class="content">
+            <div class="content" style="flex-direction:row">
                 
-                
-                <div class="field">
+                <!-- HR Name -->
+                <!-- <div class="field">
                     <span class="material-symbols-outlined prevent-select">
                         account_box
                     </span>
                     <p style="font-family: 'Poppins';font-weight:500;">HR Name : </p>
                     <p>{{drive.HR_name}}</p>
-                </div>
+                </div> -->
                 
-                <div class="field">
+                <!-- HR Mail -->
+                <!-- <div class="field">
                     <span class="material-symbols-outlined prevent-select">
                         mail
                     </span>
                     <p style="font-family: 'Poppins';font-weight:500;">HR Mail : </p>
                     <p>{{(drive.lock_hr_mail && cur_staff_id!==drive.placement_officer_id)? '--' : drive.HR_mail}}</p>
-                </div>
+                </div> -->
 
-                <div class="field">
+                <!-- HR Contact -->
+                <!-- <div class="field">
                     <span class="material-symbols-outlined prevent-select">
                         phone
                     </span>
                     <p style="font-family: 'Poppins';font-weight:500;">HR Contact : </p>
                     <p>{{(drive.lock_hr_contact && cur_staff_id!==drive.placement_officer_id)? '--' : '+91 '+drive.HR_contact}}</p>
-                </div>
+                </div> -->
 
+                <!-- Mode -->
                 <div class="field">
                     <span class="material-symbols-outlined prevent-select">
                         push_pin
@@ -176,6 +163,7 @@
                     <p>{{drive.mode}}</p>
                 </div>
 
+                <!-- CTC -->
                 <div class="field">
                     <span class="material-symbols-outlined prevent-select">
                         currency_rupee
@@ -184,41 +172,136 @@
                     <p>{{drive.ctc}} LPA</p>
                 </div>
 
-                <div class="dept-grid prevent-select">
+                <!-- Depts -->
+                <!-- <div class="dept-grid prevent-select">
                     <p class="dept" *ngFor="let dept of drive.departments">{{dept}}</p>
-                </div>
+                </div> -->
+
+                
+
+                <!-- <img src="../../../../backend/cdc_app/media/" alt=""> -->
+            </div>
+
+            <div class="btm-box">
+                <button mat-raised-button (click)="publishMail(drive)">Publish Mail</button>
 
                 <div class="options-box prevent-select">
                     <span class="material-symbols-outlined" id="edit" matTooltip="edit" (click)='openDrivePopup(drive)'  *ngIf="role==='Director' || drive.placement_officer_id === cur_staff_id">
-                        <!-- getDriveById(drive.id) -->
                         edit
                     </span>
                     <span class="material-symbols-outlined" id="delete" matTooltip="delete" (click)="show_delete = (drive.id.toString())" *ngIf="role==='Director' || drive.placement_officer_id === cur_staff_id">
                         delete
                     </span>
-                    <span class="material-symbols-outlined" id="info" matTooltip="description" (click)="show_desc = (drive.id.toString())">
+                    <span class="material-symbols-outlined" id="info" matTooltip="view more" (click)="openDriveDesc(drive)">
                         info
                     </span>
                 </div>
+            </div>
+        
+        </div> 
 
-                <!-- <img src="../../../../backend/cdc_app/media/" alt=""> -->
+    </div>
+
+    <div class="popup-container" *ngIf="drive_popup||desc_popup">
+        <app-drive-popup (popup_closed)="handleDrivePopup($event)" *ngIf="drive_popup" [data] = 'drive_popup_data'></app-drive-popup>
+        
+        <div class="drive-info-box" *ngIf="desc_popup" style="flex-direction: column;padding:20px; width:40%">
+            <!-- <div class="close">
+                <span class="material-symbols-outlined" (click)="desc_popup = false">
+                    close
+                </span>
+            </div> -->
+
+            <div class="title-box prevent-select">
+                <div class="left">
+                    <p class="category">{{cur_desc_drive.category}}</p>
+                    <div class="company">
+                        <h1>{{cur_desc_drive.company}}</h1>
+                        <a [href]="cur_desc_drive.website" target="_blank">
+                            <span class="material-symbols-outlined link">
+                                open_in_new
+                            </span>
+                        </a>
+                    </div>
+                    <p>{{cur_desc_drive.job_role}}</p>
+                </div>
+                <div class="right">
+                    <span class="material-symbols-outlined">
+                        today
+                    </span>
+                    <p>{{cur_desc_drive.date}}</p>
+                </div>
+            </div>
+            
+            <div class="content">
+                
+                <!-- HR Name -->
+                <div class="field">
+                    <span class="material-symbols-outlined prevent-select">
+                        account_box
+                    </span>
+                    <p style="font-family: 'Poppins';font-weight:500;">HR Name : </p>
+                    <p>{{cur_desc_drive.HR_name}}</p>
+                </div>
+                
+                <!-- HR Mail -->
+                <div class="field">
+                    <span class="material-symbols-outlined prevent-select">
+                        mail
+                    </span>
+                    <p style="font-family: 'Poppins';font-weight:500;">HR Mail : </p>
+                    <p>{{(cur_desc_drive.lock_hr_mail && cur_staff_id!==cur_desc_drive.placement_officer_id)? '--' : cur_desc_drive.HR_mail}}</p>
+                </div>
+
+                <!-- HR Contact -->
+                <div class="field">
+                    <span class="material-symbols-outlined prevent-select">
+                        phone
+                    </span>
+                    <p style="font-family: 'Poppins';font-weight:500;">HR Contact : </p>
+                    <p>{{(cur_desc_drive.lock_hr_contact && cur_staff_id!==cur_desc_drive.placement_officer_id)? '--' : '+91 '+cur_desc_drive.HR_contact}}</p>
+                </div>
+
+                <!-- Mode -->
+                <div class="field">
+                    <span class="material-symbols-outlined prevent-select">
+                        push_pin
+                    </span>
+                    <p style="font-family: 'Poppins';font-weight:500;">Mode : </p>
+                    <p>{{cur_desc_drive.mode}}</p>
+                </div>
+
+                <!-- CTC -->
+                <div class="field">
+                    <span class="material-symbols-outlined prevent-select">
+                        currency_rupee
+                    </span>
+                    <p style="font-family: 'Poppins';font-weight:500;">CTC : </p>
+                    <p>{{cur_desc_drive.ctc}} LPA</p>
+                </div>
+
+                <!-- Depts -->
+                <div class="dept-grid prevent-select">
+                    <p class="dept" *ngFor="let dept of cur_desc_drive.departments">{{dept}}</p>
+                </div>
+
             </div>
 
-            <button mat-raised-button (click)="publishMail(drive)">Publish Mail</button>
-            <!-- [href]="drive.file" download -->
-           
-            <div class="info" *ngIf="drive.placement_officer_id === cur_staff_id">
-                <!-- <p>more</p> -->
+            <div class="btm-box">
+                <div style="margin-top: 10px;">
+                    <!-- <button mat-raised-button (click)="publishMail(cur_desc_drive)">Publish Mail</button> -->
+                    <button mat-raised-button (click)="desc_popup=false" style="background-color: red">Close</button>
+                </div>
+            </div>
+
+            <div class="info" *ngIf="cur_desc_drive.placement_officer_id === cur_staff_id">
                 <span class="material-symbols-outlined" matTooltip="posted by you">
                     check_circle
                 </span>
             </div>
         
-        </div>        
-    </div>
-
-    <div class="popup-container" *ngIf="drive_popup">
-        <app-drive-popup (popup_closed)="handleDrivePopup($event)" [data] = 'drive_popup_data' *ngIf="drive_popup"></app-drive-popup>
+        </div>
+       
     </div>
 
 </div>

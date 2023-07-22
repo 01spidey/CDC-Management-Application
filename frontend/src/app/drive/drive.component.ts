@@ -82,6 +82,7 @@ export class DriveComponent implements OnInit {
       this.service.getDriveByStatus(status).subscribe(
         (res:driveByStatusResponse)=>{
           this.drive_lst = res.drive_lst
+          console.log(this.drive_lst)
           if(!res.success) this.toastr.warning('Some Technical Error!!');
         },
         (err)=>{

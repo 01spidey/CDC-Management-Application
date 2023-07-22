@@ -1341,7 +1341,8 @@ def add_and_update_company_drive(request):
             drive_obj.offer_type = offer_type
             
             drive_obj.save()
-            # print(filters)
+            print(f'Final Round : {final_round}\ncur_round : {cur_round}\nrounds : {drive_obj.drive_rounds}')
+            
             
             if(cur_round>len(drive_obj.drive_rounds)-1):
                 print('Adding new round')
@@ -1364,28 +1365,53 @@ def add_and_update_company_drive(request):
                    
             else:
                 print('Updating Existing round')
+                print('Final Round : ', final_round)
+                print('Current Round : ', cur_round)
+                
                 if(cur_round==0):
                     # the students should be removed from the attended_students field
-                    print(drive_obj.attended_students.all())
-                else:
-                    # the round field of the driveselection object of corresponding drive_pk and student_reg_no should be updated 
-                    pass
+                    already_selected_students = drive_obj.attended_students.all()
+                    for student in already_selected_students:
+                        student.attended_drives.remove(drive_obj)
+                    drive_obj.filter_criteria = filters
+                                        
+                    students = Student.objects.filter(reg_no__in=checked_students)
+                    drive_obj.attended_students.set(students)
+                    
+                    drive_obj.save()
+                            
+                    # Update attended_drives field in Student model
+                    for student in students:
+                        student.attended_drives.add(drive_obj)
                 
-            # if(cur_round==0):
-            #     pass
-            # already_selected_students = drive_obj.attended_students.all()
-            # for student in already_selected_students:
-            #     student.attended_drives.remove(drive_obj)
-            # drive_obj.filter_criteria = filters
-            
-            # drive_obj.save()
-            
-            # students = Student.objects.filter(reg_no__in=checked_students)
-            # drive_obj.attended_students.set(students)
-            
-            # # Update attended_drives field in Student model
-            # for student in students:
-            #     student.attended_drives.add(drive_obj)
+                else:
+                    # the round field of the driveselection object of corresponding drive_pk and student_reg_no should be updated
+                    print('Updating round', cur_round)
+                    already_selected_students = DriveSelection.objects.filter(drive = drive_obj, round=cur_round)
+                    print([i.student.reg_no for i in already_selected_students])
+                    print('Checked Students : ', checked_students)
+                    
+                    DriveSelection.objects.filter(drive = drive_obj, student__reg_no__in = [i.student.reg_no for i in already_selected_students]).update(selected = False)
+                    for student in already_selected_students:
+                        student.selected = False
+                        student.round-=1
+                        student.save()
+                    
+                    
+                    cur_selected_students = DriveSelection.objects.filter(drive = drive_obj, student__reg_no__in = checked_students)
+                    
+                    for student in cur_selected_students:
+                        if final_round:
+                            student.selected = True
+                        student.round+=1
+                        student.save()
+                        
+                    
+                    drive_obj.completed = final_round
+                    drive_obj.save()
+                                        
+                    
+                        
             
             data = {
                 'success':True,
@@ -1519,7 +1545,10 @@ def get_eligible_students(request):
             
             # print(cur_round)
             prev_round = cur_round-1
-            if(cur_round>len(drive_rounds)-1):
+            
+            if(cur_round == 0):
+                print(f'Filtering students for Eligible List  = {cur_round}\nCount : {len(eligible_students)}')
+            elif(cur_round>len(drive_rounds)-1):
                 eligible_students = eligible_students.filter(attended_drives__pk=pk, driveselection__round =prev_round )
                 print(f'Filtering students for New Round = {cur_round}\nCount : {len(eligible_students)}')
             else:

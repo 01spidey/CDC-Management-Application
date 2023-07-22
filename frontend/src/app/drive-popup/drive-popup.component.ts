@@ -217,6 +217,7 @@ export class DrivePopupComponent implements OnInit{
       if(applied_filters.checked_students.length>0){
         this.eligible_lst_uploaded = true   
         this.filters = applied_filters
+        this.filters.round = 0
       }else this.eligible_lst_uploaded = false
     }
 

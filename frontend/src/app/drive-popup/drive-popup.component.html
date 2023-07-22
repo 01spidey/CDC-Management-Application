@@ -82,7 +82,8 @@
 
                 <div class="input spl-btn-box">
                     <div class="spl-btn" [ngClass]="{'disabled-gen' :  (!eligible_lst_uploaded || last_round!==0), 'gen-btn' : (eligible_lst_uploaded && last_round==0) }" 
-                    (click)="openStudentTable()">
+                     (click)="openStudentTable()">
+                    <!-- (click)="last_round==0?openStudentTableforRound({''}) : openStudentTable()" -->
                         <span class="material-icons" *ngIf="!eligible_lst_uploaded">
                             add_box
                         </span>

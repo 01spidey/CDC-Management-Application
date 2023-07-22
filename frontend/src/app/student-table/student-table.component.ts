@@ -199,6 +199,7 @@ export class StudentTableComponent implements OnInit{
 
   applyFilters(round:number){
     let drive = this.student_table_popup_data.drive
+    
     const filters:studentTableFilterOptions = {
       drive_id: drive!==null? this.student_table_popup_data.drive!.id : null,
       round : this.cur_round,
@@ -267,15 +268,21 @@ export class StudentTableComponent implements OnInit{
   }
 
   updateCheckedStudents(student:filtered_student, manual:boolean){
+    console.log(student)
     if(student.checked){ 
       this.filtered_student_count += 1
       this.checked_students.add(student.reg_no)
     }
     else{
-      // if(manual){ 
+      if(this.cur_round!=0){ 
         this.filtered_student_count -= 1
         this.checked_students.delete(student.reg_no)
-      // }
+      }
+      if(manual){
+        this.filtered_student_count -= 1
+        this.checked_students.delete(student.reg_no)
+      }
+
     }
 
     if(this.filtered_student_count == this.filtered_students.length) this.all_checked = true

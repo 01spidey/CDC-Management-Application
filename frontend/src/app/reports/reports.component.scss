@@ -1,0 +1,34 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+
+.main{
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+
+    .top{
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        position: relative;
+        
+        .title{
+            margin-left: 40px;
+            font-family: 'Poppins';
+            font-size: 1.2rem;
+            letter-spacing: 2px;
+            color: #152b51ff;
+            padding-right: 20px;
+            border-bottom: 3px solid #152b51;
+        }
+    }
+
+    .main-container{
+        margin-left: 40px;
+        height: fit-content;
+        width: 95%;
+    }
+}

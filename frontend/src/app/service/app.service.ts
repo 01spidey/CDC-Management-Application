@@ -211,5 +211,9 @@ export class AppService {
     return this.http.get<getChartsDataResponse>(`${this.URL}/get_charts_data`, {params : data})
   }
 
+  addRemarks(report_pk:number, remark:string){
+    return this.http.post<serverResponse>(`${this.URL}/add_remarks`, {report_pk : report_pk, remark : remark})
+  }
+
 
 }

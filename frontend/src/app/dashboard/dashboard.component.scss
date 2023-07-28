@@ -10,91 +10,22 @@
     // padding-bottom: 5%;
     position: relative;
 
-    .back{
-        height: 30px;
-        width: 30px;
-        position: absolute;
-        left: 40px;
-        cursor: pointer;
-    }
-    
-    .no-data{
-        // background-color: #152b51;
-        width: 80%;
-        height: 60vh;
-        align-self: center;
+    .top{
         display: flex;
         align-items: center;
-        justify-content: center;
-        flex-direction: column;
-
-        img{
-            height: 70%;
-        }
-
-        p{
+        justify-content: space-between;
+        position: relative;
+        
+        .title{
+            margin-left: 40px;
             font-family: 'Poppins';
-            font-size: 20px;
+            font-size: 1.2rem;
+            letter-spacing: 2px;
+            color: #152b51ff;
+            padding-right: 20px;
+            border-bottom: 3px solid #152b51;
         }
     }
-
-    .title{
-        margin-top: 30px;
-        margin-left: 40px;
-        font-family: 'Poppins';
-        font-size: 1.5rem;
-        letter-spacing: 2px;
-        color: #152b51ff;
-
-        h2{
-            font-size: 1.5rem;
-            background-color: #198754;
-            display: inline-block;
-            padding: 5px 20px;
-            color: white;
-            border-radius: 5px;
-            margin-top: 20px;
-        }
-    }
-    
-    #line{
-        height: 3px;
-        background-color: #152b51ff;
-        border-radius: 10px;
-    }
-
-    .more{
-        color: white;
-        display: flex;
-        align-items: center;
-        justify-content: flex-end;
-        margin-bottom: 15px;
-        // width: 100%;
-        button{
-            background-color: #35363a;
-            color: white;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            border-radius: 5px;
-            padding: 5px 10px;
-            cursor: pointer;
-            transition: 0.3s ease;
-            p{
-                font-family: 'Poppins';
-                font-weight: 500;
-            }
-            span{
-                font-size: 1rem;
-            }
-            &:hover{
-                // opacity: 0.9;
-                background-color: white;
-                color: #35363a;
-            }
-        }
-    }
-
 
     .filter-box{
         display: flex;

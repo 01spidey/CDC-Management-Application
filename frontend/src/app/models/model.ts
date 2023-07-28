@@ -220,6 +220,7 @@ export interface Report {
     hr_name : string,
     hr_mail : string,
     time : string,
+    remarks : string,
 }
 
 export interface getReportsByCompanyResponse{

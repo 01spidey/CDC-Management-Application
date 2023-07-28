@@ -32,22 +32,13 @@
     }
 
     .title{
-        margin-top: 20px;
         margin-left: 40px;
         font-family: 'Poppins';
-        font-size: 1.5rem;
+        font-size: 1.2rem;
         letter-spacing: 2px;
         color: #152b51ff;
-
-        h2{
-            font-size: 1.5rem;
-            background-color: #198754;
-            display: inline-block;
-            padding: 5px 20px;
-            color: white;
-            border-radius: 5px;
-            margin-top: 20px;
-        }
+        padding-right: 20px;
+        border-bottom: 3px solid #152b51;
     }
     
     #line{
@@ -60,7 +51,7 @@
         display: flex;
         align-items: center;
         width: fit-content;
-        padding: 7px 15px;
+        padding: 7px 10px;
         border-radius: 5px;
         margin-right: 50px;
         color: white;
@@ -74,7 +65,7 @@
         cursor: pointer;
 
         p{
-            font-size: 17px;
+            font-size: 15px;
             font-family: 'Nunito';
         }
 
@@ -428,6 +419,13 @@
                         width: 150px;
                         border: 1px solid #8b8b8bff;
                         font-size: 1rem;
+
+                        button{
+                            background-color: #35363a;
+                            color: white;
+                            font-family: 'Nunito';
+                            font-weight: 500;
+                        }
                     }
                 }
                 
@@ -699,6 +697,37 @@
             .btns{
                 display: flex;
                 gap: 50px;
+                button{
+                    color: white;
+                }
+            }
+        }
+
+        .remarks-popup{
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            width: 30vw;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            align-items: flex-start;
+            justify-content: flex-start;
+            .remark-title{
+                font-family: 'Poppins';
+                font-size: 1.2rem;
+                font-weight: 500;
+                color: #152b51;
+            }
+            .input{
+                width: 100%;
+            }
+            mat-form-field{
+                width: 90%;
+            }
+            .btns{
+                display: flex;
+                gap: 30px;
                 button{
                     color: white;
                 }

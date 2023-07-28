@@ -9,30 +9,22 @@
     flex-direction: column;
     padding-bottom: 5%;
 
-    .title{
-        margin-top: 30px;
-        margin-left: 40px;
-        font-family: 'Poppins';
-        font-size: 1.5rem;
-        letter-spacing: 2px;
-        color: #152b51ff;
+    .top{
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        position: relative;
 
-        h2{
-            font-size: 1.5rem;
-            background-color: #198754;
-            display: inline-block;
-            padding: 5px 20px;
-            color: white;
-            border-radius: 5px;
-            margin-top: 20px;
+
+        .title{
+            margin-left: 40px;
+            font-family: 'Poppins';
+            font-size: 1.2rem;
+            letter-spacing: 2px;
+            color: #152b51ff;
+            padding-right: 20px;
+            border-bottom: 3px solid #152b51;
         }
-    }
-    
-    #line{
-        width: 300px;
-        height: 3px;
-        background-color: #152b51ff;
-        border-radius: 10px;
     }
 
     .add-drive{
@@ -445,6 +437,14 @@
                     font-family: 'Poppins';
                     height: 25px;
                     font-size: .8rem;
+                    padding: 2px 5px;
+                    border-radius: 5px;
+                    transition: .15s ease;
+                    cursor: pointer;
+
+                    &:hover{
+                        opacity: .9;
+                    }
                 }
         }
 

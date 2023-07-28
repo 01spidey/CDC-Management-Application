@@ -15,8 +15,8 @@ class Report(models.Model):
     message = models.TextField(null=False)
     reminder_date = models.DateField(null=True, default=None)
     completed = models.BooleanField(default=False)
-    timestamp = models.DateTimeField(auto_now_add=True, null=True)
-
+    timestamp = models.DateTimeField(default=now, null=True)
+    remarks = models.TextField(null=True)
     # time = models.CharField(max_length=50, null=True)
     
     class Meta:
@@ -40,8 +40,6 @@ class PlacementDirector(models.Model):
     staff_id = models.CharField(max_length=50, null=False)
     profile_img = models.ImageField(upload_to='backend\cdc_app\app\director_profiles', null=True)
 
-
-
 class Company(models.Model):
     company = models.CharField(max_length=50, null=False)
     HR_name = models.CharField(max_length=50, null=False)
@@ -57,8 +55,6 @@ class Company(models.Model):
     last_reminder_date = models.DateField(null=True, default=None)
     
     initiated_at = models.DateField(default=now, null=False)
-
-
 
 class StudentEdu(models.Model):
     reg_no = models.CharField(max_length=50, null=False, primary_key=True)

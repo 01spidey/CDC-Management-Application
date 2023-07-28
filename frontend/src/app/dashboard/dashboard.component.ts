@@ -151,7 +151,8 @@ export class DashboardComponent implements OnInit, AfterViewInit {
       job_type_filter: job_type_filter,
       start_year: this.start_year,
       end_year: this.end_year,
-      batch : this.batch_indi
+      batch : this.batch_indi,
+      role : this.role==='Director'? 'Director' : this.userData.staff_id
     }
 
     this.service.getPlacementStats(data).subscribe(
@@ -199,7 +200,8 @@ export class DashboardComponent implements OnInit, AfterViewInit {
       job_type_filter: this.job_type_filter,
       start_year: this.start_year,
       end_year: this.end_year,
-      batch : this.batch_indi
+      batch : this.batch_indi,
+      role : this.role==='Director'? 'Director' : this.userData.staff_id
     }
 
     this.service.getChartsData(data).subscribe(

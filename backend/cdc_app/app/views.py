@@ -65,11 +65,11 @@ from django.utils.html import strip_tags
 #             )
 #             studentEdu.save()
             
-#         print("Success")
+#         #print("Success")
         
 #     except Exception as e:
-#         print(e)
-#         print("Out-uh vro!!")
+#         #print(e)
+#         #print("Out-uh vro!!")
 
 @csrf_exempt
 def test(request):
@@ -128,7 +128,7 @@ def send_otp(request):
             return JsonResponse(data)
     
     except Exception as e:
-        print(f'Error : {e}')
+        #print(f'Error : {e}')
         data = {
                 'success':False,
                 'otp' : '',
@@ -140,7 +140,7 @@ def send_otp(request):
 @csrf_exempt
 def update_credentials(request):
     formData = json.loads(request.body)
-    # print(formData)
+    # #print(formData)
     old_user_id = formData['old_user_id']
     old_pass = formData['old_password']
     new_user_id = formData['new_user_id']
@@ -159,7 +159,7 @@ def update_credentials(request):
         return JsonResponse(data) 
         
     except Exception as e:
-        print(e)
+        #print(e)
         data = {
             'success':False,
             'message' : "Something went wrong!!"
@@ -185,7 +185,7 @@ def login(request):
         'staff_id' : 'null'
     }
     
-    # print(f'{user_id}\n{password}\n{role}')
+    # #print(f'{user_id}\n{password}\n{role}')
     
     if(role=='Director'):
         if PlacementDirector.objects.filter(user_id=user_id, password = password):
@@ -263,7 +263,7 @@ def add_admin(request):
         data = {
             'message': 'Error Bruh!!'
         }
-        print(e)
+        #print(e)
         
         return JsonResponse(data)
         
@@ -274,7 +274,7 @@ def get_drive_by_status(request):
     drive_lst = []
     
     status = request.GET.get('status')
-    # print(status)
+    # #print(status)
     today = date.today()
 
 
@@ -291,7 +291,7 @@ def get_drive_by_status(request):
         for drive in drives:
             drive_date = datetime.strptime(str(drive.date), '%Y-%m-%d').strftime('%d-%m-%Y')
             company_obj = Company.objects.get(company=drive.company)
-            # print(json.loads(drive.drive_rounds))
+            # #print(json.loads(drive.drive_rounds))
             drive_lst.append(
                 {
                     'id' : drive.pk,
@@ -325,7 +325,7 @@ def get_drive_by_status(request):
         return JsonResponse(data)
     
     except Exception as e:
-        print(e)
+        #print(e)
         return JsonResponse(
             {
                 'success':False,
@@ -349,7 +349,7 @@ def get_drive_by_dateRange(request):
     yesterday = today - timedelta(days=1)                   
     
     try:
-        # print(f'{status}\n{start_date}\n{end_date}') 
+        # #print(f'{status}\n{start_date}\n{end_date}') 
         
         drives = None
         
@@ -359,7 +359,7 @@ def get_drive_by_dateRange(request):
         elif(status=='Completed'):
             
             if(start_date>=str(today)):
-                print('start_date is greater than today')
+                #print('start_date is greater than today')
                 return JsonResponse(
                         {
                             'success':False,
@@ -368,7 +368,7 @@ def get_drive_by_dateRange(request):
                 )
             
             elif(end_date>str(today)):
-                print('end_date is greater than today')
+                #print('end_date is greater than today')
                 end_date = yesterday
                 # drives = Drive.objects.filter(date__range=[start_date, yesterday], date__lt=today)
                 
@@ -377,7 +377,7 @@ def get_drive_by_dateRange(request):
         for drive in drives:
             drive_date = datetime.strptime(str(drive.date), '%Y-%m-%d').strftime('%d-%m-%Y')
             company_obj = Company.objects.get(company=drive.company)
-            # print(drive.drive_rounds)
+            # #print(drive.drive_rounds)
             
             drive_lst.append(
                 {
@@ -412,7 +412,7 @@ def get_drive_by_dateRange(request):
         return JsonResponse(data)
     
     except Exception as e:
-        print(e)
+        #print(e)
         return JsonResponse(
             {
                 'success':False,
@@ -453,7 +453,7 @@ def get_report_summary(request):
     
     report_summary = []
        
-    print(filter, start_date, end_date) 
+    #print(filter, start_date, end_date) 
     
     try:
         staff_ids = PlacementOfficer.objects.values_list('staff_id', flat=True).distinct()
@@ -474,7 +474,7 @@ def get_report_summary(request):
         return JsonResponse(data)
     
     except Exception as e:
-        print(e)
+        #print(e)
         data = {
             'success': False,
             'report_summary': []
@@ -503,7 +503,7 @@ def get_notifications(request):
     category = request.GET.get('category')
     staff_id = request.GET.get('staff_id')
     
-    print(category, staff_id)
+    #print(category, staff_id)
     report_notifications = []
     drive_notifications = []
     
@@ -522,7 +522,7 @@ def get_notifications(request):
                     'days_left' : get_remaining_days(report.reminder_date),
                 }
             )
-        print(today)
+        #print(today)
             
         data = {
             'success': True,
@@ -610,7 +610,7 @@ def add_member(request):
     staff_id = request.POST['staff_id']
     role = request.POST['role']
     
-    print(f'{user_id}\n{password}\n{name}\n{mail}\n{contact}\n{staff_id}')
+    #print(f'{user_id}\n{password}\n{name}\n{mail}\n{contact}\n{staff_id}')
     
     try:
         if(role=='Admin'):
@@ -672,7 +672,7 @@ def add_member(request):
                 return JsonResponse(data)
     
     except Exception as e:
-        print(e)
+        #print(e)
         data = {
            'success':False,
             'message' : 'Some Technical Error!!' 
@@ -718,7 +718,7 @@ def get_member_by_id(request):
             return JsonResponse(data)
     
     except Exception as e:
-        print(e)
+        #print(e)
         data = {
             'success' : False,
             'user' : { }
@@ -743,8 +743,8 @@ def update_member(request):
             'staff_id' : staff_id
         }
         
-        print(role)
-        print(pk)
+        #print(role)
+        #print(pk)
         
         if(role=='Member'):
             PlacementOfficer.objects.filter(pk=pk).update(**updated_data)
@@ -767,7 +767,7 @@ def update_member(request):
             return JsonResponse(data)
     
     except Exception as e:
-        print(e)
+        #print(e)
         data = {
             'success':False,
             'message' : f'Some Technical Error!!'
@@ -803,7 +803,7 @@ def delete_member(request):
             return JsonResponse(data)
     
     except Exception as e:
-        print(e)
+        #print(e)
         data = {
             'success':False,
             'message' : f'Some Technical Error!!'
@@ -822,7 +822,7 @@ def get_user_stats(request):
     
     staff_id = request.GET.get('staff_id')
     today = date.today()
-    print(staff_id)
+    #print(staff_id)
     try:
         if(Company.objects.filter(placement_officer_id = staff_id)):
             company = Company.objects.filter(placement_officer_id = staff_id)
@@ -862,7 +862,7 @@ def get_user_stats(request):
         return JsonResponse(data)
     
     except Exception as e:
-        print(e)
+        #print(e)
         data = {
             'success': False,
             'stats' : {}
@@ -884,7 +884,7 @@ def get_company_stats(request):
         marketing = companies.filter(category='Sales / Management').values('company').distinct()
         others = companies.filter(category='Others').values('company').distinct()
     
-        print(it_service)
+        #print(it_service)
         
         data = {
             'success' : True,
@@ -900,7 +900,7 @@ def get_company_stats(request):
         return JsonResponse(data)
     
     except Exception as e:
-        print(e)
+        #print(e)
         data = {
             'success' : False,
             'stats' : {
@@ -924,14 +924,14 @@ def get_reports_by_company(request):
     end_date = request.GET.get('end_date')
     staff_id = request.GET.get('staff_id')
     
-    print(f'company : {company}\nstart_date : {start_date}\nend_date : {end_date}\nstaff_id : {staff_id}')
+    #print(f'company : {company}\nstart_date : {start_date}\nend_date : {end_date}\nstaff_id : {staff_id}')
     try:
         reports = Report.objects.filter(company = company, date__range = [start_date, end_date]).order_by('-date')
         company = Company.objects.get(company = company)
         reports_lst = []
         a = 1
         for report in reports:
-            # print()
+            # #print()
             reports_lst.append(
                 {
                     'pk' : report.pk,
@@ -941,7 +941,8 @@ def get_reports_by_company(request):
                     'status' : report.completed,
                     'message' : report.message,
                     'reminder_date' : None if report.reminder_date is None else convert_date_format(report.reminder_date),
-                    'time' : UTCtoIST(str(report.timestamp))
+                    'time' : UTCtoIST(str(report.timestamp)),
+                    'remarks' : report.remarks,
                 }
             )
             a+=1
@@ -954,7 +955,7 @@ def get_reports_by_company(request):
         return JsonResponse(data)
     
     except  Exception as e:
-        print(e)
+        #print(e)
         data = {
             'success' : False,
             'reports' : []
@@ -988,7 +989,7 @@ def add_company(request):
     today = date.today()
     reminder_date_obj = None if reminder_date=='' else datetime.strptime(reminder_date, '%d-%m-%Y').date()
 
-    print(f'company : {company}\nhr_name : {hr_name}\nhr_mail : {hr_mail}\ncategory : {category}\nstaff_id : {staff_id}\nwebsite : {website}\nmessage : {message}\nreminder_date : {reminder_date}\ntoday : {today}')
+    #print(f'company : {company}\nhr_name : {hr_name}\nhr_mail : {hr_mail}\ncategory : {category}\nstaff_id : {staff_id}\nwebsite : {website}\nmessage : {message}\nreminder_date : {reminder_date}\ntoday : {today}')
     
     try:
         if(Company.objects.filter(company = company).exists()):
@@ -1020,7 +1021,7 @@ def add_company(request):
                 lock_hr_contact = lock_hr_contact
             )            
             
-            print(f'Reminder Date : {reminder_date_obj}') 
+            #print(f'Reminder Date : {reminder_date_obj}') 
             company_obj.save()
             report_obj.save()
 
@@ -1031,7 +1032,7 @@ def add_company(request):
             return JsonResponse(data)
             
     except Exception as e:
-        print(e)
+        #print(e)
         data = {
             'success' : False,
             'message' : 'Some Technical Error!!'
@@ -1052,7 +1053,7 @@ def get_company_by_id(request):
         return JsonResponse(data)
     
     except Exception as e:
-        print(e)
+        #print(e)
         data = {
             'success' : False,
             'company' : {}
@@ -1093,7 +1094,7 @@ def get_companies(request):
         return JsonResponse(data)
     
     except Exception as e:
-        print(e)
+        #print(e)
         data = {
             'success' : False,
             'companies' : []
@@ -1115,13 +1116,13 @@ def update_company(request):
     
     
     try:
-        print(formdata)
+        #print(formdata)
         company_obj = Company.objects.get(pk = pk)
         company_name = company_obj.company
-        # print(company_name)
+        # #print(company_name)
         Report.objects.filter(company = company_name).update(company = new_company)
         Drive.objects.filter(company = company_name).update(company = new_company)
-        # print(reports)
+        # #print(reports)
         company_obj.HR_name = hr_name
         company_obj.company = new_company
         company_obj.HR_mail = hr_mail
@@ -1138,7 +1139,7 @@ def update_company(request):
         })
         
     except Exception as e:
-        print(e)
+        #print(e)
         data = {
             'success' : False,
             'message' : 'Some Technical Error!!'
@@ -1158,7 +1159,7 @@ def delete_company(request):
         })
     
     except Exception as e:
-        print(e)
+        #print(e)
         data = {
             'success' : False,
             'message' : 'Some Technical Error!!'
@@ -1169,7 +1170,7 @@ def delete_company(request):
 def add_and_update_company_report(request):
     
     formdata = json.loads(request.body)
-    # print(formdata)
+    # #print(formdata)
     pk = formdata['pk']
     company = formdata['company']
     staff_id = formdata['staff_id']
@@ -1196,13 +1197,13 @@ def add_and_update_company_report(request):
             
             company_obj = Company.objects.get(company = company)
             
-            print(company_obj.last_reminder_date, reminder_date_obj)
+            #print(company_obj.last_reminder_date, reminder_date_obj)
             
             if(reminder_date_obj!=None):
                 if(company_obj.last_reminder_date < reminder_date_obj):
                     company_obj.last_reminder_date = reminder_date_obj
                     company_obj.save()
-                    print('reminder date changed') 
+                    #print('reminder date changed') 
                 else:
                     print('reminder date not changed')
             
@@ -1231,10 +1232,35 @@ def add_and_update_company_report(request):
             return JsonResponse(data)
         
     except Exception as e:
-        print(e)
+        #print(e)
         data = {
             'success' : False,
             'message' : 'Some Technical Error!!'
+        }
+        return JsonResponse(data)
+
+@csrf_exempt
+def add_remarks(request):
+    formdata = json.loads(request.body)
+    report_pk = formdata['report_pk']
+    remark = formdata['remark']
+    
+    try:
+        report_obj = Report.objects.get(pk = report_pk)
+        report_obj.remarks = remark
+        report_obj.save() 
+        data = {
+            'success' : True,
+            'message' : 'Remarks Added Successfully!!'
+        }
+        
+        return JsonResponse(data)
+    
+    except Exception as e:
+        #print(e)
+        data = {
+          'success' : False,
+          'message' : 'Some Technical Error!!'
         }
         return JsonResponse(data)
     
@@ -1242,7 +1268,7 @@ def add_and_update_company_report(request):
 def delete_company_report(request):
     data = json.loads(request.body)
     report_id = data['pk']
-    # print(formData)
+    # #print(formData)
     try:
         report = Report.objects.get(pk = report_id)
         report.delete()
@@ -1253,7 +1279,7 @@ def delete_company_report(request):
         return JsonResponse(data)
     
     except Exception as e:
-        print(e)
+        #print(e)
     
         data = {
             'success':False,
@@ -1277,7 +1303,7 @@ def add_and_update_company_drive(request):
     offer_type = formdata['type']
     
     filters = json.loads(formdata['filters'])
-    # print(filters)
+    # #print(filters)
     
     checked_students = filters['checked_students']
     departments = formdata['eligible_depts'].split(',')  
@@ -1324,8 +1350,8 @@ def add_and_update_company_drive(request):
             return JsonResponse(data)
         
         else:
-            print('Edit Drive', pk)
-            # print(formdata)
+            #print('Edit Drive', pk)
+            # #print(formdata)
             
             final_round = filters['final_round']
             
@@ -1341,18 +1367,18 @@ def add_and_update_company_drive(request):
             drive_obj.offer_type = offer_type
             
             drive_obj.save()
-            print(f'Final Round : {final_round}\ncur_round : {cur_round}\nrounds : {drive_obj.drive_rounds}')
+            #print(f'Final Round : {final_round}\ncur_round : {cur_round}\nrounds : {drive_obj.drive_rounds}')
             
             
             if(cur_round>len(drive_obj.drive_rounds)-1):
-                print('Adding new round')
-                # print(checked_students)
+                #print('Adding new round')
+                # #print(checked_students)
                 # Adding the new round to the drive_rounds field
                 drive_rounds_data = drive_obj.drive_rounds
                 drive_rounds_data.append(
                     {'num' : cur_round, 'name' : cur_round_name}
                 )
-                print(drive_rounds_data)
+                #print(drive_rounds_data)
                 drive_obj.drive_rounds = drive_rounds_data
                 
                 if(final_round):
@@ -1364,9 +1390,9 @@ def add_and_update_company_drive(request):
                 drive_obj.save()
                    
             else:
-                print('Updating Existing round')
-                print('Final Round : ', final_round)
-                print('Current Round : ', cur_round)
+                #print('Updating Existing round')
+                #print('Final Round : ', final_round)
+                #print('Current Round : ', cur_round)
                 
                 if(cur_round==0):
                     # the students should be removed from the attended_students field
@@ -1386,10 +1412,10 @@ def add_and_update_company_drive(request):
                 
                 else:
                     # the round field of the driveselection object of corresponding drive_pk and student_reg_no should be updated
-                    print('Updating round', cur_round)
+                    #print('Updating round', cur_round)
                     already_selected_students = DriveSelection.objects.filter(drive = drive_obj, round=cur_round)
-                    print([i.student.reg_no for i in already_selected_students])
-                    print('Checked Students : ', checked_students)
+                    #print([i.student.reg_no for i in already_selected_students])
+                    #print('Checked Students : ', checked_students)
                     
                     DriveSelection.objects.filter(drive = drive_obj, student__reg_no__in = [i.student.reg_no for i in already_selected_students]).update(selected = False)
                     for student in already_selected_students:
@@ -1422,7 +1448,7 @@ def add_and_update_company_drive(request):
         
     except Exception as e:
         
-        print('Exception : ',e)
+        #print('Exception : ',e)
         
         data = {
             'success':False,
@@ -1455,7 +1481,7 @@ def export_as_csv(request):
             
             position = 1
             for report in reports:
-                # print(UTCtoIST(str(report.timestamp)))
+                # #print(UTCtoIST(str(report.timestamp)))
                 writer.writerow([position, report.placement_officer_id, report.date, UTCtoIST(str(report.timestamp)), report.company, report.message, report.reminder_date, 'Completed' if report.completed else 'Not Completed'])
                 position+=1
             
@@ -1468,7 +1494,7 @@ def export_as_csv(request):
     else:
         drive_id = int(request.GET.get('drive_id'))
         drive_round = int(request.GET.get('round'))
-        print(f'Drive ID : {drive_id}, Round : {drive_round}')
+        #print(f'Drive ID : {drive_id}, Round : {drive_round}')
         drive_obj = Drive.objects.get(pk=drive_id)
 
         response = HttpResponse(content_type='text/csv')
@@ -1482,7 +1508,7 @@ def export_as_csv(request):
             
             position = 1
             for student in student_personal_data:
-                # print(UTCtoIST(str(report.timestamp)))
+                # #print(UTCtoIST(str(report.timestamp)))
                 writer.writerow([position, student.reg_no, student.name, student.mail, str(student.phone), student.dept, student.batch])
                 position+=1
                 
@@ -1496,7 +1522,7 @@ def export_as_csv(request):
 @csrf_exempt
 def delete_drive(request):
     drive_id = request.POST.get('drive_id')
-    print(drive_id)
+    #print(drive_id)
     
     try:
         drive = Drive.objects.get(pk=drive_id)
@@ -1524,17 +1550,17 @@ def get_eligible_students(request):
     if(request.method == 'POST'):
     
         formdata = json.loads(request.body)
-        # print(formdata)
+        # #print(formdata)
         # checked_students = formdata['checked_students']
         round = formdata['round']
         pk = formdata['drive_id']
-        print(pk, round)
+        #print(pk, round)
         
         
         eligible_students = Student.objects.all() 
         
         if(pk!=None):
-            # print(f'Requesting for Drive - {pk}\nRound - {round}')
+            # #print(f'Requesting for Drive - {pk}\nRound - {round}')
             # filter the students based on the round
             # If round exists in drive_rounds, then filter the students based on the round
             # else filter the students based on the previous round
@@ -1543,18 +1569,18 @@ def get_eligible_students(request):
             drive_rounds = drive.drive_rounds
             
             
-            # print(cur_round)
+            # #print(cur_round)
             prev_round = cur_round-1
             
             if(cur_round == 0):
                 print(f'Filtering students for Eligible List  = {cur_round}\nCount : {len(eligible_students)}')
             elif(cur_round>len(drive_rounds)-1):
                 eligible_students = eligible_students.filter(attended_drives__pk=pk, driveselection__round =prev_round )
-                print(f'Filtering students for New Round = {cur_round}\nCount : {len(eligible_students)}')
+                #print(f'Filtering students for New Round = {cur_round}\nCount : {len(eligible_students)}')
             else:
                 cur_round_name = drive_rounds[cur_round]['name']
                 eligible_students = eligible_students.filter(attended_drives__pk=pk, driveselection__round__gt = prev_round-1)
-                print(f'Filtering students for Existing Round = {cur_round}\nCount : {len(eligible_students)}')
+                #print(f'Filtering students for Existing Round = {cur_round}\nCount : {len(eligible_students)}')
         
         departments = formdata['departments']
         batch = formdata['batch']
@@ -1590,17 +1616,17 @@ def get_eligible_students(request):
             gender__in = ['Male', 'Female'] if gender=='All' else [gender] 
         )
         
-        # print(f'Count : {len(eligible_students)}')
+        # #print(f'Count : {len(eligible_students)}')
 
         
-        # print(status)
+        # #print(status)
         if(status[0] and (not status[1])):
             eligible_students = eligible_students.filter(attended_drives__driveselection__selected=True)
         elif(status[1] and (not status[0])):
             eligible_students = eligible_students.filter(Q(attended_drives__driveselection__selected=False) | Q(attended_drives = None))
         
         eligible_students_id = eligible_students.values_list('reg_no', flat=True).distinct().order_by('reg_no')
-        # print(f'Count : {len(eligible_students)}')
+        # #print(f'Count : {len(eligible_students)}')
          
         eligible_students = StudentEdu.objects.filter(
             reg_no__in=eligible_students_id, 
@@ -1624,16 +1650,16 @@ def get_eligible_students(request):
             )
         
         # cgpa = [cgpa[0]+0.01, cgpa[1]+0.01]
-        # print(cgpa)
+        # #print(cgpa)
         eligible_students_edu = eligible_students.filter(ug_cgpa__range = cgpa)
         
-        # print(backlogs)
+        # #print(backlogs)
         
         if((not backlogs[0]) and (not backlogs[1])):
             eligible_students_edu = eligible_students_edu.filter(arrear_history = 0, standing_arrears = 0)
         
         
-        print(f'Count : {len(eligible_students_edu)}')
+        #print(f'Count : {len(eligible_students_edu)}')
         
         eligible_students_edu = eligible_students_edu.order_by('reg_no')
         eligible_students_id = eligible_students_edu.values_list('reg_no', flat=True).distinct()
@@ -1649,7 +1675,7 @@ def get_eligible_students(request):
         drive_selection_objs = DriveSelection.objects.filter(drive__pk=pk, round__gt=round-1).values_list('student__reg_no', flat=True)
         checked_students = list(drive_selection_objs)
         
-        print(checked_students)
+        #print(checked_students)
         
         for student_personal, student_edu in zip(eligible_students_personal, eligible_students_edu):
             eligible_students.append({
@@ -1684,9 +1710,9 @@ def get_eligible_students(request):
             position+=1  
         
         # for student in eligible_students.values():
-        #     print(student)  
+        #     #print(student)  
         
-        print(f'Final Count : {len(eligible_students)}')
+        #print(f'Final Count : {len(eligible_students)}')
         
         data = {
             'success':True,
@@ -1697,7 +1723,7 @@ def get_eligible_students(request):
         return JsonResponse(data)
     
     else: 
-        print('Else Bruh!!')
+        #print('Else Bruh!!')
         pk = int(request.GET.get('drive_id'))
         checked_students = request.GET.get('checked_students').split(',')
         cur_round = int(request.GET.get('cur_round'))
@@ -1770,7 +1796,7 @@ def publish_drive_mail(request):
         
         
         student_mail_ids = DriveSelection.objects.filter(drive__pk=drive_id, round__gte = 0).values_list('student__mail', flat=True)
-        print(len(student_mail_ids)) 
+        #print(len(student_mail_ids)) 
         
         # recipients = list(student_mail_ids)
         recipients = ['msabari2002@gmail.com', '20cs186@kpriet.ac.in', 'vijaymurugan0707@gmail.com']
@@ -1799,7 +1825,7 @@ def publish_drive_mail(request):
         return JsonResponse(data)
     
     except Exception as e:
-        print(e)
+        #print(e)
         data = {
             'success':False,
             'message' : 'Something went wrong'
@@ -1807,6 +1833,8 @@ def publish_drive_mail(request):
         
         return JsonResponse(data)
  
+ 
+# ---------------------------------- Placement Stats ---------------------------------- #
 @csrf_exempt
 def get_placement_stats(request) :
     status_filter = request.GET.get('status_filter')
@@ -1814,8 +1842,11 @@ def get_placement_stats(request) :
     start_year = request.GET.get('start_year')
     end_year = request.GET.get('end_year')
     batch = request.GET.get('batch')
+    role = request.GET.get('role')
     
-    # print(f'status_filter : {status_filter}\njob_type_filter : {job_type_filter}\nstart_year : {start_year}\nend_year : {end_year}\nbatch : {batch}')
+    print('Role : ', role)
+    
+    # #print(f'status_filter : {status_filter}\njob_type_filter : {job_type_filter}\nstart_year : {start_year}\nend_year : {end_year}\nbatch : {batch}')
     
     max_pkg = 0
     max_pkg_count = 0
@@ -1831,13 +1862,19 @@ def get_placement_stats(request) :
     tot_drives = 0
     offered_drives = 0
     
+    followed_companies = []
     
-    if(status_filter=='Batch'):    
-        placed_student_objs_all = DriveSelection.objects.filter(student__batch=batch, drive__offer_type__in = [job_type_filter] if job_type_filter!='All' else ['Job', 'Internship'], selected=True)
-        placed_student_objs = DriveSelection.objects.filter(student__batch=batch, drive__offer_type__in = [job_type_filter] if job_type_filter!='All' else ['Job', 'Internship'], selected=True).distinct('student_id') 
+    if(role=='Director'):
+        followed_companies = Company.objects.all().values_list('company', flat=True)
     else:
-        placed_student_objs_all = DriveSelection.objects.filter(student__batch__range=[start_year, end_year], drive__offer_type__in = [job_type_filter] if job_type_filter!='All' else ['Job', 'Internship'], selected=True)
-        placed_student_objs = DriveSelection.objects.filter(student__batch__range=[start_year, end_year], drive__offer_type__in = [job_type_filter] if job_type_filter!='All' else ['Job', 'Internship'], selected=True).distinct('student_id') 
+        followed_companies = Company.objects.filter(placement_officer_id=role).values_list('company', flat=True)
+    
+    if(status_filter=='Batch'): 
+        placed_student_objs_all = DriveSelection.objects.filter(student__batch=batch, drive__offer_type__in = [job_type_filter] if job_type_filter!='All' else ['Job', 'Internship'], selected=True, drive__company__in = followed_companies)
+        placed_student_objs = DriveSelection.objects.filter(student__batch=batch, drive__offer_type__in = [job_type_filter] if job_type_filter!='All' else ['Job', 'Internship'], selected=True, drive__company__in = followed_companies).distinct('student_id')
+    else:
+        placed_student_objs_all = DriveSelection.objects.filter(student__batch__range=[start_year, end_year], drive__offer_type__in = [job_type_filter] if job_type_filter!='All' else ['Job', 'Internship'], selected=True, drive__company__in = followed_companies)
+        placed_student_objs = DriveSelection.objects.filter(student__batch__range=[start_year, end_year], drive__offer_type__in = [job_type_filter] if job_type_filter!='All' else ['Job', 'Internship'], selected=True, drive__company__in = followed_companies).distinct('student_id') 
 
     
     # calculating placed students count
@@ -1865,7 +1902,7 @@ def get_placement_stats(request) :
     except ZeroDivisionError:
         avg_pkg = 0
     
-    print('Placed_student_objs', len(placed_student_objs))
+    #print('Placed_student_objs', len(placed_student_objs))
     if len(placed_student_objs)>0:
         median_pkg = placed_student_objs[int(len(placed_student_objs)/2)].drive.ctc
         mode_pkg = mode([driveSelection.drive.ctc for driveSelection in placed_student_objs])
@@ -1876,11 +1913,11 @@ def get_placement_stats(request) :
     
     # calculating total drives and offered drives
     if status_filter=='Batch':
-        tot_drives = DriveSelection.objects.filter(student__batch=batch).distinct('drive_id').count()
-        offered_drives = DriveSelection.objects.filter(student__batch=batch, selected=True).distinct('drive_id').count()
+        tot_drives = DriveSelection.objects.filter(student__batch=batch, drive__company__in = followed_companies).distinct('drive_id').count()
+        offered_drives = DriveSelection.objects.filter(student__batch=batch, selected=True, drive__company__in = followed_companies).distinct('drive_id').count()
     else:
-        tot_drives = DriveSelection.objects.filter(student__batch__range=[start_year, end_year]).distinct('drive_id').count()
-        offered_drives = DriveSelection.objects.filter(student__batch__range=[start_year, end_year], selected=True).distinct('drive_id').count()
+        tot_drives = DriveSelection.objects.filter(student__batch__range=[start_year, end_year], drive__company__in = followed_companies).distinct('drive_id').count()
+        offered_drives = DriveSelection.objects.filter(student__batch__range=[start_year, end_year], selected=True, drive__company__in = followed_companies).distinct('drive_id').count()
     
     
     data = {
@@ -1912,7 +1949,6 @@ def get_placement_stats(request) :
     
     return JsonResponse(data)
 
-
 @csrf_exempt
 def get_company_category_stats(request):
     status_filter = request.GET.get('status_filter')
@@ -1920,23 +1956,23 @@ def get_company_category_stats(request):
     start_year = request.GET.get('start_year')
     end_year = request.GET.get('end_year')
     batch = request.GET.get('batch')
-    
+    role = request.GET.get('role')
     category_stats = []
     
-#     name:string,
-#   tot_offers:number,
-#   avg_ctc:number,
-#   max_ctc:number,
-#   color?:string
 
     category = ['IT - Product', 'IT - Service', 'Core', 'Marketing', 'Others']
     colors = ['#36A2EB', '#FF6384', '#FFCE56', '#4BC0C0', '#FF8C00']
-    
+        
+        
     for i,j in zip(category,colors):
         
         drive_selection_objs = []
-        companies = list(Company.objects.filter(category=i).values_list('company', flat=True))
-        
+        if(role=='Director'):
+            companies = list(Company.objects.filter(category=i).values_list('company', flat=True))
+        else:
+            companies = list(Company.objects.filter(category=i, placement_officer_id=role).values_list('company', flat=True))
+           
+            
         if(status_filter=='Batch'):
             drive_selection_objs = DriveSelection.objects.filter(student__batch=batch, drive__offer_type__in = [job_type_filter] if job_type_filter!='All' else ['Job', 'Internship'], selected=True, drive__company__in = companies).select_related('drive')
         else:
@@ -1956,7 +1992,7 @@ def get_company_category_stats(request):
             
         avg_ctc = tot_ctc//tot_offers if tot_offers>0 else 0
            
-        # print(f'{i} : {tot_offers} : {avg_ctc} : {max_ctc}') 
+        # #print(f'{i} : {tot_offers} : {avg_ctc} : {max_ctc}') 
           
         category_data = {
             'name' : i,
@@ -1975,6 +2011,7 @@ def get_company_category_stats(request):
     
     return JsonResponse(data)
 
+
 @csrf_exempt
 def get_charts_data(request):
     status_filter = request.GET.get('status_filter')
@@ -1982,6 +2019,7 @@ def get_charts_data(request):
     start_year = request.GET.get('start_year')
     end_year = request.GET.get('end_year')
     batch = request.GET.get('batch')
+    role = request.GET.get('role')
     
     dept_chart_data = []
     ctc_chart_data = []
@@ -1992,16 +2030,20 @@ def get_charts_data(request):
     overall_chart_labels = []
     
     try:
+        if(role=='Director'):
+            followed_companies = Company.objects.all().values_list('company', flat=True)
+        else:
+            followed_companies = Company.objects.filter(placement_officer_id=role).values_list('company', flat=True)
         
-        placed_student_objs_all = []
+        # placed_student_objs_all = []
         placed_student_objs = []
         
         if(status_filter=='Batch'):    
-            placed_student_objs_all = DriveSelection.objects.filter(student__batch=batch, drive__offer_type__in = [job_type_filter] if job_type_filter!='All' else ['Job', 'Internship'], selected=True)
-            placed_student_objs = DriveSelection.objects.filter(student__batch=batch, drive__offer_type__in = [job_type_filter] if job_type_filter!='All' else ['Job', 'Internship'], selected=True).distinct('student_id') 
+            # placed_student_objs_all = DriveSelection.objects.filter(student__batch=batch, drive__offer_type__in = [job_type_filter] if job_type_filter!='All' else ['Job', 'Internship'], selected=True, drive__company__in = followed_companies)
+            placed_student_objs = DriveSelection.objects.filter(student__batch=batch, drive__offer_type__in = [job_type_filter] if job_type_filter!='All' else ['Job', 'Internship'], selected=True, drive__company__in = followed_companies).distinct('student_id') 
         else:
-            placed_student_objs_all = DriveSelection.objects.filter(student__batch__range=[start_year, end_year], drive__offer_type__in = [job_type_filter] if job_type_filter!='All' else ['Job', 'Internship'], selected=True)
-            placed_student_objs = DriveSelection.objects.filter(student__batch__range=[start_year, end_year], drive__offer_type__in = [job_type_filter] if job_type_filter!='All' else ['Job', 'Internship'], selected=True).distinct('student_id')
+            # placed_student_objs_all = DriveSelection.objects.filter(student__batch__range=[start_year, end_year], drive__offer_type__in = [job_type_filter] if job_type_filter!='All' else ['Job', 'Internship'], selected=True, drive__company__in = followed_companies)
+            placed_student_objs = DriveSelection.objects.filter(student__batch__range=[start_year, end_year], drive__offer_type__in = [job_type_filter] if job_type_filter!='All' else ['Job', 'Internship'], selected=True,drive__company__in = followed_companies).distinct('student_id')
        
         # fetching Dept wise data
         
@@ -2012,7 +2054,6 @@ def get_charts_data(request):
         date_wise_data = {}
         
           
-        # print(placed_student_objs)
         for i in placed_student_objs:
             dept_wise_data[i.student.dept]+=1
             studentEdu = StudentEdu.objects.get(reg_no=i.student.reg_no)
@@ -2035,7 +2076,7 @@ def get_charts_data(request):
         
 
             gender_wise_data[i.student.gender]+=1
-            # print(i.student.gender)
+            # #print(i.student.gender)
             
             if(i.drive.ctc in ctc_wise_data.keys()):
                 ctc_wise_data[i.drive.ctc]+=1
@@ -2054,7 +2095,7 @@ def get_charts_data(request):
                     date_wise_data[i.date]=1
                 
         
-        print(gender_wise_data)        
+        #print(gender_wise_data)        
         
         ctc_chart_labels = list(ctc_wise_data.keys())
         ctc_chart_data = list(ctc_wise_data[i] for i in ctc_chart_labels )
@@ -2066,8 +2107,8 @@ def get_charts_data(request):
         overall_chart_labels_strip = [i.strftime('%d %b, %Y') for i in overall_chart_labels]
         overall_chart_data = list(date_wise_data[i] for i in overall_chart_labels )
         
-        print(overall_chart_data)
-        print(overall_chart_labels_strip)
+        #print(overall_chart_data)
+        #print(overall_chart_labels_strip)
         
         data = {
             'success' : True,
@@ -2096,7 +2137,7 @@ def get_charts_data(request):
         return JsonResponse(data)
     
     except Exception as e:
-        print(e)
+        #print(e)
         data = {
             'success' : False,
             'charts_data' : {

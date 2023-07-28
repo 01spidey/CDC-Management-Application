@@ -1,11 +1,8 @@
 <div class="main" *ngIf="section==1">
 
-    <!-- <img (click) = "back()" src="../../assets/back.png" *ngIf="section==2" class="back"> -->
-
     <div class="top">
         <div class="title">
             <h1>My Dashboard</h1>
-            <hr id="line" style="width: 330px;">
         </div>
     </div>
 
@@ -15,7 +12,8 @@
 
                 <div class="status-filter" style="margin-top: 15px;">
                     
-                    <div class="status" [ngClass]="{'active-chip-blue' : status_filter=='Batch', 'not-active-chip':status_filter!='Batch'}" (click)="changeFilter('Batch', job_type_filter)">
+                    <div class="status" 
+                    [ngClass]="{'active-chip-blue' : status_filter=='Batch', 'not-active-chip':status_filter!='Batch'}" (click)="changeFilter('Batch', job_type_filter)">
                         <span class="material-symbols-outlined">
                             communities
                         </span>
@@ -177,19 +175,19 @@
             <div class="chart-box">
                 <div class="chart-title">
                     <h1>By Department</h1>
-                    <div class="action-btn" *ngIf="charts.dept_chart" (click)="charts.dept_chart = !charts.dept_chart">
+                    <!-- <div class="action-btn" *ngIf="charts.dept_chart" (click)="charts.dept_chart = !charts.dept_chart">
                         <span class="material-icons">
                             table_chart
                         </span>
                         <p>Table</p>
-                    </div>
+                    </div> -->
     
-                    <div class="action-btn" *ngIf="!charts.dept_chart" (click)="charts.dept_chart = !charts.dept_chart">
+                    <!-- <div class="action-btn" *ngIf="!charts.dept_chart" (click)="charts.dept_chart = !charts.dept_chart">
                         <span class="material-icons">
                             bar_chart
                         </span>
                         <p>Chart</p>
-                    </div>
+                    </div> -->
                     
                 </div>
                 <div (click)="full_screen_chart = 'dept_chart'" [ngClass]="{'full-screen-chart' : full_screen_chart==='dept_chart', 'chart-canvas':full_screen_chart!=='dept_chart'}">
@@ -203,20 +201,6 @@
             <div class="chart-box">
                 <div class="chart-title">
                     <h1>By CTC</h1>
-                    <div class="action-btn" *ngIf="charts.ctc_chart" (click)="charts.ctc_chart = !charts.ctc_chart">
-                        <span class="material-icons">
-                            table_chart
-                        </span>
-                        <p>Table</p>
-                    </div>
-    
-                    <div class="action-btn" *ngIf="!charts.ctc_chart" (click)="charts.ctc_chart = !charts.ctc_chart">
-                        <span class="material-icons">
-                            bar_chart
-                        </span>
-                        <p>Chart</p>
-                    </div>
-                    
                 </div>
                 <div class="chart-canvas">
                     <canvas id="ctc_line_chart">
@@ -230,19 +214,7 @@
             <div class="chart-box">
                 <div class="chart-title">
                     <h1>By CGPA</h1>
-                    <div class="action-btn" *ngIf="charts.cgpa_chart" (click)="charts.cgpa_chart = !charts.cgpa_chart">
-                        <span class="material-icons">
-                            table_chart
-                        </span>
-                        <p>Table</p>
-                    </div>
-    
-                    <div class="action-btn" *ngIf="!charts.cgpa_chart" (click)="charts.cgpa_chart = !charts.cgpa_chart">
-                        <span class="material-icons">
-                            bar_chart
-                        </span>
-                        <p>Chart</p>
-                    </div>
+                    
                     
                 </div>
                 <div class="chart-canvas">

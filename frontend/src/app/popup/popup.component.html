@@ -12,7 +12,7 @@
                     <p>Message</p>
                     <mat-form-field>
                         <mat-label>Write your message here...</mat-label>
-                        <input matInput formControlName = 'message'>
+                        <textarea matInput formControlName = 'message'></textarea>
                         <!-- [formControl] = 'popup_message' -->
                     </mat-form-field>
                 </div>
@@ -49,7 +49,7 @@
     
                 <div class="btns">
                     <button mat-raised-button style="background-color: #1a6486;" (click)="addReport()">Update</button>
-                    <button  mat-raised-button style="background-color: red;" (click)="closePopup()">Cancel</button>
+                    <button  mat-raised-button style="background-color: #35363a;" (click)="closePopup()">Cancel</button>
                 </div>
             </div>
         </form>

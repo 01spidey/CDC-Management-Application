@@ -3,12 +3,10 @@
     <div class="top">
         <div class="title" *ngIf="section==1">
             <h1>Placement Drive</h1>
-            <hr id="line" style="width: 380px;">
         </div>
 
         <div class="title" *ngIf="section==2">
             <h1>{{action==='add'?'Add Drive' : 'Edit Drive'}}</h1>
-            <hr id="line" style="width: 250px;">
         </div>
 
     </div>
@@ -183,7 +181,7 @@
             </div>
 
             <div class="btm-box">
-                <button mat-raised-button (click)="publishMail(drive)">Publish Mail</button>
+                <button (click)="publishMail(drive)">Publish Mail</button>
 
                 <div class="options-box prevent-select">
                     <span class="material-symbols-outlined" id="edit" matTooltip="edit" (click)='openDrivePopup(drive)'  *ngIf="role==='Director' || drive.placement_officer_id === cur_staff_id">

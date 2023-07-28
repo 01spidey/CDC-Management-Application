@@ -5,17 +5,14 @@
         <img (click) = "back()" src="../../assets/back.png" *ngIf="section==2 || section==3 || (section==1 && role==='Director')" class="back">
         <div class="title" *ngIf="section==1">
             <h1>My Companies</h1>
-            <hr id="line" style="width: 320px;">
         </div>
 
         <div class="title" *ngIf="section==2">
             <h1>{{action}}</h1>
-            <hr id="line" style="width: 320px;">
         </div>
 
         <div class="title" *ngIf="section==3">
             <h1>Company Details</h1>
-            <hr id="line" style="width: 380px;">
         </div>
 
 
@@ -265,30 +262,50 @@
                         <th>Date</th>
                         <th colspan="2">Message</th>
                         <th>Reminder</th>
-                        <th>Status</th>
+                        <th style="width: 30px;">Status</th>
+                        <th colspan="2">Remarks</th>
                         <th *ngIf="role==='Officer'">Edit</th>
                         <th *ngIf="role==='Officer'">Delete</th>
                     </tr>
 
                     <tr *ngFor="let item of report_lst">
+                        <!-- 1 -->
                         <td style="width: 30px;">{{item.position}}</td>
+                        
+                        <!-- 2 -->
                         <td>
                             <div class="temp">
                                 <p>{{item.date}}</p>
                                 <p style="font-style: italic;font-size : .85rem">[{{item.time}}]</p>
                             </div>
-                            
                         </td>
+
+                        <!-- 3 -->
                         <td colspan="2">{{item.message}}</td>
+                        
+                        <!-- 4 -->
                         <td>{{item.reminder_date}}</td>
+                        
+                        <!-- 5 -->
                         <td>
                             <p class="status prevent-select"  [ngClass]="{'active-status': !item.status, 'not-active-status' : item.status}" [ngStyle]="role==='Director'? {'pointer-events' : 'none'} : {}" (click)="openPopup('add', item)">{{item.status?'Completed' : 'Update'}}</p>
                         </td>
+
+                        <!-- 5 -->
+                        <td colspan="2">
+                            <p style="cursor:pointer;" *ngIf="item.remarks!==null" (click) = "role==='Director'?openRemarksPopup(item.pk, 'edit'): ''">{{item.remarks}}</p>
+                            <p *ngIf="item.remarks===null">-</p>
+                            <button *ngIf="item.remarks===null  && role==='Director'" mat-raised-button (click)="openRemarksPopup(item.pk, 'add')">Add</button>
+                        </td>
+
+                        <!-- 7 -->
                         <td style="width: 30px;" *ngIf="role==='Officer'">
                             <span class="material-symbols-outlined prevent-select" (click)="openPopup('edit', item)">
                                 edit
                             </span>
                         </td>
+                       
+                        <!--8-->
                         <td style="width: 30px;" [ngStyle]="!item.status?{'opacity' : '0.8', 'pointer-events' : 'none'} : {}" *ngIf="role==='Officer'">
                             <span class="material-symbols-outlined prevent-select" (click)="openDeletePopup(item.pk)">
                                 delete
@@ -408,18 +425,32 @@
 
     </div>
 
-    <div class="popup-container" *ngIf="section==3 && (popup||delete_popup||drive_popup )">
+    <div class="popup-container" *ngIf="section==3 && (popup||delete_popup||drive_popup||remarks_popup )">
         <app-popup 
             (popup_closed)="handleValue($event)" 
             [data] = 'popup_data' 
             *ngIf="popup">
         </app-popup>
 
+        <div class="remarks-popup" *ngIf="remarks_popup">
+            <div class="remark-title">Add Remarks</div>
+            <div class="input">
+                <mat-form-field>
+                    <mat-label>Write Remarks Here</mat-label>
+                    <textarea matInput [(ngModel)]="remarks"></textarea>
+                </mat-form-field>
+            </div>
+            <div class="btns">
+                <button mat-raised-button style="background-color: #198754;" (click)="addRemarks()">Add</button>
+                <button mat-raised-button style="background-color: #35363a;" (click)="closeRemarksPopup()">Cancel</button>
+            </div>
+        </div>
+
         <div class="delete-popup" *ngIf="delete_popup">
             <p>Are You sure You want to delete the Report?</p>
             <div class="btns">
-                <button mat-raised-button style="background-color: #35363a;" (click)="delete_popup=false">Cancel</button>
                 <button mat-raised-button style="background-color: red;" (click)="deleteReport(delete_report_pk)">Delete</button>
+                <button mat-raised-button style="background-color: #35363a;" (click)="delete_popup=false">Cancel</button>
             </div>
         </div>
         

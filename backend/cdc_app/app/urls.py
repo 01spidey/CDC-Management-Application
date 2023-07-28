@@ -49,6 +49,7 @@ urlpatterns = [
         
     path('get_placement_stats', views.get_placement_stats),
     path('get_company_category_stats', views.get_company_category_stats),
-    path('get_charts_data', views.get_charts_data)
-        
+    path('get_charts_data', views.get_charts_data),
+    path('add_remarks', views.add_remarks),
+    
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

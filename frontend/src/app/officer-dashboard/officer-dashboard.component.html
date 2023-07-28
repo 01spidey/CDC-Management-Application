@@ -33,6 +33,13 @@
             </span>
             <p>Notifications</p>
         </div>
+
+        <div class="nav" (click)="selectMenu('reports')" [ngClass] ="{active: cur_option =='reports'}">
+            <span class="material-icons">
+                list_alt
+            </span>
+            <p>Reports</p>
+        </div>
         
         <div class="nav" (click)="selectMenu('profile')" [ngClass] ="{active: cur_option =='profile'}">
             <span class="material-icons">
@@ -55,6 +62,7 @@
         <app-company *ngIf="cur_option=='company'"></app-company>
         <app-profile *ngIf="cur_option=='profile'"></app-profile>
         <app-notification *ngIf="cur_option=='notification'"></app-notification>
+        <app-reports *ngIf="cur_option=='reports'"></app-reports>
     </div>
 
 </section>

@@ -20,6 +20,7 @@ export class CompanyComponent implements OnInit{
   role = sessionStorage.getItem('user_role')!
   action = 'Add Company'
   staff_id = this.userData.staff_id
+  remarks = ''
   
   popup_data!:popup_data;
   drive_popup_data!:drive_popup_data;
@@ -41,7 +42,9 @@ export class CompanyComponent implements OnInit{
   lock_hr_contact = false
   delete_popup = false
   delete_report_pk = 0
+  remark_report_pk = 0
   drive_popup = false
+  remarks_popup = false
   
 
   report_lst : Report[] = []
@@ -99,6 +102,42 @@ export class CompanyComponent implements OnInit{
 
   applyFilter(){
 
+  }
+
+  openRemarksPopup(report_pk : number, open_as:string){
+    this.remarks_popup = true
+    this.remark_report_pk = report_pk
+    if(open_as==='edit') this.remarks = this.report_lst.filter(report=>report.pk===report_pk)[0].remarks
+  }
+
+  addRemarks(){
+    if(this.remarks.trim().length>0){
+      this.service.addRemarks(this.remark_report_pk, this.remarks).subscribe(
+        (res:serverResponse)=>{
+          
+          if(res.success){
+            this.toastr.success('Remarks Added!!')
+            this.remarks_popup = false
+            this.remarks = ''
+            this.remark_report_pk = 0
+            this.getReportsByCompany()
+          }else this.toastr.warning('Some technical Error!!')
+        },
+        err=>{
+          this.toastr.error('Server Not Reachable!!')
+        }
+      )
+    }
+    else{
+      console.log(this.remarks)
+      this.toastr.warning('Remarks cannot be empty!!')
+    }
+  }
+
+  closeRemarksPopup(){
+    this.remarks_popup = false
+    this.remarks = ''
+    this.remark_report_pk = 0
   }
 
   handleValue(value: boolean) {
@@ -256,7 +295,7 @@ export class CompanyComponent implements OnInit{
           this.report_lst = res.reports
           this.last_followup = this.report_lst[0]
           this.last_followup_status = this.last_followup.status
-          console.log(this.last_followup)
+          console.log(res.reports)
         }
         else this.toastr.warning('Something went wrong')
       },

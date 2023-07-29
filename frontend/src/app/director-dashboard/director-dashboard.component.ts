@@ -10,7 +10,7 @@ import { ImplicitReceiver } from '@angular/compiler';
 })
 export class DirectorDashboardComponent implements OnInit{
   
-  cur_option = 'summary'
+  cur_option = 'reports'
   userData = JSON.parse(sessionStorage.getItem('cur_user_data')!);
   user_id = this.userData.name
 

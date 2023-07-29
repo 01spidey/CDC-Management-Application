@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http'
-import { companyByIdResponse, driveByIdResponse, driveByStatusResponse, filterOptions, getChartsDataResponse, getCompaniesResponse, getCompanyStatsResponse, getMembersResponse, getReportsByCompanyResponse, getReportsResponse, getUserStatsResponse, loadMembersResponse, loginResponse, notificationResponse, openMemberResponse, placementStats, placementStatsResponse, reportByIdResponse, reportSummaryResponse, sendOTPResponse, serverResponse, studentTableFilterOptions, studentTableFilterResponse, user, userByIdResponse } from '../models/model';
+import { companyByIdResponse, deptWiseReportData, driveByIdResponse, driveByStatusResponse, filterOptions, getChartsDataResponse, getCompaniesResponse, getCompanyStatsResponse, getMembersResponse, getReportsByCompanyResponse, getReportsResponse, getUserStatsResponse, loadMembersResponse, loginResponse, notificationResponse, openMemberResponse, placementStats, placementStatsResponse, reportByIdResponse, reportSummaryResponse, sendOTPResponse, serverResponse, studentTableFilterOptions, studentTableFilterResponse, user, userByIdResponse } from '../models/model';
 import { Router } from '@angular/router';
 import { categoryStats } from '../dashboard/dashboard.component';
 
@@ -213,6 +213,13 @@ export class AppService {
 
   addRemarks(report_pk:number, remark:string){
     return this.http.post<serverResponse>(`${this.URL}/add_remarks`, {report_pk : report_pk, remark : remark})
+  }
+
+  getDeptWiseReportData(batch: number, sel_month: string) {
+    return this.http.get<{
+      success: boolean,
+      data: deptWiseReportData[]
+    }>(`${this.URL}/get_dept_wise_report_data`, { params: { batch: batch, sel_month: sel_month } })
   }
 
 

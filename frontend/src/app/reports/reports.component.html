@@ -6,7 +6,106 @@
         </div>
     </div>
 
-    <div class="main-container">
+    <div class="filter-box">
+        <div class="batch-filter">
+            <mat-form-field>
+                <mat-label>Batch</mat-label>
+                <mat-select [ngModel] = 'batch' (ngModelChange)="onBatchChange($event)">
+                  <mat-option *ngFor="let batch of batch_lst" [value]="batch">{{batch}}</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
 
+        <div class="batch-filter">
+            <mat-form-field>
+                <mat-label>Month</mat-label>
+                <mat-select [ngModel] = 'sel_month' (ngModelChange)="onMonthChange($event)">
+                  <mat-option *ngFor="let month of months" [value]="month">{{month}}</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+
+        
+        <!-- <a>
+            <span matTooltip="Refresh" class="material-symbols-outlined" id="refresh" (click)="changeFilter(status_filter,job_type_filter)">
+                refresh
+            </span>
+        </a> -->
+            
+    </div>
+
+    <div class="main-container">
+        <div class="report-box">
+            <div class="top-box">
+                <h2>Department-Wise Report</h2>
+                <div class="btn">
+                    <span class="material-icons">download</span>
+                    <p color="primary" > Download </p>
+                </div>
+            </div>
+            <div class="table">
+                <table>
+                    <tr>
+                        <th rowspan="2">S.No</th>
+                        <th rowspan="2">Department</th>
+                        <th rowspan="2">Total Strength</th>
+                        <th rowspan="2">Placement Interested</th>
+                        <th rowspan="2">Placed Students</th>
+                        <th rowspan="2">Remaining</th>
+                        <th colspan="9">CTC</th>
+                        <th rowspan="2">Total %</th>
+                    </tr>
+                    
+                    <tr>
+                        <th>>=20LPA</th>
+                        <th>>=15LPA</th>
+                        <th>>=10LPA</th>
+                        <th>>=8LPA</th>
+                        <th>>=7LPA</th>
+                        <th>>=6LPA</th>
+                        <th>>=5LPA</th>
+                        <th>>=4LPA</th>
+                        <th>&lt;4L</th>
+                    </tr>
+                    
+                    <tr *ngFor="let dept of deptWiseReportData">
+                        <td>{{dept.pos}}</td>
+                        <td>{{dept.dept}}</td>
+                        <td>{{dept.total}}</td>
+                        <td>{{dept.interested}}</td>
+                        <td>{{dept.placed}}</td>
+                        <td>{{dept.remaining}}</td>
+                        <td>{{dept.ctc.gt20}}</td>
+                        <td>{{dept.ctc.gt15}}</td>
+                        <td>{{dept.ctc.gt10}}</td>
+                        <td>{{dept.ctc.gt8}}</td>
+                        <td>{{dept.ctc.gt7}}</td>
+                        <td>{{dept.ctc.gt6}}</td>
+                        <td>{{dept.ctc.gt5}}</td>
+                        <td>{{dept.ctc.gt4}}</td>
+                        <td>{{dept.ctc.lt4}}</td>
+                        <td>{{dept.total_percent}}%</td>
+                    </tr>
+
+                    <tr class="btm-row">
+                        <td colspan="2">Total</td>
+                        <td>{{deptWiseReportDataTotal.total}}</td>
+                        <td>{{deptWiseReportDataTotal.interested}}</td>
+                        <td>{{deptWiseReportDataTotal.placed}}</td>
+                        <td>{{deptWiseReportDataTotal.remaining}}</td>
+                        <td>{{deptWiseReportDataTotal.ctc.gt20}}</td>
+                        <td>{{deptWiseReportDataTotal.ctc.gt15}}</td>
+                        <td>{{deptWiseReportDataTotal.ctc.gt10}}</td>
+                        <td>{{deptWiseReportDataTotal.ctc.gt8}}</td>
+                        <td>{{deptWiseReportDataTotal.ctc.gt7}}</td>
+                        <td>{{deptWiseReportDataTotal.ctc.gt6}}</td>
+                        <td>{{deptWiseReportDataTotal.ctc.gt5}}</td>
+                        <td>{{deptWiseReportDataTotal.ctc.gt4}}</td>
+                        <td>{{deptWiseReportDataTotal.ctc.lt4}}</td>
+                        <td>{{deptWiseReportDataTotal.total_percent}}%</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
     </div>
 </div>

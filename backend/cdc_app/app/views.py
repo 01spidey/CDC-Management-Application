@@ -1,8 +1,6 @@
 import csv
 from email.message import EmailMessage
 import json
-import math
-import random
 from statistics import mode
 from django.conf import settings
 from django.shortcuts import render
@@ -17,7 +15,10 @@ from django.utils import timezone
 import pytz
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
+from django.db.models.functions import ExtractMonth
 
+cur_username = ''
+cur_password = ''
 
 
 # Create your views here.
@@ -169,6 +170,8 @@ def update_credentials(request):
 
 @csrf_exempt
 def login(request):
+    global cur_username, cur_password
+    
     user_id = request.POST['user_id']
     password = request.POST['pass']
     role = request.POST['user_role']
@@ -186,7 +189,9 @@ def login(request):
     }
     
     # #print(f'{user_id}\n{password}\n{role}')
-    
+    print('Before : ')
+    print(f'cur_username : {cur_username}\ncur_password : {cur_password}')
+
     if(role=='Director'):
         if PlacementDirector.objects.filter(user_id=user_id, password = password):
             success = True  
@@ -198,6 +203,8 @@ def login(request):
                             'phone' : director.phone,
                             'staff_id' : director.staff_id
                             }
+            cur_username = user_id
+            cur_password = password
             
             message = f'Welcome {director.name}!!'          
             
@@ -218,6 +225,8 @@ def login(request):
                     'staff_id' : officer.staff_id
                 }
             message = f"Welcome {officer.name}!!"
+            cur_username = user_id
+            cur_password = password
 
 
         else:
@@ -229,6 +238,9 @@ def login(request):
         'message' : message,
         'user_data' : user_data
     }
+    
+    print('After : ')
+    print(f'cur_username : {cur_username}\ncur_password : {cur_password}')
     
     return JsonResponse(data)
 
@@ -2162,4 +2174,92 @@ def get_charts_data(request):
         }
         
         return JsonResponse(data)
+
+
+@csrf_exempt
+def get_dept_wise_report_data(request):
+    batch = request.POST.get('batch')
+    month = request.POST.get('month')
     
+    dept_wise_report_data = []
+    months = {
+        'All' : 0,'Jan' : 1, 'Feb' : 2, 'Mar' : 3, 'Apr' : 4, 'May' : 5, 'Jun' : 6, 'Jul' : 7, 'Aug' : 8, 'Sep' : 9, 'Oct' : 10, 'Nov' : 11, 'Dec' : 12
+    }
+    
+    dept_wise_report_data.append(
+        [
+            get_dept_data('AI-DS', batch, months[month], 1),
+            get_dept_data('CSE', batch, months[month], 2),
+            get_dept_data('ECE', batch, months[month], 3),
+            get_dept_data('EEE', batch, months[month], 4),
+            get_dept_data('BME', batch, months[month], 5),
+            get_dept_data('CHEM', batch, months[month], 6),
+            get_dept_data('CIVIL', batch, months[month], 7),
+            get_dept_data('MECH', batch, months[month], 8),
+        ]    
+    )
+    
+    data = {
+        'success' : True,
+        'data' : dept_wise_report_data
+    }
+    
+    return JsonResponse(data)
+
+def get_dept_data(dept, batch, month, pos):
+    dept_data = {
+        'pos' : 0,
+        'dept' : '',
+        'total' : 0,
+        'interested' : 0,
+        'placed' : 0,
+        'remaining' : 0,
+        'ctc' : {
+            'gt20' : 0,
+            'gt15' : 0,
+            'gt10' : 0,
+            'gt8' : 0,
+            'gt7' : 0,
+            'gt6' : 0,
+            'gt5' : 0,
+            'gt4' : 0,
+            'lt4' : 0
+        },
+        'total_percent' : 0
+    }
+    
+    
+    
+    
+    all_students = Student.objects.filter(dept=dept, batch=batch)
+    placement_interest = all_students.filter(placement_interest=True)
+    
+    student_ids = placement_interest.values_list('id', flat=True)
+    
+    placed_students = DriveSelection.objects.filter(student__reg_no__in=student_ids, selected=True,  date__month=month)
+    
+    dept_data['gt20'] = placed_students.filter(drive__ctc__gte=20).distinct('id').count()
+        
+    dept_data['pos'] = pos
+    dept_data['dept'] = dept
+    dept_data['total'] = len(all_students)
+    dept_data['interested'] = len(placement_interest)
+    dept_data['placed'] = len(placed_students)
+    dept_data['remaining'] = len(placement_interest) - len(placed_students)
+    
+    return dept_data
+
+
+def get_students_by_CTC(placed_students, ctc):
+    
+    selected_drives = placed_students.filter(
+        selected=True, drive__ctc__gte=ctc
+    ).select_related('student', 'drive') 
+        
+    students_for_selected_drives = [drive_sel.student for drive_sel in selected_drives]
+
+    unique_students = {student.reg_no: student for student in students_for_selected_drives}
+
+    return len(unique_students)
+
+

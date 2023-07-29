@@ -346,3 +346,24 @@ export interface getChartsDataResponse{
 
     }
 }
+
+export interface deptWiseReportData{
+    pos : number,
+    dept : string,
+    total : number,
+    interested : number,
+    placed : number,
+    remaining : number,
+    ctc : {
+        gt20 : number,
+        gt15 : number,
+        gt10 : number,
+        gt8 : number,
+        gt7 : number,
+        gt6 : number,
+        gt5 : number,
+        gt4 : number,
+        lt4 : number
+    },
+    total_percent : number,
+}

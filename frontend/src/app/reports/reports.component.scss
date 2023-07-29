@@ -26,9 +26,153 @@
         }
     }
 
+    .filter-box{
+        display: flex;
+        margin-top: 20px;
+        margin-left: 40px;
+        gap: 40px;
+        align-items: center;
+
+        .status-filter{
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+            align-items: flex-start;
+            justify-content: flex-start;
+            border-radius: 5px;
+            gap: 15px;
+            background-color: white;
+            
+            .status{
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 5px;
+                padding: 5px 15px;
+                border-radius: 15px;
+                font-family: 'Nunito';
+                cursor: pointer;
+                transition: 0.2s ease;
+                flex: 1;
+
+                p{
+                    font-family: 'Nunito';
+                    font-size: 1rem;
+                    margin-left: 2px;
+                }
+
+                &:active{
+                    transform: scale(0.9);
+                }
+
+                span{
+                    font-size: 1rem;
+                }
+            }
+        }
+            
+        
+    }
+
     .main-container{
         margin-left: 40px;
         height: fit-content;
         width: 95%;
+        margin-top: 20px;
+
+        .report-box{
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 20px;
+            height: 300px;
+            gap: 10px;
+
+            .top-box{
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+
+                h2{
+                    font-family: 'Poppins';
+                    font-size: 1.1rem;
+                    letter-spacing: 2px;
+                    // color: #152b51ff;
+                    color: white;
+                    font-weight: 500;
+                    padding-right: 20px;
+                    // border-bottom: 3px solid #152b51;
+                    background-color:#152b51;
+                    padding: 2px 5px;
+                    border-radius: 5px;
+                }
+
+                .btn{
+                    font-family: 'Nunito';
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                    background-color: #198754;
+                    color: white;
+                    font-size: .85rem;
+                    padding: 3px 5px;
+                    border-radius: 5px;
+                    span{
+                        font-size: 1rem;
+                    }
+                }
+            }
+
+            .table{
+                
+                table{
+                    width: 100%;
+                    th{
+                        font-family: 'Poppins';
+                        font-weight: 500;
+                        font-size: .85rem;
+                        background-color: #1a6486;
+                        color: white;
+                        border-radius: 5px;
+                    }
+
+                    tr{
+                        margin-bottom: 3px;
+                    }
+    
+                    td{
+                        padding: 5px;
+                        text-align: center;
+                        font-family: 'Nunito';
+                        background-color: white;
+                        color:#35363a;
+                        border: 1px solid #aaa;
+                        border-radius: 5px;
+                    }
+
+                    .btm-row{
+                        td{
+                            font-weight: 500;
+                            border-radius: 0px;
+                            background-color: #35363a;
+                            color: white;
+                        }
+                    }
+                }
+        
+                
+            }
+        }
+    }
+
+    .active-chip-orange{
+        background-color: #ea4034;
+        color: white;
+    }
+
+    .not-active-chip{
+        color: #aaa;
+        &:hover{
+            opacity: 0.9;
+            color: #35363a;
+        }
     }
 }

@@ -48,15 +48,14 @@ export class ReportsComponent implements OnInit, AfterViewInit {
     total_percent: 0
   }
 
-  visited_companies:MatTableDataSource<any> = new MatTableDataSource<any>([
+  VISITED_COMPANIES:MatTableDataSource<any> = new MatTableDataSource<any>([
     1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
     11,12,13,14,15,16,17,18,19,20,
     21,22,23,24,25,26,27,28,29,30
   ]);
-  
-  displayedColumns: string[] = ['column1', 'column2', 'column3']; // Add your table column names here
-  pageSize = 5;
-  pageSizeOptions: number[] = [5, 10, 25, 50];
+
+  displayedColumns: string[] = ['s.no', 'company', 'category', 'ctc', 'drive date', 'dept', 'total offers']; // Add your table column names here
+  pageSizeOptions: number[] = [5, 10, 15];
 
   constructor(
     private service : AppService,
@@ -67,7 +66,9 @@ export class ReportsComponent implements OnInit, AfterViewInit {
 
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
 
+  
   ngOnInit(): void {
+    // this.initTable()
     this.cur_year= new Date().getFullYear();
     for(let i=this.cur_year-10; i<=this.cur_year+5; i++) this.batch_lst.push(i);
     this.batch = this.cur_year+1;
@@ -75,10 +76,20 @@ export class ReportsComponent implements OnInit, AfterViewInit {
     this.getDeptWiseReportData()
   }
 
+  initTable(){
+    const data = [
+      1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
+      11,12,13,14,15,16,17,18,19,20,
+      21,22,23,24,25,26,27,28,29,30
+    ]
+    this.VISITED_COMPANIES = new MatTableDataSource(data);
+  }
+
   ngAfterViewInit(): void {
+    this.VISITED_COMPANIES.paginator = this.paginator;
 
     // this.visited_companies = new MatTableDataSource(data);
-    this.visited_companies.paginator = this.paginator;
+    // this.visited_companies.paginator = this.paginator;
   }
 
 

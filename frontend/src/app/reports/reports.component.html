@@ -136,27 +136,48 @@
                 </div> -->
             </div>
             <div class="table">
-                <table mat-table [dataSource]="visited_companies">
-                    <ng-container matColumnDef="column1">
-                        <th mat-header-cell *matHeaderCellDef> No. </th>
-                        <td mat-cell *matCellDef="let element"> {{element.position}} </td>
+                <!-- 's.no', 'company', 'category', 'ctc', 'drive_date', 'dept', 'total offers'] -->
+                <table mat-table [dataSource]="VISITED_COMPANIES">
+                    <ng-container matColumnDef="s.no">
+                        <th mat-header-cell *matHeaderCellDef> S.no </th>
+                        <td mat-cell *matCellDef="let item"> {{item}} </td>
                     </ng-container>  
                     
-                    <ng-container matColumnDef="column2">
-                        <th mat-header-cell *matHeaderCellDef> No. </th>
-                        <td mat-cell *matCellDef="let element"> {{element.position}} </td>
+                    <ng-container matColumnDef="company">
+                        <th mat-header-cell *matHeaderCellDef> Company </th>
+                        <td mat-cell *matCellDef="let item"> {{item}} </td>
                     </ng-container>  
 
-                    <ng-container matColumnDef="column3">
-                        <th mat-header-cell *matHeaderCellDef> No. </th>
-                        <td mat-cell *matCellDef="let element"> {{element.position}} </td>
+                    <ng-container matColumnDef="category">
+                        <th mat-header-cell *matHeaderCellDef> Category </th>
+                        <td mat-cell *matCellDef="let item"> {{item}} </td>
+                    </ng-container>  
+                    
+                    <ng-container matColumnDef="ctc">
+                        <th mat-header-cell *matHeaderCellDef> CTC(LPA) </th>
+                        <td mat-cell *matCellDef="let item"> {{item}} </td>
+                    </ng-container>  
+
+                    <ng-container matColumnDef="drive date">
+                        <th mat-header-cell *matHeaderCellDef> Drive Date </th>
+                        <td mat-cell *matCellDef="let item"> {{item}} </td>
+                    </ng-container>  
+
+                    <ng-container matColumnDef="dept">
+                        <th mat-header-cell *matHeaderCellDef> Department </th>
+                        <td mat-cell *matCellDef="let item"> {{item}} </td>
+                    </ng-container>  
+
+                    <ng-container matColumnDef="total offers">
+                        <th mat-header-cell *matHeaderCellDef> Total Offers </th>
+                        <td mat-cell *matCellDef="let item"> {{item}} </td>
                     </ng-container>  
 
                     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
                 </table>
                   
-                  <mat-paginator [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions"></mat-paginator>
+                  <mat-paginator [pageSizeOptions]="pageSizeOptions" showFirstLastButtons></mat-paginator>
                   
             </div>
         </div>

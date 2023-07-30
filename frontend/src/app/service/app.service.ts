@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {HttpClient, HttpParams} from '@angular/common/http'
+import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http'
 import { companyByIdResponse, deptWiseReportData, driveByIdResponse, driveByStatusResponse, filterOptions, getChartsDataResponse, getCompaniesResponse, getCompanyStatsResponse, getMembersResponse, getReportsByCompanyResponse, getReportsResponse, getUserStatsResponse, loadMembersResponse, loginResponse, notificationResponse, openMemberResponse, placementStats, placementStatsResponse, reportByIdResponse, reportSummaryResponse, sendOTPResponse, serverResponse, studentTableFilterOptions, studentTableFilterResponse, user, userByIdResponse } from '../models/model';
 import { Router } from '@angular/router';
 import { categoryStats } from '../dashboard/dashboard.component';
@@ -18,12 +18,37 @@ export class AppService {
 
   }
 
+  getCookie(name:string) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) {
+      return parts.pop()?.split(';').shift();
+    }
+    return '';
+  }
+
   add_admin(formData:FormData){
     return this.http.post<serverResponse>(`${this.URL}/add_admin`, formData);
   }
 
   login(formData:FormData){
-    return this.http.post<loginResponse>(`${this.URL}/login`, formData);
+    // const csrfToken = this.getCookie('csrftoken');
+    // console.log(csrfToken)
+    // // Set the request headers with the CSRF token
+    // const headers = new HttpHeaders({
+    //   'Content-Type': 'application/json',
+    //   'X-CSRFToken': csrfToken!
+    // });
+
+    console.log(formData.get('user_id'))
+
+    return this.http.post<loginResponse>(`${this.URL}/login`,
+      {
+        user_id: formData.get('user_id'),
+        pass : formData.get('pass'),
+        user_role : formData.get('user_role')
+      }
+    )
   }
 
   // Both ADMIN and MEMBER can use this function

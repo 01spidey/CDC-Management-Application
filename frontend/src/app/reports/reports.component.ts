@@ -23,7 +23,7 @@ export class ReportsComponent implements OnInit {
 
   months:string[] = ['All', 'Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
 
-  deptWiseReportData : deptWiseReportData[] = [ ]
+  DeptWiseReportData : deptWiseReportData[] = [ ]
   
   deptWiseReportDataTotal = {
     total: 0,
@@ -57,46 +57,44 @@ export class ReportsComponent implements OnInit {
     for(let i=this.cur_year-10; i<=this.cur_year+5; i++) this.batch_lst.push(i);
     this.batch = this.cur_year+1;
 
-    this.deptWiseReportData = [
-      {
-        pos: 1,
-        dept: 'CSE',
-        total: 100,
-        interested: 80,
-        placed: 60,
-        remaining: 20,
-        ctc: {
-          gt20: 10,
-          gt15: 20,
-          gt10: 5,
-          gt8: 6,
-          gt7: 15,
-          gt6: 4,
-          gt5: 0,
-          gt4: 0,
-          lt4: 0
-        },
-        total_percent: 80
-      }
-    ]
-
-    this.getTotalDeptWiseReportData(this.deptWiseReportData)
-
+    this.getDeptWiseReportData()
   }
 
 
   onBatchChange(selectedBatch:string){
     this.batch = parseInt(selectedBatch)
-    // this.applyFilter(this.status_filter, this.job_type_filter)
+    this.getDeptWiseReportData()
   }
 
   onMonthChange(selectedMonth:string){
     this.sel_month = selectedMonth
-    // this.applyFilter(this.status_filter, this.job_type_filter)
+    this.getDeptWiseReportData()
   }
 
   getTotalDeptWiseReportData(deptWiseReportData: deptWiseReportData[]){
+    // console.log(deptWiseReportData.length)
+
+    this.deptWiseReportDataTotal = {
+      total: 0,
+      interested: 0,
+      placed: 0,
+      remaining: 0,
+      ctc : {
+        gt20: 0,
+        gt15: 0,
+        gt10: 0,
+        gt8: 0,
+        gt7: 0,
+        gt6: 0,
+        gt5: 0,
+        gt4: 0,
+        lt4: 0
+      },
+      total_percent: 0
+    }
+
     deptWiseReportData.forEach((dept)=>{
+      
       this.deptWiseReportDataTotal.total += dept.total
       this.deptWiseReportDataTotal.interested += dept.interested
       this.deptWiseReportDataTotal.placed += dept.placed
@@ -117,11 +115,19 @@ export class ReportsComponent implements OnInit {
 
   getDeptWiseReportData(){
     this.service.getDeptWiseReportData(this.batch, this.sel_month).subscribe(
-      (res:any)=>{
+      (res:{
+        success:boolean,
+        data:deptWiseReportData[]
+      })=>{
+        let temp:deptWiseReportData[] = res.data
+        
         console.log(res)
+
+        this.DeptWiseReportData = temp
+        this.getTotalDeptWiseReportData(this.DeptWiseReportData)
       },
       (err:any)=>{
-        
+        this.toastr.error('Something went wrong!')
       }
     )
   }

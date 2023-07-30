@@ -170,11 +170,12 @@ def update_credentials(request):
 
 @csrf_exempt
 def login(request):
-    global cur_username, cur_password
+    formdata = json.loads(request.body)
+    print(formdata)
     
-    user_id = request.POST['user_id']
-    password = request.POST['pass']
-    role = request.POST['user_role']
+    user_id = formdata['user_id']
+    password = formdata['pass']
+    role = formdata['user_role']
     
     success = True
     
@@ -188,9 +189,6 @@ def login(request):
         'staff_id' : 'null'
     }
     
-    # #print(f'{user_id}\n{password}\n{role}')
-    print('Before : ')
-    print(f'cur_username : {cur_username}\ncur_password : {cur_password}')
 
     if(role=='Director'):
         if PlacementDirector.objects.filter(user_id=user_id, password = password):
@@ -203,8 +201,9 @@ def login(request):
                             'phone' : director.phone,
                             'staff_id' : director.staff_id
                             }
-            cur_username = user_id
-            cur_password = password
+            
+            # request.session['username'] = director.user_id
+            # request.session['password'] = director.password
             
             message = f'Welcome {director.name}!!'          
             
@@ -225,22 +224,19 @@ def login(request):
                     'staff_id' : officer.staff_id
                 }
             message = f"Welcome {officer.name}!!"
-            cur_username = user_id
-            cur_password = password
-
+            # request.session['username'] = officer.user_id
+            # request.session['password'] = officer.password
 
         else:
             success = False
             message = 'Invalid Crdentials!!'
-        
+     
+    print(request.session)   
     data = {
         'success':success,
         'message' : message,
         'user_data' : user_data
     }
-    
-    print('After : ')
-    print(f'cur_username : {cur_username}\ncur_password : {cur_password}')
     
     return JsonResponse(data)
 
@@ -2178,15 +2174,18 @@ def get_charts_data(request):
 
 @csrf_exempt
 def get_dept_wise_report_data(request):
-    batch = request.POST.get('batch')
-    month = request.POST.get('month')
+    
+    batch = request.GET.get('batch')
+    month = request.GET.get('sel_month')
+    
+    # print(f'Batch : {batch}\nMonth : {month}')
     
     dept_wise_report_data = []
     months = {
         'All' : 0,'Jan' : 1, 'Feb' : 2, 'Mar' : 3, 'Apr' : 4, 'May' : 5, 'Jun' : 6, 'Jul' : 7, 'Aug' : 8, 'Sep' : 9, 'Oct' : 10, 'Nov' : 11, 'Dec' : 12
     }
     
-    dept_wise_report_data.append(
+    dept_wise_report_data+=(
         [
             get_dept_data('AI-DS', batch, months[month], 1),
             get_dept_data('CSE', batch, months[month], 2),
@@ -2201,12 +2200,15 @@ def get_dept_wise_report_data(request):
     
     data = {
         'success' : True,
-        'data' : dept_wise_report_data
+        'data' : dept_wise_report_data,
+        # 'user_id' : request.session.get('username', None),
+        # 'password' :  request.session.get('password', None)
     }
     
     return JsonResponse(data)
 
 def get_dept_data(dept, batch, month, pos):
+        
     dept_data = {
         'pos' : 0,
         'dept' : '',
@@ -2228,17 +2230,26 @@ def get_dept_data(dept, batch, month, pos):
         'total_percent' : 0
     }
     
-    
-    
-    
     all_students = Student.objects.filter(dept=dept, batch=batch)
-    placement_interest = all_students.filter(placement_interest=True)
+    placement_interest = all_students.filter(placement_interested=True)
     
-    student_ids = placement_interest.values_list('id', flat=True)
+    student_ids = placement_interest.values_list('reg_no', flat=True)
     
-    placed_students = DriveSelection.objects.filter(student__reg_no__in=student_ids, selected=True,  date__month=month)
+    if(month == 0):
+        placed_students = DriveSelection.objects.filter(student__reg_no__in=student_ids, selected=True).distinct('student_id')
+    else:
+        placed_students = DriveSelection.objects.filter(student__reg_no__in=student_ids, selected=True,  date__month__lte=month).distinct('student_id')
     
-    dept_data['gt20'] = placed_students.filter(drive__ctc__gte=20).distinct('id').count()
+    dept_data['ctc']['gt20'] = placed_students.filter(drive__ctc__gte=20).count()
+    dept_data['ctc']['gt15'] = placed_students.filter(drive__ctc__gte=15).count()
+    dept_data['ctc']['gt10'] = placed_students.filter(drive__ctc__gte=10).count()
+    dept_data['ctc']['gt8'] = placed_students.filter(drive__ctc__gte=8).count()
+    dept_data['ctc']['gt7'] = placed_students.filter(drive__ctc__gte=7).count()
+    dept_data['ctc']['gt6'] = placed_students.filter(drive__ctc__gte=6).count()
+    dept_data['ctc']['gt5'] = placed_students.filter(drive__ctc__gte=5).count()
+    dept_data['ctc']['gt4'] = placed_students.filter(drive__ctc__gte=4).count()
+    dept_data['ctc']['lt4'] = placed_students.filter(drive__ctc__lt=4).count()
+    
         
     dept_data['pos'] = pos
     dept_data['dept'] = dept
@@ -2246,20 +2257,7 @@ def get_dept_data(dept, batch, month, pos):
     dept_data['interested'] = len(placement_interest)
     dept_data['placed'] = len(placed_students)
     dept_data['remaining'] = len(placement_interest) - len(placed_students)
+    dept_data['total_percent'] = round((len(placed_students)/len(placement_interest))*100, 2) if len(placement_interest) > 0 else 0
     
     return dept_data
-
-
-def get_students_by_CTC(placed_students, ctc):
-    
-    selected_drives = placed_students.filter(
-        selected=True, drive__ctc__gte=ctc
-    ).select_related('student', 'drive') 
-        
-    students_for_selected_drives = [drive_sel.student for drive_sel in selected_drives]
-
-    unique_students = {student.reg_no: student for student in students_for_selected_drives}
-
-    return len(unique_students)
-
 

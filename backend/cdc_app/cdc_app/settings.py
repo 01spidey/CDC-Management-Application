@@ -153,6 +153,9 @@ CORS_ALLOWED_ORIGINS = [
     'https://b0ad-123-63-135-33.ngrok-free.app',
 ]
 
+# CORS_ALLOW_ALL_ORIGINS = True
+
+
 # Mail Configurations
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
@@ -166,3 +169,6 @@ DEFAULT_FROM_EMAIL = '01srikumaran@gmail.com'
 MEDIA_ROOT = 'path/to/media/directory/'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+
+# SESSION_COOKIE_AGE = 120 # 2 minutes

@@ -11,7 +11,7 @@
             <mat-form-field>
                 <mat-label>Batch</mat-label>
                 <mat-select [ngModel] = 'batch' (ngModelChange)="onBatchChange($event)">
-                  <mat-option *ngFor="let batch of batch_lst" [value]="batch">{{batch}}</mat-option>
+                  <mat-option *ngFor="let batch of batch_lst" [value]="batch">{{batch-4}}&nbsp;-&nbsp;{{batch}}</mat-option>
                 </mat-select>
             </mat-form-field>
         </div>
@@ -68,7 +68,7 @@
                         <th>&lt;4L</th>
                     </tr>
                     
-                    <tr *ngFor="let dept of deptWiseReportData">
+                    <tr *ngFor="let dept of DeptWiseReportData">
                         <td>{{dept.pos}}</td>
                         <td>{{dept.dept}}</td>
                         <td>{{dept.total}}</td>
@@ -106,6 +106,56 @@
                     </tr>
                 </table>
             </div>
+
         </div>
+
+        <div class="report-box">
+            <div class="top-box">
+                <h2>Department-Wise Report</h2>
+                <div class="btn">
+                    <span class="material-icons">download</span>
+                    <p color="primary" > Download </p>
+                </div>
+            </div>
+
+            <div class="month-box-all">
+                <div class="month-box">
+
+                </div>
+                
+                <div class="month-box">
+                    
+                </div>
+                
+                <div class="month-box">
+                    
+                </div>
+                
+                <div class="month-box">
+                    
+                </div>
+                
+                <div class="month-box">
+                    
+                </div>
+
+                <div class="month-box">
+                    
+                </div>
+            </div>
+
+        </div>
+
+        <div class="report-box">
+            <div class="top-box">
+                <h2>Visited Companies</h2>
+                <div class="btn">
+                    <span class="material-icons">download</span>
+                    <p color="primary" > Download </p>
+                </div>
+            </div>
+        </div>
+        
     </div>
+
 </div>

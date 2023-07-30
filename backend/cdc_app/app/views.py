@@ -2177,24 +2177,32 @@ def get_dept_wise_report_data(request):
     
     batch = request.GET.get('batch')
     month = request.GET.get('sel_month')
+    user_id = request.GET.get('user_id')
     
-    # print(f'Batch : {batch}\nMonth : {month}')
+    print(f'Batch : {batch}\nMonth : {month}\nUser ID : {user_id}')
     
     dept_wise_report_data = []
     months = {
         'All' : 0,'Jan' : 1, 'Feb' : 2, 'Mar' : 3, 'Apr' : 4, 'May' : 5, 'Jun' : 6, 'Jul' : 7, 'Aug' : 8, 'Sep' : 9, 'Oct' : 10, 'Nov' : 11, 'Dec' : 12
     }
     
+    if(user_id=='Director'):
+        followed_companies = Company.objects.all().values_list('company', flat=True)
+    else:
+        followed_companies = Company.objects.filter(placement_officer_id=user_id).values_list('company', flat=True)
+    
+    print(followed_companies)
+    
     dept_wise_report_data+=(
         [
-            get_dept_data('AI-DS', batch, months[month], 1),
-            get_dept_data('CSE', batch, months[month], 2),
-            get_dept_data('ECE', batch, months[month], 3),
-            get_dept_data('EEE', batch, months[month], 4),
-            get_dept_data('BME', batch, months[month], 5),
-            get_dept_data('CHEM', batch, months[month], 6),
-            get_dept_data('CIVIL', batch, months[month], 7),
-            get_dept_data('MECH', batch, months[month], 8),
+            get_dept_data('AI-DS', batch, months[month], 1, followed_companies),
+            get_dept_data('CSE', batch, months[month], 2, followed_companies),
+            get_dept_data('ECE', batch, months[month], 3, followed_companies),
+            get_dept_data('EEE', batch, months[month], 4, followed_companies),
+            get_dept_data('BME', batch, months[month], 5, followed_companies),
+            get_dept_data('CHEM', batch, months[month], 6, followed_companies),
+            get_dept_data('CIVIL', batch, months[month], 7, followed_companies),
+            get_dept_data('MECH', batch, months[month], 8, followed_companies),
         ]    
     )
     
@@ -2207,7 +2215,7 @@ def get_dept_wise_report_data(request):
     
     return JsonResponse(data)
 
-def get_dept_data(dept, batch, month, pos):
+def get_dept_data(dept, batch, month, pos, followed_companies):
         
     dept_data = {
         'pos' : 0,
@@ -2235,10 +2243,7 @@ def get_dept_data(dept, batch, month, pos):
     
     student_ids = placement_interest.values_list('reg_no', flat=True)
     
-    if(month == 0):
-        placed_students = DriveSelection.objects.filter(student__reg_no__in=student_ids, selected=True).distinct('student_id')
-    else:
-        placed_students = DriveSelection.objects.filter(student__reg_no__in=student_ids, selected=True,  date__month__lte=month).distinct('student_id')
+    placed_students = DriveSelection.objects.filter(student__reg_no__in=student_ids, selected=True, drive__company__in = followed_companies).distinct('student_id')
     
     dept_data['ctc']['gt20'] = placed_students.filter(drive__ctc__gte=20).count()
     dept_data['ctc']['gt15'] = placed_students.filter(drive__ctc__gte=15).count()

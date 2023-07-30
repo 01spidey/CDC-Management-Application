@@ -240,11 +240,11 @@ export class AppService {
     return this.http.post<serverResponse>(`${this.URL}/add_remarks`, {report_pk : report_pk, remark : remark})
   }
 
-  getDeptWiseReportData(batch: number, sel_month: string) {
+  getDeptWiseReportData(batch: number, sel_month: string, user_id: string) {
     return this.http.get<{
       success: boolean,
       data: deptWiseReportData[]
-    }>(`${this.URL}/get_dept_wise_report_data`, { params: { batch: batch, sel_month: sel_month } })
+    }>(`${this.URL}/get_dept_wise_report_data`, { params: { batch: batch, sel_month: sel_month, user_id:user_id } })
   }
 
 

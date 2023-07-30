@@ -33,6 +33,7 @@
         margin-left: 40px;
         gap: 40px;
         align-items: center;
+        margin-bottom: -30px;
 
         .status-filter{
             display: grid;
@@ -69,9 +70,7 @@
                     font-size: 1rem;
                 }
             }
-        }
-            
-        
+        }   
     }
 
     .main-container{
@@ -95,14 +94,10 @@
                     font-family: 'Poppins';
                     font-size: 1.1rem;
                     letter-spacing: 2px;
-                    // color: #152b51ff;
-                    color: white;
                     font-weight: 500;
+                    color: #152b51;
                     padding-right: 20px;
-                    // border-bottom: 3px solid #152b51;
-                    background-color:#152b51;
-                    padding: 2px 5px;
-                    border-radius: 5px;
+                    border-bottom: 1px solid #152b51;
                 }
 
                 .btn{
@@ -161,7 +156,7 @@
 
             .month-box-all{
                 display: grid;
-                grid-template-columns: 1fr 1fr 1fr;
+                grid-template-columns: 1fr 1fr 1fr 1fr;
                 gap: 10px;
 
                 .month-box{

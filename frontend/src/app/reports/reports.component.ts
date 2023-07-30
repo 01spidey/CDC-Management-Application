@@ -1,16 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { AppService } from '../service/app.service';
 import { FormBuilder } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
 import { deptWiseReportData } from '../models/model';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-reports',
   templateUrl: './reports.component.html',
   styleUrls: ['./reports.component.scss']
 })
-export class ReportsComponent implements OnInit {
+export class ReportsComponent implements OnInit, AfterViewInit {
   section = 1
 
   role = sessionStorage.getItem('user_role')!
@@ -22,6 +24,8 @@ export class ReportsComponent implements OnInit {
   sel_month:string = 'All'
 
   months:string[] = ['All', 'Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
+
+  month_lst = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct','Nov','Dec']
 
   DeptWiseReportData : deptWiseReportData[] = [ ]
   
@@ -44,6 +48,15 @@ export class ReportsComponent implements OnInit {
     total_percent: 0
   }
 
+  visited_companies:MatTableDataSource<any> = new MatTableDataSource<any>([
+    1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
+    11,12,13,14,15,16,17,18,19,20,
+    21,22,23,24,25,26,27,28,29,30
+  ]);
+  
+  displayedColumns: string[] = ['column1', 'column2', 'column3']; // Add your table column names here
+  pageSize = 5;
+  pageSizeOptions: number[] = [5, 10, 25, 50];
 
   constructor(
     private service : AppService,
@@ -52,12 +65,20 @@ export class ReportsComponent implements OnInit {
     private toastr:ToastrService
   ) { }
 
+  @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
+
   ngOnInit(): void {
     this.cur_year= new Date().getFullYear();
     for(let i=this.cur_year-10; i<=this.cur_year+5; i++) this.batch_lst.push(i);
     this.batch = this.cur_year+1;
 
     this.getDeptWiseReportData()
+  }
+
+  ngAfterViewInit(): void {
+
+    // this.visited_companies = new MatTableDataSource(data);
+    this.visited_companies.paginator = this.paginator;
   }
 
 
@@ -114,7 +135,8 @@ export class ReportsComponent implements OnInit {
   }
 
   getDeptWiseReportData(){
-    this.service.getDeptWiseReportData(this.batch, this.sel_month).subscribe(
+    let user_id = this.role==='Director'?'Director':(this.userData.staff_id!)
+    this.service.getDeptWiseReportData(this.batch, this.sel_month, user_id).subscribe(
       (res:{
         success:boolean,
         data:deptWiseReportData[]

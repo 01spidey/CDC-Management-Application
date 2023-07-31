@@ -1,9 +1,7 @@
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { AppService } from '../service/app.service';
-import { FormBuilder } from '@angular/forms';
-import { DatePipe } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
-import { deptWiseReportData } from '../models/model';
+import { deptWiseReportData, getVisitedCompaniesData, visitedCompany } from '../models/model';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 
@@ -48,27 +46,82 @@ export class ReportsComponent implements OnInit, AfterViewInit {
     total_percent: 0
   }
 
-  VISITED_COMPANIES:MatTableDataSource<any> = new MatTableDataSource<any>([
-    1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
-    11,12,13,14,15,16,17,18,19,20,
-    21,22,23,24,25,26,27,28,29,30
-  ]);
+  VISITED_COMPANIES!:MatTableDataSource<visitedCompany>;
 
-  displayedColumns: string[] = ['s.no', 'company', 'category', 'ctc', 'drive date', 'dept', 'total offers']; // Add your table column names here
+  displayedColumns: string[] = ['s.no', 'company', 'category', 'mode', 'ctc', 'drive date', 'ai-ds', 'cse', 'ece', 'eee', 'bme', 'chem', 'civil', 'mech', 'total offers']; // Add your table column names here
   pageSizeOptions: number[] = [5, 10, 15];
 
   constructor(
     private service : AppService,
-    private builder : FormBuilder,
-    private datePipe : DatePipe,
     private toastr:ToastrService
   ) { }
 
-  @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
+  @ViewChild(MatPaginator) paginator!: MatPaginator
 
+  visitedCompanies:visitedCompany[] = [
+    {
+      pos: 1,
+      company: 'AutoDesk',
+      category: 'IT-Product',
+      ctc: 20,
+      mode : 'Online',
+      drive_date: '20-06-2023',
+      dept: {
+        ai_ds: '10',
+        cse: '10',
+        ece: '10',
+        eee: '5',
+        bme: 'NE',
+        chem: 'NE',
+        civil: 'NE',
+        mech: 'NE'
+      },
+      total_offers: 35
+    },
+
+    {
+      pos: 2,
+      company: 'Hexaware',
+      category: 'IT-Service',
+      ctc: 10,
+      mode : 'Online',
+      drive_date: '20-06-2023',
+      dept: {
+        ai_ds: '10',
+        cse: '10',
+        ece: '10',
+        eee: '5',
+        bme: 'NE',
+        chem: 'NE',
+        civil: 'NE',
+        mech: 'NE'
+      },
+      total_offers: 35
+    },
+
+    {
+      pos: 3,
+      company: 'TCS',
+      category: 'IT-Service',
+      ctc: 8,
+      mode : 'Offline',
+      drive_date: '20-06-2023',
+      dept: {
+        ai_ds: '10',
+        cse: '10',
+        ece: '10',
+        eee: '5',
+        bme: 'NE',
+        chem: 'NE',
+        civil: 'NE',
+        mech: 'NE'
+      },
+      total_offers: 35
+    }
+  ]
   
   ngOnInit(): void {
-    // this.initTable()
+    this.initTable()
     this.cur_year= new Date().getFullYear();
     for(let i=this.cur_year-10; i<=this.cur_year+5; i++) this.batch_lst.push(i);
     this.batch = this.cur_year+1;
@@ -82,20 +135,22 @@ export class ReportsComponent implements OnInit, AfterViewInit {
       11,12,13,14,15,16,17,18,19,20,
       21,22,23,24,25,26,27,28,29,30
     ]
-    this.VISITED_COMPANIES = new MatTableDataSource(data);
+    this.getVisitedCompanies()
   }
 
   ngAfterViewInit(): void {
-    this.VISITED_COMPANIES.paginator = this.paginator;
-
-    // this.visited_companies = new MatTableDataSource(data);
-    // this.visited_companies.paginator = this.paginator;
+    
   }
 
 
   onBatchChange(selectedBatch:string){
     this.batch = parseInt(selectedBatch)
     this.getDeptWiseReportData()
+  }
+
+  applyFilter(event:Event){
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.VISITED_COMPANIES.filter = filterValue.trim().toLowerCase();
   }
 
   onMonthChange(selectedMonth:string){
@@ -145,6 +200,19 @@ export class ReportsComponent implements OnInit, AfterViewInit {
 
   }
 
+  getVisitedCompanies(){
+    this.service.getVisitedCompanies(this.batch).subscribe(
+      (res:getVisitedCompaniesData)=>{
+        console.log(res)
+        this.VISITED_COMPANIES = new MatTableDataSource(res.visited_companies);
+        this.VISITED_COMPANIES.paginator = this.paginator;
+      },
+      (err:any)=>{
+        this.toastr.error('Something went wrong!')
+      }
+    )
+  }
+
   getDeptWiseReportData(){
     let user_id = this.role==='Director'?'Director':(this.userData.staff_id!)
     this.service.getDeptWiseReportData(this.batch, this.sel_month, user_id).subscribe(
@@ -158,6 +226,7 @@ export class ReportsComponent implements OnInit, AfterViewInit {
 
         this.DeptWiseReportData = temp
         this.getTotalDeptWiseReportData(this.DeptWiseReportData)
+        
       },
       (err:any)=>{
         this.toastr.error('Something went wrong!')

@@ -1,4 +1,3 @@
-import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
@@ -7,6 +6,7 @@ import { Router } from '@angular/router';
   templateUrl: './officer-dashboard.component.html',
   styleUrls: ['./officer-dashboard.component.scss']
 })
+
 export class OfficerDashboardComponent implements OnInit {
   cur_option = 'reports'
   userData = JSON.parse(sessionStorage.getItem('cur_user_data')!);
@@ -15,7 +15,6 @@ export class OfficerDashboardComponent implements OnInit {
 
   constructor( 
     private router: Router,
-    private location : Location
   ){ }
 
   ngOnInit(): void {

@@ -367,3 +367,28 @@ export interface deptWiseReportData{
     },
     total_percent : number,
 }
+
+export interface visitedCompany{
+    pos : number,
+    company : string,
+    category : string,
+    ctc : number,
+    drive_date : string,
+    mode : string,
+    dept : {
+        ai_ds : string,
+        cse : string,
+        ece : string,
+        eee : string,
+        bme : string,
+        chem : string,
+        civil : string,
+        mech : string,
+    },
+    total_offers : number
+}
+
+export interface getVisitedCompaniesData{
+    success : boolean,
+    visited_companies : visitedCompany[]
+}

@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http'
-import { companyByIdResponse, deptWiseReportData, driveByIdResponse, driveByStatusResponse, filterOptions, getChartsDataResponse, getCompaniesResponse, getCompanyStatsResponse, getMembersResponse, getReportsByCompanyResponse, getReportsResponse, getUserStatsResponse, loadMembersResponse, loginResponse, notificationResponse, openMemberResponse, placementStats, placementStatsResponse, reportByIdResponse, reportSummaryResponse, sendOTPResponse, serverResponse, studentTableFilterOptions, studentTableFilterResponse, user, userByIdResponse } from '../models/model';
+import { companyByIdResponse, deptWiseReportData, driveByIdResponse, driveByStatusResponse, filterOptions, getChartsDataResponse, getCompaniesResponse, getCompanyStatsResponse, getMembersResponse, getReportsByCompanyResponse, getReportsResponse, getUserStatsResponse, getVisitedCompaniesData, loadMembersResponse, loginResponse, notificationResponse, openMemberResponse, placementStats, placementStatsResponse, reportByIdResponse, reportSummaryResponse, sendOTPResponse, serverResponse, studentTableFilterOptions, studentTableFilterResponse, user, userByIdResponse } from '../models/model';
 import { Router } from '@angular/router';
 import { categoryStats } from '../dashboard/dashboard.component';
 
@@ -17,6 +17,7 @@ export class AppService {
     private router:Router) {
 
   }
+  
 
   getCookie(name:string) {
     const value = `; ${document.cookie}`;
@@ -245,6 +246,10 @@ export class AppService {
       success: boolean,
       data: deptWiseReportData[]
     }>(`${this.URL}/get_dept_wise_report_data`, { params: { batch: batch, sel_month: sel_month, user_id:user_id } })
+  }
+
+  getVisitedCompanies(data:any){
+    return this.http.get<getVisitedCompaniesData>(`${this.URL}/get_visited_companies`, {params : data})
   }
 
 

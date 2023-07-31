@@ -2266,3 +2266,78 @@ def get_dept_data(dept, batch, month, pos, followed_companies):
     
     return dept_data
 
+
+@csrf_exempt
+def get_visited_companies(request):
+    
+    visited_companies =[]
+    
+    try:
+        all_drives = Drive.objects.all().order_by('date')
+        
+        
+        a = 1
+        for drive in all_drives:
+            drive_obj = {
+                'pos' : a,
+                'company' : '',
+                'category' : '',
+                'ctc' : '',
+                'drive_date' : '',
+                'mode' : '',
+                'dept' : {
+                    'ai_ds' : '',
+                    'cse' : '',
+                    'ece' : '',
+                    'eee' : '',
+                    'bme' : '',
+                    'chem' : '',
+                    'civil' : '',
+                    'mech' : '',
+                },
+                'total_offers' : 0
+            }   
+            
+            # Need to calculate total offers of Individual Departments 
+            
+            drive_obj['company'] = drive.company
+            company = Company.objects.get(company=drive.company)
+            drive_obj['category'] = company.category
+            drive_obj['ctc'] = drive.ctc
+            drive_obj['drive_date'] = drive.date
+            drive_obj['mode'] = drive.drive_mode
+            drive_obj['dept']['ai_ds'] = DriveSelection.objects.filter(drive=drive, student__dept='AI-DS', selected = True).count()
+            drive_obj['dept']['cse'] = DriveSelection.objects.filter(drive=drive, student__dept='CSE', selected = True).count()
+            drive_obj['dept']['ece'] = DriveSelection.objects.filter(drive=drive, student__dept='ECE', selected = True).count()
+            drive_obj['dept']['eee'] = DriveSelection.objects.filter(drive=drive, student__dept='EEE', selected = True).count()
+            drive_obj['dept']['bme'] = DriveSelection.objects.filter(drive=drive, student__dept='BME', selected = True).count()
+            drive_obj['dept']['chem'] = DriveSelection.objects.filter(drive=drive, student__dept='CHEM', selected = True).count()
+            drive_obj['dept']['civil'] = DriveSelection.objects.filter(drive=drive, student__dept='CIVIL', selected = True).count()
+            drive_obj['dept']['mech'] = DriveSelection.objects.filter(drive=drive, student__dept='MECH', selected = True).count()
+            
+            drive_obj['total_offers'] = drive_obj['dept']['ai_ds'] + drive_obj['dept']['cse'] + drive_obj['dept']['ece'] + drive_obj['dept']['eee'] + drive_obj['dept']['bme'] + drive_obj['dept']['chem'] + drive_obj['dept']['civil'] + drive_obj['dept']['mech']
+            
+            print(drive.company)
+            print(f'AI-DS : {drive_obj["dept"]["ai_ds"]}\nCSE : {drive_obj["dept"]["cse"]}\nECE : {drive_obj["dept"]["ece"]}\nEEE : {drive_obj["dept"]["eee"]}\nBME : {drive_obj["dept"]["bme"]}\nCHEM : {drive_obj["dept"]["chem"]}\nCIVIL : {drive_obj["dept"]["civil"]}\nMECH : {drive_obj["dept"]["mech"]}\n\n')
+            a+=1
+            
+            visited_companies.append(drive_obj)
+        
+        # pos : number,
+        # company : string,
+        
+        
+        data = {
+            'success' : True,
+            'visited_companies' : visited_companies
+        }
+        
+        return JsonResponse(data)
+    
+    except Exception as e:
+        print(e)
+        data = {
+            'success' : False,
+            'visited_companies' : visited_companies
+        }
+        return JsonResponse(data)

@@ -49,7 +49,7 @@ export class ReportsComponent implements OnInit, AfterViewInit {
   VISITED_COMPANIES!:MatTableDataSource<visitedCompany>;
 
   displayedColumns: string[] = ['s.no', 'company', 'category', 'mode', 'ctc', 'drive date', 'ai-ds', 'cse', 'ece', 'eee', 'bme', 'chem', 'civil', 'mech', 'total offers']; // Add your table column names here
-  pageSizeOptions: number[] = [5, 10, 15];
+  pageSizeOptions: number[] = [3, 5, 10, 15];
 
   constructor(
     private service : AppService,
@@ -58,74 +58,24 @@ export class ReportsComponent implements OnInit, AfterViewInit {
 
   @ViewChild(MatPaginator) paginator!: MatPaginator
 
-  visitedCompanies:visitedCompany[] = [
-    {
-      pos: 1,
-      company: 'AutoDesk',
-      category: 'IT-Product',
-      ctc: 20,
-      mode : 'Online',
-      drive_date: '20-06-2023',
-      dept: {
-        ai_ds: '10',
-        cse: '10',
-        ece: '10',
-        eee: '5',
-        bme: 'NE',
-        chem: 'NE',
-        civil: 'NE',
-        mech: 'NE'
-      },
-      total_offers: 35
-    },
-
-    {
-      pos: 2,
-      company: 'Hexaware',
-      category: 'IT-Service',
-      ctc: 10,
-      mode : 'Online',
-      drive_date: '20-06-2023',
-      dept: {
-        ai_ds: '10',
-        cse: '10',
-        ece: '10',
-        eee: '5',
-        bme: 'NE',
-        chem: 'NE',
-        civil: 'NE',
-        mech: 'NE'
-      },
-      total_offers: 35
-    },
-
-    {
-      pos: 3,
-      company: 'TCS',
-      category: 'IT-Service',
-      ctc: 8,
-      mode : 'Offline',
-      drive_date: '20-06-2023',
-      dept: {
-        ai_ds: '10',
-        cse: '10',
-        ece: '10',
-        eee: '5',
-        bme: 'NE',
-        chem: 'NE',
-        civil: 'NE',
-        mech: 'NE'
-      },
-      total_offers: 35
-    }
-  ]
+  visitedCompanies:visitedCompany[] = []
+  totalOfferData!:{
+    ai_ds : number,
+    cse : number,
+    ece : number,
+    eee : number,
+    bme : number,
+    chem : number,
+    civil : number,
+    mech : number,
+    total : number
+  };
   
   ngOnInit(): void {
-    this.initTable()
     this.cur_year= new Date().getFullYear();
     for(let i=this.cur_year-10; i<=this.cur_year+5; i++) this.batch_lst.push(i);
     this.batch = this.cur_year+1;
-
+    this.initTable()
     this.getDeptWiseReportData()
   }
 
@@ -201,9 +151,11 @@ export class ReportsComponent implements OnInit, AfterViewInit {
   }
 
   getVisitedCompanies(){
-    this.service.getVisitedCompanies(this.batch).subscribe(
+    let user_id = this.role==='Director'?'Director':(this.userData.staff_id!)
+    this.service.getVisitedCompanies(this.batch, user_id).subscribe(
       (res:getVisitedCompaniesData)=>{
         console.log(res)
+        this.totalOfferData = res.total
         this.VISITED_COMPANIES = new MatTableDataSource(res.visited_companies);
         this.VISITED_COMPANIES.paginator = this.paginator;
       },
@@ -214,6 +166,7 @@ export class ReportsComponent implements OnInit, AfterViewInit {
   }
 
   getDeptWiseReportData(){
+
     let user_id = this.role==='Director'?'Director':(this.userData.staff_id!)
     this.service.getDeptWiseReportData(this.batch, this.sel_month, user_id).subscribe(
       (res:{

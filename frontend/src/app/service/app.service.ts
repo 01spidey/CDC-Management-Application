@@ -248,8 +248,11 @@ export class AppService {
     }>(`${this.URL}/get_dept_wise_report_data`, { params: { batch: batch, sel_month: sel_month, user_id:user_id } })
   }
 
-  getVisitedCompanies(data:any){
-    return this.http.get<getVisitedCompaniesData>(`${this.URL}/get_visited_companies`, {params : data})
+  getVisitedCompanies(batch:number, user_id:string){
+    return this.http.get<getVisitedCompaniesData>(`${this.URL}/get_visited_companies`, {params : {
+      batch : batch,
+      user_id : user_id
+    }})
   }
 
 

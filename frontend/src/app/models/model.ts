@@ -390,5 +390,16 @@ export interface visitedCompany{
 
 export interface getVisitedCompaniesData{
     success : boolean,
-    visited_companies : visitedCompany[]
+    visited_companies : visitedCompany[],
+    total : {
+        ai_ds : number,
+        cse : number,
+        ece : number,
+        eee : number,
+        bme : number,
+        chem : number,
+        civil : number,
+        mech : number,
+        total : number
+    }
 }

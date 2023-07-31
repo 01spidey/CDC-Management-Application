@@ -2270,14 +2270,39 @@ def get_dept_data(dept, batch, month, pos, followed_companies):
 @csrf_exempt
 def get_visited_companies(request):
     
+    batch = request.GET.get('batch')
+    user_id = request.GET.get('user_id')
+    
+    print(f'Batch : {batch}\nUser ID : {user_id}')
+    
     visited_companies =[]
     
+    total = {
+        'ai_ds' : 0,
+        'cse' : 0,
+        'ece' : 0,
+        'eee' : 0,
+        'bme' : 0,
+        'chem' : 0,
+        'civil' : 0,
+        'mech' : 0,
+        'total' : 0
+    }
+    
     try:
-        all_drives = Drive.objects.all().order_by('date')
+        if(user_id=='Director'):
+            followed_companies = Company.objects.all().values_list('company', flat=True)
+        else:
+            followed_companies = Company.objects.filter(placement_officer_id=user_id).values_list('company', flat=True)
         
+        all_drives = Drive.objects.filter(company__in = followed_companies).order_by('date')
         
         a = 1
         for drive in all_drives:
+            student_obj = Student.objects.filter(drive = drive).first()
+            cur_batch = student_obj.batch
+            
+            
             drive_obj = {
                 'pos' : a,
                 'company' : '',
@@ -2298,38 +2323,48 @@ def get_visited_companies(request):
                 'total_offers' : 0
             }   
             
-            # Need to calculate total offers of Individual Departments 
+            print(cur_batch, batch)
             
-            drive_obj['company'] = drive.company
-            company = Company.objects.get(company=drive.company)
-            drive_obj['category'] = company.category
-            drive_obj['ctc'] = drive.ctc
-            drive_obj['drive_date'] = drive.date
-            drive_obj['mode'] = drive.drive_mode
-            drive_obj['dept']['ai_ds'] = DriveSelection.objects.filter(drive=drive, student__dept='AI-DS', selected = True).count()
-            drive_obj['dept']['cse'] = DriveSelection.objects.filter(drive=drive, student__dept='CSE', selected = True).count()
-            drive_obj['dept']['ece'] = DriveSelection.objects.filter(drive=drive, student__dept='ECE', selected = True).count()
-            drive_obj['dept']['eee'] = DriveSelection.objects.filter(drive=drive, student__dept='EEE', selected = True).count()
-            drive_obj['dept']['bme'] = DriveSelection.objects.filter(drive=drive, student__dept='BME', selected = True).count()
-            drive_obj['dept']['chem'] = DriveSelection.objects.filter(drive=drive, student__dept='CHEM', selected = True).count()
-            drive_obj['dept']['civil'] = DriveSelection.objects.filter(drive=drive, student__dept='CIVIL', selected = True).count()
-            drive_obj['dept']['mech'] = DriveSelection.objects.filter(drive=drive, student__dept='MECH', selected = True).count()
+            if(cur_batch==batch):
+                
+                drive_obj['company'] = drive.company
+                company = Company.objects.get(company=drive.company)
+                drive_obj['category'] = company.category
+                drive_obj['ctc'] = drive.ctc
+                drive_obj['drive_date'] = drive.date
+                drive_obj['mode'] = drive.drive_mode
+                drive_obj['dept']['ai_ds'] = DriveSelection.objects.filter(drive=drive, student__dept='AI-DS', selected = True).count()
+                drive_obj['dept']['cse'] = DriveSelection.objects.filter(drive=drive, student__dept='CSE', selected = True).count()
+                drive_obj['dept']['ece'] = DriveSelection.objects.filter(drive=drive, student__dept='ECE', selected = True).count()
+                drive_obj['dept']['eee'] = DriveSelection.objects.filter(drive=drive, student__dept='EEE', selected = True).count()
+                drive_obj['dept']['bme'] = DriveSelection.objects.filter(drive=drive, student__dept='BME', selected = True).count()
+                drive_obj['dept']['chem'] = DriveSelection.objects.filter(drive=drive, student__dept='CHEM', selected = True).count()
+                drive_obj['dept']['civil'] = DriveSelection.objects.filter(drive=drive, student__dept='CIVIL', selected = True).count()
+                drive_obj['dept']['mech'] = DriveSelection.objects.filter(drive=drive, student__dept='MECH', selected = True).count()
+                
+                drive_obj['total_offers'] = drive_obj['dept']['ai_ds'] + drive_obj['dept']['cse'] + drive_obj['dept']['ece'] + drive_obj['dept']['eee'] + drive_obj['dept']['bme'] + drive_obj['dept']['chem'] + drive_obj['dept']['civil'] + drive_obj['dept']['mech']
+                
+                total['ai_ds'] += drive_obj['dept']['ai_ds']
+                total['cse'] += drive_obj['dept']['cse']
+                total['ece'] += drive_obj['dept']['ece']
+                total['eee'] += drive_obj['dept']['eee']
+                total['bme'] += drive_obj['dept']['bme']
+                total['chem'] += drive_obj['dept']['chem']
+                total['civil'] += drive_obj['dept']['civil']
+                total['mech'] += drive_obj['dept']['mech']
+                total['total'] += drive_obj['total_offers']
+                
+                # print(f'Company : {drive.company}')
+                # print(f'Batch : {batch}')
+                # print(f'AI-DS : {drive_obj["dept"]["ai_ds"]}\nCSE : {drive_obj["dept"]["cse"]}\nECE : {drive_obj["dept"]["ece"]}\nEEE : {drive_obj["dept"]["eee"]}\nBME : {drive_obj["dept"]["bme"]}\nCHEM : {drive_obj["dept"]["chem"]}\nCIVIL : {drive_obj["dept"]["civil"]}\nMECH : {drive_obj["dept"]["mech"]}\n\n')
+                a+=1
+                
+                visited_companies.append(drive_obj)
             
-            drive_obj['total_offers'] = drive_obj['dept']['ai_ds'] + drive_obj['dept']['cse'] + drive_obj['dept']['ece'] + drive_obj['dept']['eee'] + drive_obj['dept']['bme'] + drive_obj['dept']['chem'] + drive_obj['dept']['civil'] + drive_obj['dept']['mech']
-            
-            print(drive.company)
-            print(f'AI-DS : {drive_obj["dept"]["ai_ds"]}\nCSE : {drive_obj["dept"]["cse"]}\nECE : {drive_obj["dept"]["ece"]}\nEEE : {drive_obj["dept"]["eee"]}\nBME : {drive_obj["dept"]["bme"]}\nCHEM : {drive_obj["dept"]["chem"]}\nCIVIL : {drive_obj["dept"]["civil"]}\nMECH : {drive_obj["dept"]["mech"]}\n\n')
-            a+=1
-            
-            visited_companies.append(drive_obj)
-        
-        # pos : number,
-        # company : string,
-        
-        
         data = {
             'success' : True,
-            'visited_companies' : visited_companies
+            'visited_companies' : visited_companies,
+            'total' : total
         }
         
         return JsonResponse(data)

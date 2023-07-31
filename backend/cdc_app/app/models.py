@@ -111,7 +111,7 @@ class Drive(models.Model):
     drive_rounds = ArrayField(models.JSONField(null=True), default=list)
     offer_type = models.CharField(max_length=50, default='Job')
     completed = models.BooleanField(default=False)
-
+    
     class Meta:
         ordering = ['-date']
     

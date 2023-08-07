@@ -34,4 +34,6 @@ export class DirectorDashboardComponent implements OnInit{
     this.cur_option = option
   }
 
+  
+
 }

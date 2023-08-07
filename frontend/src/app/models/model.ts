@@ -355,15 +355,15 @@ export interface deptWiseReportData{
     placed : number,
     remaining : number,
     ctc : {
-        gt20 : number,
-        gt15 : number,
-        gt10 : number,
-        gt8 : number,
-        gt7 : number,
-        gt6 : number,
-        gt5 : number,
-        gt4 : number,
-        lt4 : number
+        gt20 : string[],
+        gt15 : string[],
+        gt10 : string[],
+        gt8 : string[],
+        gt7 : string[],
+        gt6 : string[],
+        gt5 : string[],
+        gt4 : string[],
+        lt4 : string[]
     },
     total_percent : number,
 }
@@ -402,4 +402,11 @@ export interface getVisitedCompaniesData{
         mech : number,
         total : number
     }
+}
+
+export interface studentData{
+    name : string,
+    reg_no : string,
+    dept : string,
+    batch : string
 }

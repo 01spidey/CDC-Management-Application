@@ -2179,7 +2179,7 @@ def get_dept_wise_report_data(request):
     month = request.GET.get('sel_month')
     user_id = request.GET.get('user_id')
     
-    print(f'Batch : {batch}\nMonth : {month}\nUser ID : {user_id}')
+    # print(f'Batch : {batch}\nMonth : {month}\nUser ID : {user_id}')
     
     dept_wise_report_data = []
     months = {
@@ -2191,7 +2191,7 @@ def get_dept_wise_report_data(request):
     else:
         followed_companies = Company.objects.filter(placement_officer_id=user_id).values_list('company', flat=True)
     
-    print(followed_companies)
+    # print(followed_companies)
     
     dept_wise_report_data+=(
         [
@@ -2217,6 +2217,7 @@ def get_dept_wise_report_data(request):
 
 def get_dept_data(dept, batch, month, pos, followed_companies):
         
+        
     dept_data = {
         'pos' : 0,
         'dept' : '',
@@ -2225,15 +2226,15 @@ def get_dept_data(dept, batch, month, pos, followed_companies):
         'placed' : 0,
         'remaining' : 0,
         'ctc' : {
-            'gt20' : 0,
-            'gt15' : 0,
-            'gt10' : 0,
-            'gt8' : 0,
-            'gt7' : 0,
-            'gt6' : 0,
-            'gt5' : 0,
-            'gt4' : 0,
-            'lt4' : 0
+            'gt20' : [],
+            'gt15' : [],
+            'gt10' : [],
+            'gt8' : [],
+            'gt7' : [],
+            'gt6' : [],
+            'gt5' : [],
+            'gt4' : [],
+            'lt4' : []
         },
         'total_percent' : 0
     }
@@ -2242,19 +2243,31 @@ def get_dept_data(dept, batch, month, pos, followed_companies):
     placement_interest = all_students.filter(placement_interested=True)
     
     student_ids = placement_interest.values_list('reg_no', flat=True)
-    
+
+    # print(f'Dept : {dept}\nStudent IDs : {student_ids}')
+
     placed_students = DriveSelection.objects.filter(student__reg_no__in=student_ids, selected=True, drive__company__in = followed_companies).distinct('student_id')
+    # print(f'Dept : {dept}\nPlaced Students : {len(placed_students)}')
     
-    dept_data['ctc']['gt20'] = placed_students.filter(drive__ctc__gte=20).count()
-    dept_data['ctc']['gt15'] = placed_students.filter(drive__ctc__gte=15).count()
-    dept_data['ctc']['gt10'] = placed_students.filter(drive__ctc__gte=10).count()
-    dept_data['ctc']['gt8'] = placed_students.filter(drive__ctc__gte=8).count()
-    dept_data['ctc']['gt7'] = placed_students.filter(drive__ctc__gte=7).count()
-    dept_data['ctc']['gt6'] = placed_students.filter(drive__ctc__gte=6).count()
-    dept_data['ctc']['gt5'] = placed_students.filter(drive__ctc__gte=5).count()
-    dept_data['ctc']['gt4'] = placed_students.filter(drive__ctc__gte=4).count()
-    dept_data['ctc']['lt4'] = placed_students.filter(drive__ctc__lt=4).count()
+    dept_data['ctc']['gt20'] = list(placed_students.filter(drive__ctc__gte=20).values_list('student_id', flat=True))
+   
+    dept_data['ctc']['gt15'] = list(placed_students.filter(drive__ctc__range=(15, 20)).values_list('student_id', flat=True))
+   
+    dept_data['ctc']['gt10'] = list(placed_students.filter(drive__ctc__range=(10, 15)).values_list('student_id', flat=True))
+   
+    dept_data['ctc']['gt8'] = list(placed_students.filter(drive__ctc__range=(8, 10)).values_list('student_id', flat=True))
+   
+    dept_data['ctc']['gt7'] = list(placed_students.filter(drive__ctc__range=(7, 8)).values_list('student_id', flat=True))
+   
+    dept_data['ctc']['gt6'] = list(placed_students.filter(drive__ctc__range=(6, 7)).values_list('student_id', flat=True))
+   
+    dept_data['ctc']['gt5'] = list(placed_students.filter(drive__ctc__range=(5, 6)).values_list('student_id', flat=True))
+   
+    dept_data['ctc']['gt4'] = list(placed_students.filter(drive__ctc__range=(4, 5)).values_list('student_id', flat=True))
+   
+    dept_data['ctc']['lt4'] = list(placed_students.filter(drive__ctc__lt=4).values_list('student_id', flat=True))
     
+    print(f'Dept : {dept}\nCTC : {dept_data["ctc"]}')
         
     dept_data['pos'] = pos
     dept_data['dept'] = dept
@@ -2266,6 +2279,40 @@ def get_dept_data(dept, batch, month, pos, followed_companies):
     
     return dept_data
 
+@csrf_exempt
+def get_student_data(request):
+    postData = json.loads(request.body)
+    
+    student_data = postData['data']
+    student_objs = []
+    try:
+        print(student_data)
+        student_objs_all = Student.objects.filter(reg_no__in=student_data)
+        
+        for student in student_objs_all:
+            student_objs.append({
+                'name' : student.name,
+                'reg_no' : student.reg_no,
+                'dept' : student.dept,
+                'batch' : f'{int(student.batch)-4}-{student.batch}'
+            })
+        print(student_objs)
+        
+        data = {
+            'success' : True,
+            'data' : student_objs
+        }
+        
+        return JsonResponse(data)
+        
+    except Exception as e:
+        print(e)
+        data = {
+            'success' : False,
+            'data' : []
+        }
+        
+        return JsonResponse(data)
 
 @csrf_exempt
 def get_visited_companies(request):
@@ -2273,7 +2320,7 @@ def get_visited_companies(request):
     batch = request.GET.get('batch')
     user_id = request.GET.get('user_id')
     
-    print(f'Batch : {batch}\nUser ID : {user_id}')
+    # print(f'Batch : {batch}\nUser ID : {user_id}')
     
     visited_companies =[]
     
@@ -2323,7 +2370,7 @@ def get_visited_companies(request):
                 'total_offers' : 0
             }   
             
-            print(cur_batch, batch)
+            # print(cur_batch, batch)
             
             if(cur_batch==batch):
                 

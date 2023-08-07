@@ -1,0 +1,30 @@
+<div class="main">
+    <div class="top">
+        <p class="title">Student Data</p>
+        <span class="material-icons" id="cancel" (click)="close()">cancel</span>
+    </div>
+
+    <div class="body">
+        <div class="grid">
+            <div class="card-item" *ngFor="let item of student_objs">
+                <div class="card-top">
+                    <p class="card-title">{{item.name}}</p>
+                    <p class="card-side">{{item.reg_no}}</p>
+                </div>
+                <div class="card-body">
+                    <div class="field">
+                        <span class="material-icons">domain</span>
+                        <p class="field-title">Dept : </p>
+                        <p class="field-value">{{item.dept}}</p>
+                    </div>
+                    <div class="field">
+                        <span class="material-icons">school</span>
+                        <p class="field-title">Batch : </p>
+                        <p class="field-value">{{item.batch}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+</div>

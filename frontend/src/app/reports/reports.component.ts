@@ -13,6 +13,8 @@ import { MatPaginator } from '@angular/material/paginator';
 export class ReportsComponent implements OnInit, AfterViewInit {
   section = 1
 
+  student_table = false
+
   role = sessionStorage.getItem('user_role')!
   userData = JSON.parse(sessionStorage.getItem('cur_user_data')!);
 
@@ -46,6 +48,8 @@ export class ReportsComponent implements OnInit, AfterViewInit {
     total_percent: 0
   }
 
+  studentData:any = []
+
   VISITED_COMPANIES!:MatTableDataSource<visitedCompany>;
 
   displayedColumns: string[] = ['s.no', 'company', 'category', 'mode', 'ctc', 'drive date', 'ai-ds', 'cse', 'ece', 'eee', 'bme', 'chem', 'civil', 'mech', 'total offers']; // Add your table column names here
@@ -59,7 +63,8 @@ export class ReportsComponent implements OnInit, AfterViewInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator
 
   visitedCompanies:visitedCompany[] = []
-  totalOfferData!:{
+
+  totalOfferData:{
     ai_ds : number,
     cse : number,
     ece : number,
@@ -69,7 +74,17 @@ export class ReportsComponent implements OnInit, AfterViewInit {
     civil : number,
     mech : number,
     total : number
-  };
+  } = {
+    ai_ds: 0,
+    cse: 0,
+    ece: 0,
+    eee: 0,
+    bme: 0,
+    chem: 0,
+    civil: 0,
+    mech: 0,
+    total: 0
+  }
   
   ngOnInit(): void {
     this.cur_year= new Date().getFullYear();
@@ -136,15 +151,15 @@ export class ReportsComponent implements OnInit, AfterViewInit {
       this.deptWiseReportDataTotal.interested += dept.interested
       this.deptWiseReportDataTotal.placed += dept.placed
       this.deptWiseReportDataTotal.remaining += dept.remaining
-      this.deptWiseReportDataTotal.ctc.gt20 += dept.ctc.gt20
-      this.deptWiseReportDataTotal.ctc.gt15 += dept.ctc.gt15
-      this.deptWiseReportDataTotal.ctc.gt10 += dept.ctc.gt10
-      this.deptWiseReportDataTotal.ctc.gt8 += dept.ctc.gt8
-      this.deptWiseReportDataTotal.ctc.gt7 += dept.ctc.gt7
-      this.deptWiseReportDataTotal.ctc.gt6 += dept.ctc.gt6
-      this.deptWiseReportDataTotal.ctc.gt5 += dept.ctc.gt5
-      this.deptWiseReportDataTotal.ctc.gt4 += dept.ctc.gt4
-      this.deptWiseReportDataTotal.ctc.lt4 += dept.ctc.lt4
+      this.deptWiseReportDataTotal.ctc.gt20 += (dept.ctc.gt20).length
+      this.deptWiseReportDataTotal.ctc.gt15 += dept.ctc.gt15.length
+      this.deptWiseReportDataTotal.ctc.gt10 += dept.ctc.gt10.length
+      this.deptWiseReportDataTotal.ctc.gt8 += dept.ctc.gt8.length
+      this.deptWiseReportDataTotal.ctc.gt7 += dept.ctc.gt7.length
+      this.deptWiseReportDataTotal.ctc.gt6 += dept.ctc.gt6.length
+      this.deptWiseReportDataTotal.ctc.gt5 += dept.ctc.gt5.length
+      this.deptWiseReportDataTotal.ctc.gt4 += dept.ctc.gt4.length
+      this.deptWiseReportDataTotal.ctc.lt4 += dept.ctc.lt4.length
       this.deptWiseReportDataTotal.total_percent += dept.total_percent
     })
 
@@ -185,6 +200,15 @@ export class ReportsComponent implements OnInit, AfterViewInit {
         this.toastr.error('Something went wrong!')
       }
     )
+  }
+
+  openTable(student_lst:string[]){
+    this.student_table = true
+    this.studentData = student_lst
+  }
+
+  closeTable(flag:any){
+    this.student_table = flag
   }
 
 

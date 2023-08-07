@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http'
-import { companyByIdResponse, deptWiseReportData, driveByIdResponse, driveByStatusResponse, filterOptions, getChartsDataResponse, getCompaniesResponse, getCompanyStatsResponse, getMembersResponse, getReportsByCompanyResponse, getReportsResponse, getUserStatsResponse, getVisitedCompaniesData, loadMembersResponse, loginResponse, notificationResponse, openMemberResponse, placementStats, placementStatsResponse, reportByIdResponse, reportSummaryResponse, sendOTPResponse, serverResponse, studentTableFilterOptions, studentTableFilterResponse, user, userByIdResponse } from '../models/model';
+import { companyByIdResponse, deptWiseReportData, driveByIdResponse, driveByStatusResponse, filterOptions, getChartsDataResponse, getCompaniesResponse, getCompanyStatsResponse, getMembersResponse, getReportsByCompanyResponse, getReportsResponse, getUserStatsResponse, getVisitedCompaniesData, loadMembersResponse, loginResponse, notificationResponse, openMemberResponse, placementStats, placementStatsResponse, reportByIdResponse, reportSummaryResponse, sendOTPResponse, serverResponse, studentData, studentTableFilterOptions, studentTableFilterResponse, user, userByIdResponse } from '../models/model';
 import { Router } from '@angular/router';
 import { categoryStats } from '../dashboard/dashboard.component';
 
@@ -253,6 +253,17 @@ export class AppService {
       batch : batch,
       user_id : user_id
     }})
+  }
+
+  getStudentData(data:string[]){
+    console.log(data)
+    let postData = {
+      data : data
+    }
+    return this.http.post<{
+      success : boolean,
+      data : studentData[]
+    }>(`${this.URL}/get_student_data`, postData)
   }
 
 

@@ -66,7 +66,7 @@
                         <th>>=6LPA</th>
                         <th>>=5LPA</th>
                         <th>>=4LPA</th>
-                        <th>&lt;4L</th>
+                        <th>&lt;4LPA</th>
                     </tr>
                     
                     <tr *ngFor="let dept of DeptWiseReportData">
@@ -76,15 +76,15 @@
                         <td>{{dept.interested}}</td>
                         <td>{{dept.placed}}</td>
                         <td>{{dept.remaining}}</td>
-                        <td>{{dept.ctc.gt20}}</td>
-                        <td>{{dept.ctc.gt15}}</td>
-                        <td>{{dept.ctc.gt10}}</td>
-                        <td>{{dept.ctc.gt8}}</td>
-                        <td>{{dept.ctc.gt7}}</td>
-                        <td>{{dept.ctc.gt6}}</td>
-                        <td>{{dept.ctc.gt5}}</td>
-                        <td>{{dept.ctc.gt4}}</td>
-                        <td>{{dept.ctc.lt4}}</td>
+                        <td class="active-btn" (click)="openTable(dept.ctc.gt20)">{{dept.ctc.gt20.length}}</td>
+                        <td class="active-btn" (click)="openTable(dept.ctc.gt15)">{{dept.ctc.gt15.length}}</td>
+                        <td class="active-btn" (click)="openTable(dept.ctc.gt10)">{{dept.ctc.gt10.length}}</td>
+                        <td class="active-btn" (click)="openTable(dept.ctc.gt8)">{{dept.ctc.gt8.length}}</td>
+                        <td class="active-btn" (click)="openTable(dept.ctc.gt7)">{{dept.ctc.gt7.length}}</td>
+                        <td class="active-btn" (click)="openTable(dept.ctc.gt6)">{{dept.ctc.gt6.length}}</td>
+                        <td class="active-btn" (click)="openTable(dept.ctc.gt5)">{{dept.ctc.gt5.length}}</td>
+                        <td class="active-btn" (click)="openTable(dept.ctc.gt4)">{{dept.ctc.gt4.length}}</td>
+                        <td class="active-btn" (click)="openTable(dept.ctc.lt4)">{{dept.ctc.lt4.length}}</td>
                         <td>{{dept.total_percent}}%</td>
                     </tr>
 
@@ -251,6 +251,11 @@
                   
             </div>
         </div>
+        
+    </div>
+
+    <div class="popup-container" *ngIf="student_table">
+        <app-report-table (closeTable)="closeTable($event)" [studentData] = "studentData"></app-report-table>
         
     </div>
 

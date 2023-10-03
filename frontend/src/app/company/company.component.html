@@ -294,7 +294,7 @@
                         <!-- 5 -->
                         <td colspan="2">
                             <p style="cursor:pointer;" *ngIf="item.remarks!==null" (click) = "role==='Director'?openRemarksPopup(item.pk, 'edit'): ''">{{item.remarks}}</p>
-                            <p *ngIf="item.remarks===null">-</p>
+                            <p *ngIf="item.remarks===null && role=='Officer'">-</p>
                             <button *ngIf="item.remarks===null  && role==='Director'" mat-raised-button (click)="openRemarksPopup(item.pk, 'add')">Add</button>
                         </td>
 

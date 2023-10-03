@@ -114,9 +114,6 @@ class Drive(models.Model):
     
     class Meta:
         ordering = ['-date']
-    
-    
-    
 
 
 

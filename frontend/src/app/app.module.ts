@@ -32,6 +32,7 @@ import { StudentTableComponent } from './student-table/student-table.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { ReportsComponent } from './reports/reports.component';
 import { ReportTableComponent } from './report-table/report-table.component';
+import { PlacementsComponent } from './placements/placements.component';
 
 @NgModule({
   declarations: [
@@ -50,7 +51,8 @@ import { ReportTableComponent } from './report-table/report-table.component';
     StudentTableComponent,
     DashboardComponent,
     ReportsComponent,
-    ReportTableComponent
+    ReportTableComponent,
+    PlacementsComponent
   ],
   imports: [
     BrowserModule,

@@ -21,7 +21,6 @@ export class DriveComponent implements OnInit {
   drive_lst:drive[] = []
   selectedFile: File | null = null;
   filter = 'All'
-  // show_desc = ''
   show_delete = ''
   action = 'add'
 

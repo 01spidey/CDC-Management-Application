@@ -1,0 +1,138 @@
+<div class="main">
+
+    <div class="top">
+        <div class="title">
+            <h1>Student Placements</h1>
+        </div>
+    </div>
+    
+    <div class="filter-box">
+        <div class="container">
+            <div class="filters-box">
+                <div class="dept-filter-box">
+                    <div class="dept-filter-box-title">
+                        Filter By Department
+                    </div>
+                    <div class="dept-filter-box-content">
+                        <div 
+                            class="dept-chip"
+                            [ngClass]="{'active-dept-chip' : selected_dept.indexOf('All')>-1, 'inactive-dept-chip':selected_dept.indexOf('All')==-1}"    
+                            (click) = "changeDept('All')"
+                        >
+                    
+                        All
+                        </div>
+                        <div 
+                            class="dept-chip" 
+                            *ngFor="let dept of dept_lst" 
+                            [ngClass]="{'active-dept-chip' : selected_dept.indexOf(dept)>-1, 'inactive-dept-chip':selected_dept.indexOf(dept)==-1}"
+                            (click) = "changeDept(dept)"
+                            >
+                            {{dept}}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="batch-filter-box">
+                    <div class="batch-filter-box-title">
+                        Filter By Batch
+                    </div>
+                    <div class="batch-filter-box-content">
+                        <mat-form-field>
+                            <mat-label>Batch</mat-label>
+                            <mat-select [ngModel] = 'batch' (ngModelChange)="onBatchChange($event)">
+                                <mat-option *ngFor="let batch of batch_lst" [value]="batch">{{batch-4}}&nbsp;-&nbsp;{{batch}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="pkg-filter-box">
+
+                </div>
+            </div>
+            
+            <a>
+                <span matTooltip="Refresh" class="material-symbols-outlined" id="refresh" (click)="getPlacedStudents(selected_dept, batch)">
+                    refresh
+                </span>
+            </a>
+            
+        </div>
+       
+    </div>
+
+    <div class="main-container">
+        <div class="company-table">
+            <div class="search">
+                <span class="material-icons">search</span>
+                <input placeholder="Search Data" matInput (keyup)="filterTable($event)" #input>
+            </div>
+
+            <table mat-table [dataSource]="PLACED_STUDENTS" class="mat-elevation-z8">
+
+                <ng-container matColumnDef="sno">
+                  <th mat-header-cell *matHeaderCellDef>S.no</th>
+                  <td mat-cell *matCellDef="let item"> {{item.sno}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="name">
+                    <th mat-header-cell *matHeaderCellDef>Name</th>
+                    <td mat-cell *matCellDef="let item"> {{item.name}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="regno">
+                    <th mat-header-cell *matHeaderCellDef>Reg.no</th>
+                    <td mat-cell *matCellDef="let item"> {{item.regno}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="dept">
+                    <th mat-header-cell *matHeaderCellDef>Dept</th>
+                    <td mat-cell *matCellDef="let item"> {{item.dept}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="batch">
+                    <th mat-header-cell *matHeaderCellDef>Batch</th>
+                    <td mat-cell *matCellDef="let item"> {{item.batch}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="appointment_id">
+                    <th mat-header-cell *matHeaderCellDef>Appointment ID</th>
+                    <td mat-cell *matCellDef="let item"> {{item.appointment_id}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="company">
+                    <th mat-header-cell *matHeaderCellDef>Company</th>
+                    <td mat-cell *matCellDef="let item"> {{item.company}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="mode">
+                    <th mat-header-cell *matHeaderCellDef>Mode</th>
+                    <td mat-cell *matCellDef="let item"> {{item.mode}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="ctc">
+                    <th mat-header-cell *matHeaderCellDef>CTC (LPA)</th>
+                    <td mat-cell *matCellDef="let item"> {{item.ctc}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="offer_letter_link">
+                    <th mat-header-cell *matHeaderCellDef>Appointment Letter</th>
+                    <td mat-cell *matCellDef="let item">
+                        <a 
+                            [href]="item.offer_letter_link" target="_blank">
+                            <p class="company-table-link">Click Here</p>
+                        </a>
+                    </td>
+                </ng-container>
+                
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+              
+                            
+            
+            <mat-paginator [pageSizeOptions]="pageSizeOptions" showFirstLastButtons></mat-paginator>
+              
+        </div>
+    </div>
+</div>

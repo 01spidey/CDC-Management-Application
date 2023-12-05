@@ -6,7 +6,8 @@ from django.conf import settings
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse, JsonResponse
-from .models import DriveSelection, PlacementDirector,PlacementOfficer,Report, Drive, Company, Student, StudentEdu
+import pandas as pd
+from .models import DriveSelection, PlacementDirector,PlacementOfficer,Report, Drive, Company, Student, StudentEdu, PlacedStudents
 from datetime import datetime, date, timedelta
 from django.db.models import Q
 from django.core.mail import send_mail
@@ -19,7 +20,6 @@ from django.db.models.functions import ExtractMonth
 
 cur_username = ''
 cur_password = ''
-
 
 # Create your views here.
 
@@ -71,6 +71,32 @@ cur_password = ''
 #     except Exception as e:
 #         #print(e)
 #         #print("Out-uh vro!!")
+
+# def parse_csv():
+#     try:
+#         data = pd.read_csv(r'D:\\CDC_Website\backend\\cdc_app\\cdc_app\\Placement_Details_Dummy.csv')
+        
+#         for _, row in data.iterrows():
+            
+#             placed_student = PlacedStudents(
+#                 name = row['name'],
+#                 reg_no = row['reg_no'],
+#                 dept = row['dept'],
+#                 batch = row['batch'],
+#                 appointment_id = row['appointment_id'],
+#                 company = row['company'],
+#                 mode = row['mode'],
+#                 ctc = row['ctc'],
+#                 offer_letter_link = row['offer_letter_link']
+#             )
+#             print("Oduthu Vro!!")
+#             # placed_student.save()
+            
+#     except Exception as e:
+#         print(e)
+#         print("Out-uh vro!!")
+
+# parse_csv()
 
 @csrf_exempt
 def test(request):
@@ -2421,5 +2447,44 @@ def get_visited_companies(request):
         data = {
             'success' : False,
             'visited_companies' : visited_companies
+        }
+        return JsonResponse(data)
+
+#---------------------Placed Students-------------------------------#
+@csrf_exempt
+def get_placed_students(request):
+    try:
+        dept_lst = request.GET.get("depts").split("&")
+        batch = request.GET.get("batch")
+        print(f'Dept List : {dept_lst}\nBatch : {batch}')
+        
+        placed_students = PlacedStudents.objects.filter(dept__in=dept_lst, batch=batch)
+        result = []
+        a = 1
+        for student in placed_students:
+            result.append({
+                'sno' : a,
+                'name' : student.name,
+                'regno' : student.reg_no,
+                'dept' : student.dept,
+                'batch' : student.batch,
+                'appointment_id' : student.appointment_id,
+                'company' : student.company,
+                'mode' : student.mode,
+                'ctc' : student.ctc,
+                'offer_letter_link' : student.offer_letter_link,
+            })
+            a+=1
+            
+        return JsonResponse({
+            'success' : True,
+            'placed_students' : result
+        })
+    
+    except Exception as e:
+        print(e)
+        data = {
+            'success' : False,
+            'placed_students' : []
         }
         return JsonResponse(data)

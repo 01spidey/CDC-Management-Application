@@ -55,5 +55,7 @@ urlpatterns = [
     path('get_dept_wise_report_data', views.get_dept_wise_report_data),
     path('get_visited_companies', views.get_visited_companies),
     path('get_student_data', views.get_student_data),
+    
+    path('get_placed_students', views.get_placed_students),
      
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

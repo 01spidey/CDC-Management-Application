@@ -3,6 +3,7 @@ import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http'
 import { companyByIdResponse, deptWiseReportData, driveByIdResponse, driveByStatusResponse, filterOptions, getChartsDataResponse, getCompaniesResponse, getCompanyStatsResponse, getMembersResponse, getReportsByCompanyResponse, getReportsResponse, getUserStatsResponse, getVisitedCompaniesData, loadMembersResponse, loginResponse, notificationResponse, openMemberResponse, placementStats, placementStatsResponse, reportByIdResponse, reportSummaryResponse, sendOTPResponse, serverResponse, studentData, studentTableFilterOptions, studentTableFilterResponse, user, userByIdResponse } from '../models/model';
 import { Router } from '@angular/router';
 import { categoryStats } from '../dashboard/dashboard.component';
+import { PlacedStudent } from '../placements/placements.component';
 
 @Injectable({
   providedIn: 'root'
@@ -264,6 +265,16 @@ export class AppService {
       success : boolean,
       data : studentData[]
     }>(`${this.URL}/get_student_data`, postData)
+  }
+
+  getPlacedStudents(depts:string, batch:number){
+    return this.http.get<{
+      success : boolean,
+      data : PlacedStudent[]
+    }>(`${this.URL}/get_placed_students`, {params : {
+      depts : depts,
+      batch : batch
+    }})
   }
 
 

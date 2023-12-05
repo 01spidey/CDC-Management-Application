@@ -115,7 +115,29 @@ class Drive(models.Model):
     class Meta:
         ordering = ['-date']
 
+# export interface PlacedStudent{
+#   sno:number;
+#   name:string;
+#   regno:string;
+#   dept:string;
+#   batch:string;
+#   appointment_id:string;
+#   company:string;
+#   mode:string;
+#   ctc:number;
+#   offer_letter_link:URL;
+# }
 
+class PlacedStudents(models.Model):
+    name = models.CharField(max_length=50, null=False)
+    reg_no = models.CharField(max_length=50, null=False)
+    dept = models.CharField(max_length=20, null=False)
+    batch = models.CharField(max_length=10, null=False)
+    appointment_id = models.CharField(max_length=50, null=False)
+    company = models.CharField(max_length=50, null=False)
+    mode = models.CharField(max_length=50, null=False)
+    ctc = models.FloatField(null=True)
+    offer_letter_link = models.URLField(null=True)
 
     
     

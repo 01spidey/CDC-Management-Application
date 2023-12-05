@@ -107,9 +107,10 @@ export class DrivePopupComponent implements OnInit{
     date:this.builder.control('',Validators.required),
     description:this.builder.control('',Validators.required),
     mode : this.builder.control('',Validators.required),
-    ctc : this.builder.control(0.0,Validators.compose([
-      Validators.required,
-      Validators.pattern('^[0-9]+.?[0-9]+$')])),
+    ctc : this.builder.control(0.0,
+      Validators.compose([
+        Validators.required,
+        Validators.pattern('^[0-9]+.?[0-9]+$')])),
     offer_type : this.builder.control('',Validators.required)
   });
 

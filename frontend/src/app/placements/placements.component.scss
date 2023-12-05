@@ -1,0 +1,276 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+
+.main{
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 5%;
+
+    .top{
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        position: relative;
+
+
+        .title{
+            margin-left: 40px;
+            font-family: 'Poppins';
+            font-size: 1.2rem;
+            letter-spacing: 2px;
+            color: #152b51ff;
+            padding-right: 20px;
+            border-bottom: 3px solid #152b51;
+        }
+    }
+
+    .filter-box{
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        flex: 1;
+        margin-top: 30px;
+        margin-left: 40px;
+        margin-right: 40px;
+
+
+        .container{ 
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            .filters-box{
+                display: flex;
+                height: 100%;
+                gap: 10px;
+                
+                .dept-filter-box{
+                    width: 350px;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: flex-start;
+                    gap: 10px;
+                    box-shadow: 1px 2px 12px 1px rgba(0,0,0,0.35);
+                    padding: 10px;
+                    border-radius: 10px;
+                    background-color: white;
+
+                    .dept-filter-box-title{
+                        font-family: 'Poppins';
+                        font-size: .9rem;
+                        color: #152b51;
+                        font-weight: 500;
+                    }
+
+                    .dept-filter-box-content{
+                        display: grid;
+                        width: 350px;
+                        grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+                        gap: 10px;
+                    }
+
+                    .dept-chip{
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        gap: 5px;
+                        padding: 3px 7px;
+                        border-radius: 5px;
+                        font-family: 'Nunito';
+                        cursor: pointer;
+                        transition: 0.2s ease;
+                        font-size: .8rem;
+        
+                        &:hover{
+                            opacity: 0.9;
+                        }
+        
+                        span{
+                            font-size: 1rem;
+                        }
+                    }
+
+                    .active-dept-chip{
+                        border: 1px solid #ea4034;
+                        color: white;
+                        background-color: #ea4034;
+                    }
+
+                    .inactive-dept-chip{
+                        border: 1px solid rgb(104, 102, 102);
+                        color: rgb(104, 102, 102) ;
+                    }
+                    
+                }
+
+                .batch-filter-box{
+                    display: flex;
+                    flex-direction: column;
+                    align-items: flex-start;
+                    gap: 10px;
+                    box-shadow: 1px 2px 12px 1px rgba(0,0,0,0.35);
+                    padding: 10px;
+                    border-radius: 10px;
+                    background-color: white;
+
+                    .batch-filter-box-title{
+                        font-family: 'Poppins';
+                        font-size: .9rem;
+                        color: #152b51;
+                        font-weight: 500;
+                    }
+                }
+
+                .pkg-filter-box{
+                    background-color: lightcoral;
+                }
+            }
+
+            #refresh{
+                background-color:#198754;
+                color: white;
+                font-size: 1.2rem;
+                padding: 5px;
+                border-radius: 5px;
+                cursor: pointer;
+
+                &:hover{
+                    opacity: 0.85;
+                }
+
+                &:active{
+                    transform: scale(0.9);
+                }
+            }
+
+            .status-filter{
+                display: flex;
+                gap: 15px;
+                
+    
+                .status{
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 5px;
+                    // background-color: #d8e5e5;
+                    padding: 3px 7px;
+                    border-radius: 5px;
+                    font-family: 'Nunito';
+                    cursor: pointer;
+                    transition: 0.2s ease;
+    
+                    &:hover{
+                        opacity: 0.9;
+                    }
+    
+                    &:active{
+                        transform: scale(0.9);
+                        // transition: none;
+                    }
+    
+                    span{
+                        font-size: 1rem;
+                    }
+                }
+            }
+        }
+        
+        .date-filter{
+            width: fit-content;
+            display: flex;
+            gap: 20px;
+
+            mat-form-field{
+                color: white;
+                display: flex;
+            }
+            button{
+                margin-top: 10px;
+                background-color: #198754ff;
+                color: white;
+            }
+        }
+    }
+
+    .main-container{
+        margin-left: 40px;
+        width: 95%;
+        height: fit-content;
+        margin-top: 30px;
+
+        .company-table{
+
+            .search{
+                margin-bottom: 10px;
+                display: flex;
+                gap: 5px;
+                background-color: white;
+                box-shadow: 0px 2px 3px 1px rgba(0,0,0,0.3);
+                width: fit-content;
+                padding: 5px 10px;
+                border-radius: 5px;
+                align-items: center;
+                
+
+                span{
+                    font-size: 1.3rem;
+                }
+                input{
+                    font-family: 'Nunito';
+                    font-size: .85rem;
+                    border: none;
+                    outline: none;
+                    background-color: inherit;
+                    width: 200px;
+                    color: #35363a;
+
+                }
+            }
+            a{
+                text-decoration: none;
+            }
+            .company-table-link{
+                color: white;
+                font-family: 'Poppins';
+                // width: fit-content;
+                font-size: .9rem;
+                align-items: center;
+                background-color: #152b51;
+                padding: 2px 10px;
+                border-radius: 5px;
+                transition: .3s ease;
+
+                &:hover{
+                    opacity: .85;
+                }
+            }
+
+            .btm-row{
+                font-weight: 500;
+                border-radius: 0px;
+                background-color: #35363a;
+                color: white;
+            }
+
+            table{
+                th,td{
+                    text-align: center;
+                }
+
+                th{
+                    font-family: 'Poppins';
+                    font-weight: 500;
+                    font-size: .85rem;
+                    background-color: #1a6486;
+                    color: white;
+                }
+
+                
+            }
+        }
+    }
+}

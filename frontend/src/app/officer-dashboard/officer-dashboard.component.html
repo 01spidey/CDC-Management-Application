@@ -13,6 +13,13 @@
             <p>Dashboard</p>
         </div>
 
+        <div class="nav" (click)="selectMenu('placements')" [ngClass] ="{active: cur_option =='placements'}">
+            <span class="material-symbols-outlined">
+                school
+            </span>
+            <p>Placements</p>
+        </div>
+
         <div class="nav" (click)="selectMenu('drive')" [ngClass] = "{active: cur_option =='drive'}">
             <span class="material-icons">
                 event
@@ -27,18 +34,18 @@
             <p>My Companies</p>
         </div>
 
-        <div class="nav" (click)="selectMenu('notification')" [ngClass] ="{active: cur_option =='notification'}">
-            <span class="material-icons">
-                notifications_active
-            </span>
-            <p>Notifications</p>
-        </div>
-
         <div class="nav" (click)="selectMenu('reports')" [ngClass] ="{active: cur_option =='reports'}">
             <span class="material-icons">
                 list_alt
             </span>
             <p>Reports</p>
+        </div>
+        
+        <div class="nav" (click)="selectMenu('notification')" [ngClass] ="{active: cur_option =='notification'}">
+            <span class="material-icons">
+                notifications_active
+            </span>
+            <p>Notifications</p>
         </div>
         
         <div class="nav" (click)="selectMenu('profile')" [ngClass] ="{active: cur_option =='profile'}">
@@ -63,6 +70,7 @@
         <app-profile *ngIf="cur_option=='profile'"></app-profile>
         <app-notification *ngIf="cur_option=='notification'"></app-notification>
         <app-reports *ngIf="cur_option=='reports'"></app-reports>
+        <app-placements *ngIf="cur_option=='placements'"/>
     </div>
 
 </section>

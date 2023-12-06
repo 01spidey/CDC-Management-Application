@@ -82,27 +82,11 @@ DATABASES = {
     
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'kpr-cdc-db',
-        'USER' : 'postgres',
-        'PASSWORD' : 'abc',
-        'HOST' : 'localhost'
+        'NAME': 'cdc_db_qlji',
+        'USER' : 'cdc_db_qlji_user',
+        'PASSWORD' : '76EttkBCGz1laKHees1PJbtGKo4j2UMp',
+        'HOST' : 'dpg-clnmerpjvg7s73a01vcg-a.oregon-postgres.render.com'
     }
-    
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.postgresql',
-    #     'NAME': 'kpr_cdc_db',
-    #     'USER' : 'kpr_cdc',
-    #     'PASSWORD' : 'rSlODCvW32na3I347x4EoNn4mfzXhizp',
-    #     'HOST' : 'dpg-cib7mmp5rnuk9qfg3k80-a.singapore-postgres.render.com'
-    # }
-    
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.postgresql',
-    #     'NAME': 'kpr_cdc_db',
-    #     'USER' : 'kpr_cdc',
-    #     'PASSWORD' : 'kprcdc123',
-    #     'HOST' : 'kpr-cdc-db.co8tdg7i8awz.ap-south-1.rds.amazonaws.com'
-    # }
 }
 
 

@@ -33,7 +33,7 @@ export class PlacementsComponent implements OnInit{
   cur_year = 0
   PLACED_STUDENTS!:MatTableDataSource<PlacedStudent>;
   displayedColumns: string[] = ["sno", "name", "regno", "dept", "batch", "appointment_id", "company", "mode", "ctc", "offer_letter_link"]
-  pageSizeOptions: number[] = [3, 5, 10, 15];
+  pageSizeOptions: number[] = [5, 10, 15];
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
